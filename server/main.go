@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2/middleware/compress"
 	"log"
 	"log/slog"
 	"os"
 	"time"
+
+	"github.com/gofiber/fiber/v2/middleware/compress"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -44,7 +45,7 @@ func main() {
 
 	slog.Info("Starting server", "port", cfg.Port)
 	if err := app.Listen(":" + cfg.Port); err != nil {
-		slog.Error("Failed to start server:", err)
+		slog.Error("Failed to start server", "error", err)
 		os.Exit(1)
 	}
 }

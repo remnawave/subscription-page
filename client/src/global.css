@@ -1,0 +1,21 @@
+@layer mantine, mantine-datatable;
+
+html,
+body {
+    min-height: 100vh;
+}
+
+#root {
+    height: 100vh;
+
+    @mixin dark {
+        .mrt-table-head-sort-button {
+            border-radius: 0;
+            border: none;
+        }
+        .mrt-table-head-cell-filter-label-icon {
+            border-radius: 0;
+            border: none;
+        }
+    }
+}

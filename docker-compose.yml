@@ -1,0 +1,9 @@
+services:
+    remnawave-subscription-page:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - REMNAWAVE_PLAIN_DOMAIN=domain.com
+        ports:
+            - '3010:3010'

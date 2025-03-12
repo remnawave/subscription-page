@@ -43,7 +43,7 @@ export const SubscriptionInfoWidget = () => {
 
     return (
         <Grid>
-            <Grid.Col span={{ sm: 6, xs: 12 }}>
+            <Grid.Col span={{ sm: 6, xs: 6 }}>
                 <InfoBlock
                     color="blue"
                     icon={<IconUser size={20} />}
@@ -51,7 +51,7 @@ export const SubscriptionInfoWidget = () => {
                     value={user.username}
                 />
             </Grid.Col>
-            <Grid.Col span={{ sm: 6, xs: 12 }}>
+            <Grid.Col span={{ sm: 6, xs: 6 }}>
                 <InfoBlock
                     color="green"
                     icon={<IconCheck size={20} />}
@@ -59,7 +59,7 @@ export const SubscriptionInfoWidget = () => {
                     value={user.userStatus === 'ACTIVE' ? 'Активна' : 'Неактивна'}
                 />
             </Grid.Col>
-            <Grid.Col span={{ sm: 6, xs: 12 }}>
+            <Grid.Col span={{ sm: 6, xs: 6 }}>
                 <InfoBlock
                     color="red"
                     icon={<IconCalendar size={20} />}
@@ -67,7 +67,7 @@ export const SubscriptionInfoWidget = () => {
                     value={`До ${formatDate(user.expiresAt)}`}
                 />
             </Grid.Col>
-            <Grid.Col span={{ sm: 6, xs: 12 }}>
+            <Grid.Col span={{ sm: 6, xs: 6 }}>
                 <InfoBlock
                     color="yellow"
                     icon={<IconArrowsUpDown size={20} />}

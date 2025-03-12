@@ -19,8 +19,12 @@ export const InstallationGuideWidget = () => {
     const { subscriptionUrl } = remnawaveSubscription
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const openInClient = (_platform: string) => {
-        window.open(`hiddify://import/${subscriptionUrl}`, '_blank')
+    const openInClient = (platform: string) => {
+        window.open(`happ://add/${subscriptionUrl}`, '_blank')
+
+        if (platform === 'desktop') {
+            window.open(`hiddify://import/${subscriptionUrl}`, '_blank')
+        }
     }
 
     return (
@@ -50,15 +54,14 @@ export const InstallationGuideWidget = () => {
                                 <IconDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Установите и откройте Hiddify"
+                        title="Установите и откройте Happ"
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Откройте страницу в Google Play и установите приложение. Запустите его,
-                            выберите регион Россия, затем нажмите Старт.
+                            Откройте страницу в Google Play и установите приложение.
                         </Text>
                         <Button
                             component="a"
-                            href="https://play.google.com/store/apps/details?id=app.hiddify.com"
+                            href="https://play.google.com/store/apps/details?id=com.happproxy"
                             leftSection={<IconExternalLink size={16} />}
                             target="_blank"
                             variant="light"
@@ -94,8 +97,8 @@ export const InstallationGuideWidget = () => {
                     >
                         <Text c="dimmed" size="sm">
                             В главном разделе нажмите большую кнопку включения в центре для
-                            подключения к VPN. При необходимости выберите другой сервер, нажав на
-                            «&gt;» внизу.
+                            подключения к VPN. Не забудьте выбрать сервер в списке серверов. При
+                            необходимости выберите другой сервер в списке серверов.
                         </Text>
                     </Timeline.Item>
                 </Timeline>
@@ -109,16 +112,16 @@ export const InstallationGuideWidget = () => {
                                 <IconDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Установите и откройте Hiddify"
+                        title="Установите и откройте Happ"
                     >
                         <Text c="dimmed" mb={16} size="sm">
                             Откройте страницу в App Store и установите приложение. Запустите его, в
                             окне разрешения на добавление конфигураций VPN нажмите Разрешить и
-                            введите свой код-пароль. Выберите регион Россия, затем нажмите Старт.
+                            введите свой код-пароль.
                         </Text>
                         <Button
                             component="a"
-                            href="https://apps.apple.com/app/hiddify-proxy-vpn/id6596777532"
+                            href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215"
                             leftSection={<IconExternalLink size={16} />}
                             target="_blank"
                             variant="light"
@@ -136,8 +139,8 @@ export const InstallationGuideWidget = () => {
                         title="Добавьте подписку"
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Нажмите на кнопку ниже и в появившемся окне нажмите Открыть — откроется
-                            приложение, и подписка добавится автоматически.
+                            Нажмите на кнопку ниже — откроется приложение, и подписка добавится
+                            автоматически.
                         </Text>
                         <Button onClick={() => openInClient('ios')} variant="filled">
                             Добавить подписку
@@ -154,8 +157,8 @@ export const InstallationGuideWidget = () => {
                     >
                         <Text c="dimmed" size="sm">
                             В главном разделе нажмите большую кнопку включения в центре для
-                            подключения к VPN. При необходимости выберите другой сервер, нажав на
-                            «&gt;» внизу.
+                            подключения к VPN. Не забудьте выбрать сервер в списке серверов. При
+                            необходимости выберите другой сервер в списке серверов.
                         </Text>
                     </Timeline.Item>
                 </Timeline>

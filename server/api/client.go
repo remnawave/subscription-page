@@ -35,12 +35,12 @@ func (c *Client) FetchAPI(path string, headers http.Header) (*http.Response, err
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
 	}
+	
+	req.Header.Set("User-Agent", headers.Get("User-Agent"))
+	req.Header.Set("Accept", headers.Get("Accept"))
+	req.Header.Add("Accept-Encoding", "gzip")
 
-	for name, values := range headers {
-		for _, value := range values {
-			req.Header.Add(name, value)
-		}
-	}
+
 	
 	resp, err := c.client.Do(req)
 	if err != nil {

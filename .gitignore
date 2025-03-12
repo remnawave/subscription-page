@@ -133,3 +133,5 @@ dist
 .vercel
 stats.html
 fsd-high-level-dependencies.html
+
+docker-compose-local.yml

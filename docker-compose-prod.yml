@@ -1,6 +1,9 @@
 services:
     remnawave-subscription-page:
         image: remnawave/subscription-page:latest
+        container_name: remnawave-subscription-page
+        hostname: remnawave-subscription-page
+        restart: always
         environment:
             - REMNAWAVE_PLAIN_DOMAIN=domain.com
             - SUBSCRIPTION_PAGE_PORT=3010

@@ -3,46 +3,48 @@ package api
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/imroc/req/v3"
 )
 
 type Client struct {
 	domain string
-	client *http.Client
+	client *req.Client
 }
 
 func NewClient(domain string) *Client {
+	client := req.C().
+		SetUserAgent("req").
+		DisableDebugLog()
+		// EnableDumpAll().
+		// EnableDebugLog()
+	
 	return &Client{
 		domain: domain,
-		client: &http.Client{
-			Transport: &http.Transport{
-				DisableCompression: false,
-			},
-		},
+		client: client,
 	}
 }
 
-func (c *Client) FetchAPI(path string, headers http.Header) (*http.Response, error) {
+func (c *Client) FetchAPI(path string, headers http.Header, isBrowser bool) (*req.Response, error) {
 	var url string
 	if path == "" {
 		return nil, fmt.Errorf("error creating request")
 	} else {
 		url = fmt.Sprintf("https://%s/api/sub/%s", c.domain, path)
 	}
-
-	fmt.Println("Fetching API:", url)
 	
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
+	request := c.client.R()
+	
+	if userAgent := headers.Get("User-Agent"); userAgent != "" {
+		request.SetHeader("User-Agent", userAgent)
 	}
 	
-	req.Header.Set("User-Agent", headers.Get("User-Agent"))
-	req.Header.Set("Accept", headers.Get("Accept"))
-	req.Header.Add("Accept-Encoding", "gzip")
-
+	if accept := headers.Get("Accept"); accept != "" {
+		request.SetHeader("Accept", accept)
+	}
 
 	
-	resp, err := c.client.Do(req)
+	resp, err := request.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("error making request: %w", err)
 	}

@@ -1,4 +1,4 @@
-FROM node:22-alpine AS frontend-builder
+FROM oven/bun:latest AS frontend-builder
 
 WORKDIR /app
 
@@ -6,11 +6,11 @@ COPY package.json .
 COPY index.html .
 COPY .npmrc .
 
-RUN npm install
+RUN bun install
 
 COPY . .
 
-RUN npm run start:build
+RUN bun run start:build
 
 
 FROM golang:1.24-alpine AS builder

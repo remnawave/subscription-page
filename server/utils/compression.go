@@ -1,40 +1,16 @@
 package utils
 
 import (
-	"bytes"
-	"compress/gzip"
-	"io"
-
-	"github.com/klauspost/compress/zstd"
+	"strings"
 )
 
-func DecompressGzip(data []byte) ([]byte, error) {
-	buf := bytes.NewBuffer(data)
-	reader, err := gzip.NewReader(buf)
-	if err != nil {
-		return nil, err
-	}
-	defer reader.Close()
-	
-	return io.ReadAll(reader)
-}
-
-func DecompressZstd(data []byte) ([]byte, error) {
-	decoder, err := zstd.NewReader(bytes.NewReader(data))
-	if err != nil {
-		return nil, err
-	}
-	defer decoder.Close()
-	
-	return io.ReadAll(decoder)
-}
+var browserKeywords = [...]string{"Mozilla", "Chrome", "Safari", "Firefox", "Opera", "Edge", "TelegramBot"}
 
 func IsBrowser(userAgent string) bool {
-	browserKeywords := []string{"Mozilla", "Chrome", "Safari", "Firefox", "Opera", "Edge", "TelegramBot"}
 	for _, keyword := range browserKeywords {
-		if bytes.Contains([]byte(userAgent), []byte(keyword)) {
+		if strings.Contains(userAgent, keyword) {
 			return true
 		}
 	}
 	return false
-} 
+}

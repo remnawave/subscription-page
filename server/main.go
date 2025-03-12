@@ -2,6 +2,11 @@ package main
 
 import (
 	"log"
+	"log/slog"
+	"os"
+	"time"
+
+	"github.com/gofiber/fiber/v2/middleware/compress"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -17,19 +22,30 @@ func main() {
 	}
 
 	if cfg == nil {
-		log.Fatal("Configuration is not properly set")
+		slog.Error("Configuration is not properly set")
+		os.Exit(1)
 	}
 
-	app := fiber.New()
-	
+	app := fiber.New(fiber.Config{
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  30 * time.Second,
+	})
+
+	app.Use(compress.New())
+
 	app.Static("/assets", "./dist/assets")
 	app.Static("/locales", "./dist/locales")
 
 	apiClient := api.NewClient(cfg.RemnawavePlainDomain)
-	
-	subscriptionHandler := handlers.NewSubscriptionHandler(apiClient)
-	
-	app.Get("/*", subscriptionHandler.HandleSubscription)
 
-	log.Fatal(app.Listen(":" + cfg.Port))
+	subscriptionHandler := handlers.NewSubscriptionHandler(apiClient)
+
+	app.Get("/:shortId", subscriptionHandler.HandleSubscription)
+
+	slog.Info("Starting server", "port", cfg.Port)
+	if err := app.Listen(":" + cfg.Port); err != nil {
+		slog.Error("Failed to start server", "error", err)
+		os.Exit(1)
+	}
 }

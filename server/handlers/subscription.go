@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
+	"io"
+	"log/slog"
 
 	"subscription-page-template/server/api"
 	"subscription-page-template/server/utils"
@@ -20,36 +20,41 @@ func NewSubscriptionHandler(apiClient *api.Client) *SubscriptionHandler {
 }
 
 func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
-	path := c.Params("*")
-	userAgent := c.Get("User-Agent")
-	
+	shortId := c.Params("shortId")
+	if shortId == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Bad request.")
+	}
+
 	headers := make(map[string][]string)
 	c.Request().Header.VisitAll(func(key, value []byte) {
 		headers[string(key)] = append(headers[string(key)], string(value))
 	})
-	
-	isBrowser := utils.IsBrowser(userAgent)
-	
-	resp, err := h.apiClient.FetchAPI(path, headers, isBrowser)
+
+	resp, err := h.apiClient.FetchAPI(shortId, headers)
 	if err != nil {
-		fmt.Println("Error fetching API:", err)
+		slog.Error("Error fetching API", "error", err)
 		return c.Status(fiber.StatusInternalServerError).SendString("Request error.")
 	}
-	
+	defer resp.Body.Close()
 
-	processedBody := resp.Bytes()
-	
-	if isBrowser {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Read response error.")
+	}
+
+	userAgent := c.Get("User-Agent")
+
+	if utils.IsBrowser(userAgent) {
 		return c.Render("./dist/index.html", fiber.Map{
-			"Data": string(processedBody),
+			"Data": string(body),
 		})
 	}
-	
+
 	for name, values := range resp.Header {
 		for _, value := range values {
 			c.Set(name, value)
 		}
 	}
-	
-	return c.Status(resp.StatusCode).Send(processedBody)
-} 
+
+	return c.Status(resp.StatusCode).Send(body)
+}

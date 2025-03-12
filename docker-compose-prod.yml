@@ -1,0 +1,15 @@
+services:
+    remnawave-subscription-page:
+        image: remnawave/subscription-page:latest
+        environment:
+            - REMNAWAVE_PLAIN_DOMAIN=domain.com
+            - SUBSCRIPTION_PAGE_PORT=3010
+        ports:
+            - '127.0.0.1:3010:3010'
+        networks:
+            - remnawave-network
+
+networks:
+    remnawave-network:
+        driver: bridge
+        external: true

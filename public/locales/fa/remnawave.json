@@ -36,5 +36,16 @@
             "line-1": "Easy subscription addition to any client. There's another option: copy the link below and paste it into the client",
             "copy-link": "Copy link"
         }
+    },
+    "subscription-info": {
+        "widget": {
+            "name": "Имя",
+            "status": "Статус",
+            "active": "Активна",
+            "inactive": "Неактивна",
+            "expires": "Срок",
+            "at": "До",
+            "bandwidth": "Трафик"
+        }
     }
 }

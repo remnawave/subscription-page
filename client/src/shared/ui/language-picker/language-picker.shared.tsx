@@ -1,4 +1,4 @@
-import { Group, Menu, Text, UnstyledButton, useDirection } from '@mantine/core'
+import { Button, Group, Menu, Text, useDirection } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
@@ -63,13 +63,13 @@ export function LanguagePicker() {
             withinPortal
         >
             <Menu.Target>
-                <UnstyledButton className={classes.control} data-expanded={opened || undefined}>
+                <Button color="grape" data-expanded={opened || undefined}>
                     <Group gap="xs">
                         <Text>{selected.emoji}</Text>
-                        <span className={classes.label}>{selected.label}</span>
+                        <span>{selected.label}</span>
+                        <IconChevronDown className={classes.icon} size={16} stroke={1.5} />
                     </Group>
-                    <IconChevronDown className={classes.icon} size={16} stroke={1.5} />
-                </UnstyledButton>
+                </Button>
             </Menu.Target>
             <Menu.Dropdown>{items}</Menu.Dropdown>
         </Menu>

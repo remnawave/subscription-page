@@ -1,5 +1,6 @@
 import { Button, Image, Stack, Text } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
 import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
@@ -7,6 +8,7 @@ import { renderSVG } from 'uqr'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const SubscriptionLinkWidget = () => {
+    const { t } = useTranslation()
     const { remnawaveSubscription } = useSubscriptionInfoStoreInfo()
     const clipboard = useClipboard({ timeout: 10000 })
 
@@ -14,8 +16,8 @@ export const SubscriptionLinkWidget = () => {
 
     const handleCopy = () => {
         notifications.show({
-            title: 'Ссылка скопирована',
-            message: 'Ссылка скопирована в буфер обмена',
+            title: t('subscription-link.widget.link-copied'),
+            message: t('subscription-link.widget.link-copied-to-clipboard'),
             color: 'teal'
         })
         clipboard.copy(remnawaveSubscription.subscriptionUrl)
@@ -32,7 +34,7 @@ export const SubscriptionLinkWidget = () => {
 
                     modals.open({
                         centered: true,
-                        title: 'Получить ссылку',
+                        title: t('subscription-link.widget.get-link'),
                         children: (
                             <>
                                 <Stack align="center">
@@ -40,15 +42,14 @@ export const SubscriptionLinkWidget = () => {
                                         src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
                                     />
                                     <Text fw={600} size="lg" ta="center">
-                                        Отсканируйте QR-код выше в клиенте
+                                        {t('subscription-link.widget.scan-qr-code')}
                                     </Text>
                                     <Text c="dimmed" size="sm" ta="center">
-                                        Простое добавление подписки в любой клиент. Есть и другой
-                                        вариант: скопируйте ссылку ниже и вставьте в клиент
+                                        {t('subscription-link.widget.line-1')}
                                     </Text>
 
                                     <Button fullWidth onClick={handleCopy} variant="filled">
-                                        Скопировать ссылку
+                                        {t('subscription-link.widget.copy-link')}
                                     </Button>
                                 </Stack>
                             </>
@@ -57,7 +58,7 @@ export const SubscriptionLinkWidget = () => {
                 }}
                 variant="outline"
             >
-                Получить ссылку
+                {t('subscription-link.widget.get-link')}
             </Button>
         </>
     )

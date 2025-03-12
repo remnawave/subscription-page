@@ -8,17 +8,18 @@ import {
     IconExternalLink
 } from '@tabler/icons-react'
 import { Button, Group, Tabs, Text, ThemeIcon, Timeline } from '@mantine/core'
+import { useTranslation } from 'react-i18next'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const InstallationGuideWidget = () => {
+    const { t } = useTranslation()
     const { remnawaveSubscription } = useSubscriptionInfoStoreInfo()
 
     if (!remnawaveSubscription) return null
 
     const { subscriptionUrl } = remnawaveSubscription
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const openInClient = (platform: string) => {
         window.open(`happ://add/${subscriptionUrl}`, '_blank')
 
@@ -31,7 +32,7 @@ export const InstallationGuideWidget = () => {
         <Tabs defaultValue="android">
             <Group mb="md">
                 <Text fw={700} size="xl">
-                    Инструкция
+                    {t('installation-guide.widget.instrukciya')}
                 </Text>
                 <Tabs.List>
                     <Tabs.Tab leftSection={<IconBrandAndroid />} value="android">
@@ -41,7 +42,7 @@ export const InstallationGuideWidget = () => {
                         iOS
                     </Tabs.Tab>
                     <Tabs.Tab leftSection={<IconDeviceDesktop />} value="desktop">
-                        ПК
+                        {t('installation-guide.widget.pk')}
                     </Tabs.Tab>
                 </Tabs.List>
             </Group>
@@ -54,10 +55,10 @@ export const InstallationGuideWidget = () => {
                                 <IconDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Установите и откройте Happ"
+                        title={t('installation-guide.widget.ustanovite-i-otkroite-happ')}
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Откройте страницу в Google Play и установите приложение.
+                            {t('installation-guide.widget.open-google-play')}
                         </Text>
                         <Button
                             component="a"
@@ -66,7 +67,7 @@ export const InstallationGuideWidget = () => {
                             target="_blank"
                             variant="light"
                         >
-                            Открыть в Google Play
+                            {t('installation-guide.widget.open-in-google-play')}
                         </Button>
                     </Timeline.Item>
 
@@ -76,14 +77,13 @@ export const InstallationGuideWidget = () => {
                                 <IconCloudDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Добавьте подписку"
+                        title={t('installation-guide.widget.add-subscription')}
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Нажмите кнопку ниже — приложение откроется, и подписка добавится
-                            автоматически.
+                            {t('installation-guide.widget.add-subscription-description')}
                         </Text>
                         <Button onClick={() => openInClient('android')} variant="filled">
-                            Добавить подписку
+                            {t('installation-guide.widget.add-subscription-button')}
                         </Button>
                     </Timeline.Item>
 
@@ -93,12 +93,10 @@ export const InstallationGuideWidget = () => {
                                 <IconCheck size={16} />
                             </ThemeIcon>
                         }
-                        title="Подключитесь и пользуйтесь"
+                        title={t('installation-guide.widget.connect-and-use')}
                     >
                         <Text c="dimmed" size="sm">
-                            В главном разделе нажмите большую кнопку включения в центре для
-                            подключения к VPN. Не забудьте выбрать сервер в списке серверов. При
-                            необходимости выберите другой сервер в списке серверов.
+                            {t('installation-guide.widget.connect-and-use-description')}
                         </Text>
                     </Timeline.Item>
                 </Timeline>
@@ -112,12 +110,10 @@ export const InstallationGuideWidget = () => {
                                 <IconDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Установите и откройте Happ"
+                        title={t('installation-guide.widget.ustanovite-i-otkroite-happ')}
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Откройте страницу в App Store и установите приложение. Запустите его, в
-                            окне разрешения на добавление конфигураций VPN нажмите Разрешить и
-                            введите свой код-пароль.
+                            {t('installation-guide.widget.install-app-store-description')}
                         </Text>
                         <Button
                             component="a"
@@ -126,7 +122,7 @@ export const InstallationGuideWidget = () => {
                             target="_blank"
                             variant="light"
                         >
-                            Открыть в App Store
+                            {t('installation-guide.widget.open-app-store')}
                         </Button>
                     </Timeline.Item>
 
@@ -136,14 +132,13 @@ export const InstallationGuideWidget = () => {
                                 <IconCloudDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Добавьте подписку"
+                        title={t('installation-guide.widget.add-subscription')}
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Нажмите на кнопку ниже — откроется приложение, и подписка добавится
-                            автоматически.
+                            {t('installation-guide.widget.add-ios-subscription-description')}
                         </Text>
                         <Button onClick={() => openInClient('ios')} variant="filled">
-                            Добавить подписку
+                            {t('installation-guide.widget.add-subscription-button')}
                         </Button>
                     </Timeline.Item>
 
@@ -153,12 +148,10 @@ export const InstallationGuideWidget = () => {
                                 <IconCheck size={16} />
                             </ThemeIcon>
                         }
-                        title="Подключитесь и пользуйтесь"
+                        title={t('installation-guide.widget.connect-and-use')}
                     >
                         <Text c="dimmed" size="sm">
-                            В главном разделе нажмите большую кнопку включения в центре для
-                            подключения к VPN. Не забудьте выбрать сервер в списке серверов. При
-                            необходимости выберите другой сервер в списке серверов.
+                            {t('installation-guide.widget.connect-and-use-description')}
                         </Text>
                     </Timeline.Item>
                 </Timeline>
@@ -172,11 +165,10 @@ export const InstallationGuideWidget = () => {
                                 <IconDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Установите и откройте Hiddify"
+                        title={t('installation-guide.widget.install-hiddify')}
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Установите приложение. Запустите его, выберите регион Россия, затем
-                            нажмите Старт.
+                            {t('installation-guide.widget.install-hiddify-description')}
                         </Text>
                         <Group>
                             <Button
@@ -215,15 +207,13 @@ export const InstallationGuideWidget = () => {
                                 <IconCloudDownload size={16} />
                             </ThemeIcon>
                         }
-                        title="Добавьте подписку"
+                        title={t('installation-guide.widget.add-subscription')}
                     >
                         <Text c="dimmed" mb={16} size="sm">
-                            Нажмите кнопку ниже — приложение откроется, и подписка добавится
-                            автоматически. Если это не произошло, закройте приложение и попробуйте
-                            снова.
+                            {t('installation-guide.widget.add-subscription-pc-description')}
                         </Text>
                         <Button onClick={() => openInClient('desktop')} variant="filled">
-                            Добавить подписку
+                            {t('installation-guide.widget.add-subscription-button')}
                         </Button>
                     </Timeline.Item>
 
@@ -233,12 +223,10 @@ export const InstallationGuideWidget = () => {
                                 <IconCheck size={16} />
                             </ThemeIcon>
                         }
-                        title="Подключитесь и пользуйтесь"
+                        title={t('installation-guide.widget.connect-and-use')}
                     >
                         <Text c="dimmed" size="sm">
-                            В главном разделе нажмите большую кнопку включения в центре для
-                            подключения к VPN. При необходимости выберите другой сервер в разделе
-                            Прокси.
+                            {t('installation-guide.widget.select-server-hiddify')}
                         </Text>
                     </Timeline.Item>
                 </Timeline>

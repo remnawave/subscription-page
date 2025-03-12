@@ -1,1 +1,40 @@
-{}
+{
+    "main": {
+        "page": {
+            "component": {
+                "podpiska": "Subscription"
+            }
+        }
+    },
+    "installation-guide": {
+        "widget": {
+            "instrukciya": "Instructions",
+            "pk": "PC",
+            "ustanovite-i-otkroite-happ": "Install and open Happ",
+            "open-google-play": "Open the page in Google Play and install the app.",
+            "open-in-google-play": "Open in Google Play",
+            "add-subscription": "Add subscription",
+            "add-subscription-button": "Add subscription",
+            "add-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
+            "connect-and-use": "Connect and use",
+            "connect-and-use-description": "In the main section, click the large power button in the center to connect to VPN. Don't forget to select a server from the server list. If needed, choose a different server from the server list.",
+            "install-app-store-description": "Open the page in the App Store and install the app. Launch it, in the VPN configuration permission window click Allow and enter your passcode.",
+            "open-app-store": "Open in App Store",
+            "add-ios-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
+            "install-hiddify": "Install and open Hiddify",
+            "install-hiddify-description": "Install the app. Launch it, select Russia region, then click Start.",
+            "add-subscription-pc-description": "Click the button below — the app will open and the subscription will be added automatically. If this doesn't happen, close the app and try again.",
+            "select-server-hiddify": "In the main section, click the large power button in the center to connect to VPN. If needed, select a different server in the Proxy section."
+        }
+    },
+    "subscription-link": {
+        "widget": {
+            "link-copied": "Link copied",
+            "link-copied-to-clipboard": "Link copied to clipboard",
+            "get-link": "Get link",
+            "scan-qr-code": "Scan the QR code above in the client",
+            "line-1": "Easy subscription addition to any client. There's another option: copy the link below and paste it into the client",
+            "copy-link": "Copy link"
+        }
+    }
+}

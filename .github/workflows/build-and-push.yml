@@ -52,7 +52,7 @@ jobs:
               uses: docker/build-push-action@v3
               with:
                   context: .
-                  file: DockerfileDev
+                  file: Dockerfile
                   platforms: linux/amd64
                   push: true
                   tags: |

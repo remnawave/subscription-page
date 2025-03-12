@@ -33,7 +33,6 @@ func (c *Client) FetchAPI(shortId string, headers http.Header) (*http.Response, 
 	req.Header.Set("User-Agent", headers.Get("User-Agent"))
 	req.Header.Set("Accept", headers.Get("Accept"))
 
-
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error making request: %w", err)

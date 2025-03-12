@@ -47,7 +47,6 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	
 	for name, values := range resp.Header {
 		for _, value := range values {
-			fmt.Println(name, value)
 			c.Set(name, value)
 		}
 	}

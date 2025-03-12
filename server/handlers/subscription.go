@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"compress/gzip"
 	"github.com/gofiber/fiber/v2"
 	"io"
 	"log/slog"
@@ -37,7 +38,19 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		defer reader.Close()
+	default:
+		reader = resp.Body
+	}
+
+	body, err := io.ReadAll(reader)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Read response error.")
 	}

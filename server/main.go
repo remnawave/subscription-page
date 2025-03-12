@@ -29,7 +29,7 @@ func main() {
 	
 	subscriptionHandler := handlers.NewSubscriptionHandler(apiClient)
 	
-	app.Get("/s/*", subscriptionHandler.HandleSubscription)
+	app.Get("/*", subscriptionHandler.HandleSubscription)
 
 	log.Fatal(app.Listen(":" + cfg.Port))
 }

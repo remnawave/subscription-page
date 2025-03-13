@@ -20,24 +20,21 @@ func getSecretKey() string {
 }
 
 func VerifyMarzbanLink(token string) *User {
-	slog.Info("token", "token", token)
-	slog.Info("secretKey", "secretKey", getSecretKey())
-
+	slog.Debug("Verifying token", "token", token)
 	
 	if len(token) < 10 {
+		slog.Debug("Token too short")
 		return nil
 	}
 
 	uToken := token[:len(token)-10]
 	uSignature := token[len(token)-10:]
+	
+	slog.Debug("Token parts", "base", uToken, "signature", uSignature)
 
-	mod := len(uToken) % 4
-	if mod != 0 {
-		uToken += strings.Repeat("=", 4-mod)
-	}
-
-	decoded, err := base64.URLEncoding.DecodeString(uToken)
+	decoded, err := base64.RawURLEncoding.DecodeString(uToken)
 	if err != nil {
+		slog.Debug("Base64 decode error", "error", err)
 		return nil
 	}
 	uTokenDecStr := string(decoded)
@@ -45,23 +42,31 @@ func VerifyMarzbanLink(token string) *User {
 	hash := sha256.New()
 	hash.Write([]byte(uToken + getSecretKey()))
 	digest := hash.Sum(nil)
-	expectedSignature := base64.URLEncoding.EncodeToString(digest)[:10]
+	
+	expectedSignature := base64.RawURLEncoding.EncodeToString(digest)[:10]
 
+	slog.Debug("Expected signature", "expected", expectedSignature, "actual", uSignature)
+	
 	if uSignature != expectedSignature {
+		slog.Debug("Signature mismatch")
 		return nil
 	}
 
 	parts := strings.Split(uTokenDecStr, ",")
 	if len(parts) < 2 {
+		slog.Debug("Invalid token format", "decoded", uTokenDecStr)
 		return nil
 	}
 	username := parts[0]
 	createdAtInt, err := strconv.ParseInt(parts[1], 10, 64)
 	if err != nil {
+		slog.Debug("Invalid created_at timestamp", "error", err, "value", parts[1])
 		return nil
 	}
 
 	createdAt := time.Unix(createdAtInt, 0).UTC()
+
+	slog.Debug("Token decoded", "username", username, "createdAt", createdAt)
 
 	return &User{
 		Username:  username,

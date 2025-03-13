@@ -85,13 +85,13 @@ func (c *Client) GetUserByUsernameJSON(username string) (*User, error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("error getting user by username: %w", err)
+		return nil, fmt.Errorf("error getting user by username: %s", username)
 	}
 	
 	var userResp UserResponse
 	err = resp.Into(&userResp)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing response: %w", err)
+		return nil, fmt.Errorf("error parsing response: %s", err)
 	}
 	
 	return &userResp.Response, nil

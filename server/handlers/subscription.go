@@ -31,6 +31,7 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 		if res != nil {
 			username := ""
 			username = res.Username
+			slog.Info("Decoded Marzban Link", "res", res)
 
 			user, err := h.apiClient.GetUserByUsernameJSON(utils.SanitizeUsername(username))
 			if err != nil {
@@ -38,8 +39,11 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 				return c.Status(fiber.StatusInternalServerError).SendString("Backend returned unexpected error.")
 			}
 
-		slog.Info("Decoded Marzban Link", "res", res)
 		shortId = user.ShortUUID
+		}
+
+		if res == nil {
+			slog.Info("Decoding Marzban Link failed, trying to get subscription by shortId", "shortId", shortId)
 		}
 	}
 

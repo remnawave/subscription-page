@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -15,11 +16,40 @@ import (
 )
 
 func main() {
+	logLevel := os.Getenv("LOG_LEVEL")
+    if logLevel == "" {
+        logLevel = "INFO"
+    }
+    
+    var level slog.Level
+    switch strings.ToUpper(logLevel) {
+    case "DEBUG":
+        level = slog.LevelDebug
+    case "INFO":
+        level = slog.LevelInfo
+    case "WARN":
+        level = slog.LevelWarn
+    case "ERROR":
+        level = slog.LevelError
+    default:
+        level = slog.LevelInfo
+    }
+    
+    logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+        Level: level,
+    }))
+    slog.SetDefault(logger)
+    
+    slog.Info("Logger initialized", "level", logLevel)
+
+
 	err := config.LoadConfig()
 	if err != nil {
 		slog.Error("Failed to load config", "err", err)
 		os.Exit(1)
 	}
+
+
 
 	app := fiber.New(fiber.Config{
 		ReadTimeout:  10 * time.Second,

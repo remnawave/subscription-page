@@ -15,6 +15,7 @@ var (
 	legacyMarzbanSecretKey string
 	remnawaveApiToken string
 	customSubPrefix string
+	logLevel string
 )
 
 func LoadConfig() error {
@@ -59,6 +60,11 @@ func LoadConfig() error {
 		return nil
 	}
 
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel == "" {
+		logLevel = "INFO"
+	}
+
 	return nil
 }
 
@@ -88,4 +94,8 @@ func GetRemnawaveApiToken() string {
 
 func GetCustomSubPrefix() string {
 	return customSubPrefix
+}
+
+func GetLogLevel() string {
+	return logLevel
 }

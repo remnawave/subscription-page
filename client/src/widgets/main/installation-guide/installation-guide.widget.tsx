@@ -20,12 +20,12 @@ export const InstallationGuideWidget = () => {
 
     const { subscriptionUrl } = remnawaveSubscription
 
-    const openInClient = (platform: string) => {
+    const openHapp = () => {
         window.open(`happ://add/${subscriptionUrl}`, '_blank')
+    }
 
-        if (platform === 'desktop') {
-            window.open(`hiddify://import/${subscriptionUrl}`, '_blank')
-        }
+    const openHiddify = () => {
+        window.open(`hiddify://import/${subscriptionUrl}`, '_blank')
     }
 
     return (
@@ -82,7 +82,7 @@ export const InstallationGuideWidget = () => {
                         <Text c="dimmed" mb={16} size="sm">
                             {t('installation-guide.widget.add-subscription-description')}
                         </Text>
-                        <Button onClick={() => openInClient('android')} variant="filled">
+                        <Button onClick={openHapp} variant="filled">
                             {t('installation-guide.widget.add-subscription-button')}
                         </Button>
                     </Timeline.Item>
@@ -137,7 +137,7 @@ export const InstallationGuideWidget = () => {
                         <Text c="dimmed" mb={16} size="sm">
                             {t('installation-guide.widget.add-ios-subscription-description')}
                         </Text>
-                        <Button onClick={() => openInClient('ios')} variant="filled">
+                        <Button onClick={openHapp} variant="filled">
                             {t('installation-guide.widget.add-subscription-button')}
                         </Button>
                     </Timeline.Item>
@@ -212,7 +212,7 @@ export const InstallationGuideWidget = () => {
                         <Text c="dimmed" mb={16} size="sm">
                             {t('installation-guide.widget.add-subscription-pc-description')}
                         </Text>
-                        <Button onClick={() => openInClient('desktop')} variant="filled">
+                        <Button onClick={openHiddify} variant="filled">
                             {t('installation-guide.widget.add-subscription-button')}
                         </Button>
                     </Timeline.Item>

@@ -4,6 +4,8 @@ import (
 	"log/slog"
 	"strings"
 	"subscription-page-template/server/api"
+	"subscription-page-template/server/config"
+	"subscription-page-template/server/marzban"
 	"subscription-page-template/server/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +23,26 @@ func NewSubscriptionHandler(apiClient *api.Client) *SubscriptionHandler {
 
 func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	shortId := c.Params("shortId")
+
+	
+	if(config.IsMarzbanLegacyLinkEnabled()) {
+		res := marzban.VerifyMarzbanLink(shortId)
+
+		if res != nil {
+			username := ""
+			username = res.Username
+
+			user, err := h.apiClient.GetUserByUsernameJSON(utils.SanitizeUsername(username))
+			if err != nil {
+				slog.Error("Error fetching user", "error", err)
+				return c.Status(fiber.StatusInternalServerError).SendString("Backend returned unexpected error.")
+			}
+
+		slog.Info("Decoded Marzban Link", "res", res)
+		shortId = user.ShortUUID
+		}
+	}
+
 
 
 
@@ -44,6 +66,8 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	isBrowser := utils.IsBrowser(userAgent)
 
 	if resp.StatusCode == fiber.StatusNotFound {
+		slog.Error("Subscription not found", "shortId", shortId)
+		slog.Error("Server response", "response", resp.String())
 		return c.Status(fiber.StatusNotFound).SendString("Subscription not found.")
 	}
 	

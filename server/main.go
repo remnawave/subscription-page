@@ -33,17 +33,25 @@ func main() {
 	app.Static("/assets", "./dist/assets")
 	app.Static("/locales", "./dist/locales")
 
-	apiClient := api.NewClient(config.GetRemnawavePlainDomain())
+	apiClient := api.NewClient(config.GetRemnawavePlainDomain(), config.GetRemnawaveApiToken())
 
 	subscriptionHandler := handlers.NewSubscriptionHandler(apiClient)
 
+	var routePrefix string
+	if prefix := config.GetCustomSubPrefix(); prefix != "" {
+		routePrefix = "/" + prefix
+	} else {
+		routePrefix = ""
+	}
 
-	app.Get("/:shortId/json", func(c *fiber.Ctx) error {
+	routes := app.Group(routePrefix)
+
+	routes.Get("/:shortId/json", func(c *fiber.Ctx) error {
 		c.Locals("isJson", true)
 		return subscriptionHandler.HandleSubscription(c)
 	})
-	
-	app.Get("/:shortId", func(c *fiber.Ctx) error {
+
+	routes.Get("/:shortId", func(c *fiber.Ctx) error {
 		c.Locals("isJson", false)
 		return subscriptionHandler.HandleSubscription(c)
 	})

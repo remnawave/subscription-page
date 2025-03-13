@@ -1,12 +1,11 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"io"
 	"log/slog"
-
 	"subscription-page-template/server/api"
 	"subscription-page-template/server/utils"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type SubscriptionHandler struct {
@@ -21,6 +20,8 @@ func NewSubscriptionHandler(apiClient *api.Client) *SubscriptionHandler {
 
 func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	shortId := c.Params("shortId")
+
+
 	if shortId == "" {
 		return c.Status(fiber.StatusBadRequest).SendString("Bad request.")
 	}
@@ -35,26 +36,24 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 		slog.Error("Error fetching API", "error", err)
 		return c.Status(fiber.StatusInternalServerError).SendString("Request error.")
 	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Read response error.")
-	}
 
 	userAgent := c.Get("User-Agent")
+	isBrowser := utils.IsBrowser(userAgent)
+	
 
-	if utils.IsBrowser(userAgent) {
+	body := resp.Bytes()
+	
+	if isBrowser {
 		return c.Render("./dist/index.html", fiber.Map{
 			"Data": string(body),
 		})
 	}
-
+	
 	for name, values := range resp.Header {
 		for _, value := range values {
 			c.Set(name, value)
 		}
 	}
-
+	
 	return c.Status(resp.StatusCode).Send(body)
 }

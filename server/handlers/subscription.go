@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"io"
 	"log/slog"
-
+	"strings"
 	"subscription-page-template/server/api"
 	"subscription-page-template/server/utils"
 )
@@ -69,5 +69,20 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 		}
 	}
 
+	filteredHeaders := []string{
+		"Profile-Title",
+		"Profile-Update-Interval",
+		"Subscription-Userinfo",
+		"Profile-Web-Page-Url",
+		"Content-Disposition",
+	}
+
+	for _, header := range filteredHeaders {
+		if values, found := resp.Header[header]; found {
+			c.Set(header, strings.Join(values, ","))
+		}
+	}
+
+	c.Set("Content-Encoding", "application/gzip")
 	return c.Status(resp.StatusCode).Send(body)
 }

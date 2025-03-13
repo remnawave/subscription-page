@@ -6,26 +6,41 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
-	Port              string
-	RemnawavePlainDomain string
-}
+var (
+	port                 string
+	remnawavePlainDomain string
+	host                 string
+)
 
-func LoadConfig() (*Config, error) {
+func LoadConfig() error {
 	_ = godotenv.Load()
 
-	port := os.Getenv("SUBSCRIPTION_PAGE_PORT")
+	port = os.Getenv("SUBSCRIPTION_PAGE_PORT")
 	if port == "" {
 		port = "3010"
 	}
 
-	domain := os.Getenv("REMNAWAVE_PLAIN_DOMAIN")
-	if domain == "" {
-		return nil, nil
+	host = os.Getenv("SUBSCRIPTION_PAGE_HOST")
+	if host == "" {
+		host = "localhost"
 	}
 
-	return &Config{
-		Port:              port,
-		RemnawavePlainDomain: domain,
-	}, nil
-} 
+	remnawavePlainDomain = os.Getenv("REMNAWAVE_PLAIN_DOMAIN")
+	if remnawavePlainDomain == "" {
+		return nil
+	}
+
+	return nil
+}
+
+func GetPort() string {
+	return port
+}
+
+func GetHost() string {
+	return host
+}
+
+func GetRemnawavePlainDomain() string {
+	return remnawavePlainDomain
+}

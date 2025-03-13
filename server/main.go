@@ -37,7 +37,16 @@ func main() {
 
 	subscriptionHandler := handlers.NewSubscriptionHandler(apiClient)
 
-	app.Get("/:shortId", subscriptionHandler.HandleSubscription)
+
+	app.Get("/:shortId/json", func(c *fiber.Ctx) error {
+		c.Locals("isJson", true)
+		return subscriptionHandler.HandleSubscription(c)
+	})
+	
+	app.Get("/:shortId", func(c *fiber.Ctx) error {
+		c.Locals("isJson", false)
+		return subscriptionHandler.HandleSubscription(c)
+	})
 
 	slog.Info("Starting server", "port", config.GetPort())
 	if err := app.Listen(":" + config.GetPort()); err != nil {

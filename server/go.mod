@@ -8,6 +8,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/imroc/req/v3 v3.50.0
 	github.com/joho/godotenv v1.5.1
+	golang.org/x/exp v0.0.0-20241215155358-4a5509556b9e
 )
 
 require (
@@ -32,7 +33,6 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/exp v0.0.0-20241215155358-4a5509556b9e // indirect
 	golang.org/x/mod v0.22.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect

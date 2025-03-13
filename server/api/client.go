@@ -2,10 +2,10 @@ package api
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 
 	"github.com/imroc/req/v3"
+	"golang.org/x/exp/slog"
 )
 
 type Client struct {
@@ -26,10 +26,12 @@ func NewClient(domain string) *Client {
 	}
 }
 
-func (c *Client) FetchAPI(path string, headers http.Header) (*req.Response, error) {
+func (c *Client) FetchAPI(path string, headers http.Header, isJson bool) (*req.Response, error) {
 	var url string
 	if path == "" {
 		return nil, fmt.Errorf("error creating request")
+	} else if isJson {
+		url = fmt.Sprintf("https://%s/api/sub/%s/json", c.domain, path)
 	} else {
 		url = fmt.Sprintf("https://%s/api/sub/%s", c.domain, path)
 	}

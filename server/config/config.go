@@ -34,7 +34,8 @@ func LoadConfig() error {
 
 	remnawavePlainDomain = os.Getenv("REMNAWAVE_PLAIN_DOMAIN")
 	if remnawavePlainDomain == "" {
-		return nil
+		slog.Error("REMNAWAVE_PLAIN_DOMAIN is required, fallback to example.com")
+		remnawavePlainDomain = "example.com"
 	}
 
 	legacyLinkSetting := os.Getenv("MARZBAN_LEGACY_LINK_ENABLED")
@@ -57,9 +58,6 @@ func LoadConfig() error {
 	}
 
 	customSubPrefix = os.Getenv("CUSTOM_SUB_PREFIX")
-	if customSubPrefix == "" {
-		return nil
-	}
 
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel == "" {

@@ -63,7 +63,7 @@ func main() {
 	app.Static("/assets", "./dist/assets")
 	app.Static("/locales", "./dist/locales")
 
-	apiClient := api.NewClient(config.GetRemnawavePlainDomain(), config.GetRemnawaveApiToken())
+	apiClient := api.NewClient(config.GetRemnawavePlainDomain(), config.GetRemnawaveApiToken(), config.GetRequestRemnawaveScheme())
 
 	subscriptionHandler := handlers.NewSubscriptionHandler(apiClient)
 

@@ -16,6 +16,7 @@ var (
 	remnawaveApiToken string
 	customSubPrefix string
 	logLevel string
+	requestRemnawaveScheme string
 )
 
 func LoadConfig() error {
@@ -65,6 +66,13 @@ func LoadConfig() error {
 		logLevel = "INFO"
 	}
 
+	requestRemnawaveScheme = os.Getenv("REQUEST_REMNAWAVE_SCHEME")
+	if requestRemnawaveScheme == "" {
+		requestRemnawaveScheme = "https"
+	} else if requestRemnawaveScheme != "http" && requestRemnawaveScheme != "https" {
+		slog.Error("REQUEST_REMNAWAVE_SCHEME must be either http or https")
+	}
+
 	return nil
 }
 
@@ -98,4 +106,8 @@ func GetCustomSubPrefix() string {
 
 func GetLogLevel() string {
 	return logLevel
+}
+
+func GetRequestRemnawaveScheme() string {
+	return requestRemnawaveScheme
 }

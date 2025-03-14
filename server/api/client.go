@@ -11,12 +11,16 @@ import (
 type Client struct {
 	domain string
 	token string
+	requestRemnawaveScheme string
 	client *req.Client
+
 }
 
-func NewClient(domain string, token string) *Client {
+func NewClient(domain string, token string, requestRemnawaveScheme string) *Client {
 	client := req.C().
 		SetUserAgent("req").
+		SetCommonHeader("x-forwarded-for", "127.0.0.1").
+		SetCommonHeader("x-forwarded-proto", "https").
 		DisableDebugLog()
 		// EnableDumpAll().
 		// EnableDebugLog()
@@ -25,6 +29,7 @@ func NewClient(domain string, token string) *Client {
 		domain: domain,
 		token: token,
 		client: client,
+		requestRemnawaveScheme: requestRemnawaveScheme,
 	}
 }
 
@@ -33,9 +38,9 @@ func (c *Client) FetchAPI(path string, headers http.Header, isJson bool) (*req.R
 	if path == "" {
 		return nil, fmt.Errorf("error creating request")
 	} else if isJson {
-		url = fmt.Sprintf("https://%s/api/sub/%s/json", c.domain, path)
+		url = fmt.Sprintf("%s://%s/api/sub/%s/json", c.requestRemnawaveScheme, c.domain, path)
 	} else {
-		url = fmt.Sprintf("https://%s/api/sub/%s", c.domain, path)
+		url = fmt.Sprintf("%s://%s/api/sub/%s", c.requestRemnawaveScheme, c.domain, path)
 	}
 
 	slog.Debug("Fetching API", "url", url)
@@ -61,7 +66,7 @@ func (c *Client) FetchAPI(path string, headers http.Header, isJson bool) (*req.R
 } 
 
 func (c *Client) getUserByUsername(username string) (*req.Response, error) {
-	url := fmt.Sprintf("https://%s/api/users/username/%s", c.domain, username)
+	url := fmt.Sprintf("%s://%s/api/users/username/%s", c.requestRemnawaveScheme, c.domain, username)
 
 	slog.Debug("Getting user by username", "url", url)
 

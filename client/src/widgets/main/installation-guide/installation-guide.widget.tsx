@@ -9,7 +9,7 @@ import {
 } from '@tabler/icons-react'
 import { Button, Group, Tabs, Text, ThemeIcon, Timeline } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 

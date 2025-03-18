@@ -59,8 +59,14 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 		headers[string(key)] = append(headers[string(key)], string(value))
 	})
 
-	resp, err := h.apiClient.FetchAPI(shortId, headers, c.Locals("isJson").(bool))
-
+	clientType := c.Locals("clientType")
+	var clientTypeStr string
+	if clientType != nil {
+		clientTypeStr = clientType.(string)
+	}
+	
+	resp, err := h.apiClient.FetchAPI(shortId, headers, clientTypeStr)
+	
 	if err != nil {
 		slog.Error("Error fetching API", "error", err)
 		return c.Status(fiber.StatusInternalServerError).SendString("Request error.")

@@ -33,37 +33,37 @@ func NewClient(domain string, token string, requestRemnawaveScheme string) *Clie
 	}
 }
 
-func (c *Client) FetchAPI(path string, headers http.Header, isJson bool) (*req.Response, error) {
-	var url string
+func (c *Client) FetchAPI(path string, headers http.Header, clientType string) (*req.Response, error) {
 	if path == "" {
 		return nil, fmt.Errorf("error creating request")
-	} else if isJson {
-		url = fmt.Sprintf("%s://%s/api/sub/%s/json", c.requestRemnawaveScheme, c.domain, path)
-	} else {
-		url = fmt.Sprintf("%s://%s/api/sub/%s", c.requestRemnawaveScheme, c.domain, path)
 	}
 
-	slog.Debug("Fetching API", "url", url)
+	var url string
+	if clientType == "" {
+		url = fmt.Sprintf("%s://%s/api/sub/%s", c.requestRemnawaveScheme, c.domain, path)
+	} else {
+		url = fmt.Sprintf("%s://%s/api/sub/%s/%s", c.requestRemnawaveScheme, c.domain, path, clientType)
+	}
 
-	
+	slog.Debug("Fetching API", "url", url, "clientType", clientType)
+
 	request := c.client.R()
-	
+
 	if userAgent := headers.Get("User-Agent"); userAgent != "" {
 		request.SetHeader("User-Agent", userAgent)
 	}
-	
+
 	if accept := headers.Get("Accept"); accept != "" {
 		request.SetHeader("Accept", accept)
 	}
 
-	
 	resp, err := request.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("error making request: %w", err)
 	}
-	
+
 	return resp, nil
-} 
+}
 
 func (c *Client) getUserByUsername(username string) (*req.Response, error) {
 	url := fmt.Sprintf("%s://%s/api/users/username/%s", c.requestRemnawaveScheme, c.domain, username)

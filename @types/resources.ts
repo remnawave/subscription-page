@@ -1,7 +1,7 @@
-import remnawave from '../public/locales/en/remnawave.json'
+import main from '../public/locales/en/main.json'
 
 const resources = {
-    remnawave
+    main
 } as const
 
 export default resources

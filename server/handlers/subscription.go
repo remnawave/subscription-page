@@ -6,9 +6,12 @@ import (
 	"subscription-page-template/server/api"
 	"subscription-page-template/server/config"
 	"subscription-page-template/server/marzban"
+	"subscription-page-template/server/sessions"
 	"subscription-page-template/server/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"time"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 type SubscriptionHandler struct {
@@ -21,7 +24,7 @@ func NewSubscriptionHandler(apiClient *api.Client) *SubscriptionHandler {
 	}
 }
 
-func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
+func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 	shortId := c.Params("shortId")
 
 	
@@ -78,7 +81,7 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	if resp.StatusCode == fiber.StatusNotFound {
 		slog.Error("Subscription not found", "shortId", shortId)
 		slog.Error("Server response", "response", resp.String())
-		return c.Status(fiber.StatusNotFound).SendString("Subscription not found.")
+		return c.Drop()
 	}
 	
 
@@ -91,8 +94,21 @@ func (h *SubscriptionHandler) HandleSubscription(c *fiber.Ctx) error {
 	body := resp.Bytes()
 	
 	if isBrowser {
+		sessionID := sessions.CreateSession(shortId)
+		
+		c.Cookie(&fiber.Cookie{
+			Name:     "session",
+			Value:    sessionID,
+			Expires:  time.Now().Add(2 * time.Hour),
+			Path:     "/",
+			HTTPOnly: true,
+			Secure:   true,
+		})
+		
 		return c.Render("./dist/index.html", fiber.Map{
-			"Data": string(body),
+			"Data": utils.Base64UrlSafeEncode(string(body)),
+			"MetaTitle": config.GetMetaTitle(),
+			"MetaDescription": config.GetMetaDescription(),
 		})
 	}
 	

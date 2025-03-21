@@ -20,10 +20,10 @@ export function RootLayout() {
 
             if (subscriptionUrl) {
                 const subscription: GetSubscriptionInfoByShortUuidCommand.Response['response'] =
-                    JSON.parse(subscriptionUrl)
+                    JSON.parse(atob(subscriptionUrl))
 
                 actions.setSubscriptionInfo({
-                    remnawaveSubscription: subscription
+                    subscription
                 })
             }
         }

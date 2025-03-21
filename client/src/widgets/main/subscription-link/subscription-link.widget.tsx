@@ -9,10 +9,10 @@ import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const SubscriptionLinkWidget = () => {
     const { t } = useTranslation()
-    const { remnawaveSubscription } = useSubscriptionInfoStoreInfo()
+    const { subscription } = useSubscriptionInfoStoreInfo()
     const clipboard = useClipboard({ timeout: 10000 })
 
-    if (!remnawaveSubscription) return null
+    if (!subscription) return null
 
     const handleCopy = () => {
         notifications.show({
@@ -20,14 +20,14 @@ export const SubscriptionLinkWidget = () => {
             message: t('subscription-link.widget.link-copied-to-clipboard'),
             color: 'teal'
         })
-        clipboard.copy(remnawaveSubscription.subscriptionUrl)
+        clipboard.copy(subscription.subscriptionUrl)
     }
 
     return (
         <>
             <Button
                 onClick={() => {
-                    const subscriptionQrCode = renderSVG(remnawaveSubscription.subscriptionUrl, {
+                    const subscriptionQrCode = renderSVG(subscription.subscriptionUrl, {
                         whiteColor: '#161B22',
                         blackColor: '#3CC9DB'
                     })

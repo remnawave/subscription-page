@@ -6,13 +6,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v3/middleware/compress"
+	"github.com/gofiber/fiber/v3/middleware/static"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	"subscription-page-template/server/api"
 	"subscription-page-template/server/config"
 	"subscription-page-template/server/handlers"
+	"subscription-page-template/server/sessions"
 )
 
 func main() {
@@ -60,8 +62,9 @@ func main() {
 	app.Use(compress.New())
 	app.Use(httpsAndProxyMiddleware())
 
-	app.Static("/assets", "./dist/assets")
-	app.Static("/locales", "./dist/locales")
+	app.Use("/assets", staticAuthMiddleware(), static.New("./dist/assets"))
+	app.Use("/locales", staticAuthMiddleware(), static.New("./dist/locales"))
+
 
 	apiClient := api.NewClient(config.GetRemnawavePlainDomain(), config.GetRemnawaveApiToken(), config.GetRequestRemnawaveScheme())
 
@@ -79,13 +82,13 @@ func main() {
 	clientTypes := []string{"json", "stash", "singbox", "singbox-legacy", "mihomo", "clash"}
 	for _, t := range clientTypes {
 		clientType := t
-		routes.Get("/:shortId/" + clientType, func(c *fiber.Ctx) error {
+		routes.Get("/:shortId/" + clientType, func(c fiber.Ctx) error {
 			c.Locals("clientType", clientType)
 			return subscriptionHandler.HandleSubscription(c)
 		})
 	}
 
-	routes.Get("/:shortId", func(c *fiber.Ctx) error {
+	routes.Get("/:shortId", func(c fiber.Ctx) error {
 		return subscriptionHandler.HandleSubscription(c)
 	})
 
@@ -97,7 +100,7 @@ func main() {
 }
 
 func httpsAndProxyMiddleware() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		if config.GetHost() == "localhost" {
 			return c.Next()
 		}
@@ -108,6 +111,17 @@ func httpsAndProxyMiddleware() fiber.Handler {
 		if xForwardedFor == "" || xForwardedProto != "https" {
 			slog.Error("Reverse proxy and HTTPS are required.")
 			return c.Status(fiber.StatusForbidden).SendString("Reverse proxy and HTTPS are required")
+		}
+
+		return c.Next()
+	}
+}
+
+func staticAuthMiddleware() fiber.Handler {
+	return func(c fiber.Ctx) error {
+		sessionID := c.Cookies("subscription_session")
+		if sessionID == "" || !sessions.IsValidSession(sessionID) {
+            return c.Drop()
 		}
 
 		return c.Next()

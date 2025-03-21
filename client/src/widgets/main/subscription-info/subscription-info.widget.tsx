@@ -33,11 +33,11 @@ const InfoBlock = ({
 
 export const SubscriptionInfoWidget = () => {
     const { t } = useTranslation()
-    const { remnawaveSubscription } = useSubscriptionInfoStoreInfo()
+    const { subscription } = useSubscriptionInfoStoreInfo()
 
-    if (!remnawaveSubscription) return null
+    if (!subscription) return null
 
-    const { user } = remnawaveSubscription
+    const { user } = subscription
 
     const formatDate = (dateStr: Date | string) => {
         return dayjs(dateStr).format('DD.MM.YYYY')

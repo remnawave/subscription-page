@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8" />
 
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
-        <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180x180.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
 
         <link
             href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
@@ -20,35 +20,12 @@
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
-        <meta name="description" content="Remnawave Subscription Page" />
-        <title>Remnawave Subscription</title>
+
+        <meta name="description" content="{{ .MetaDescription }}" />
+        <title>{{ .MetaTitle }}</title>
     </head>
     <body>
-        <!-- prettier-ignore -->
-        <div id="root" data-panel='{{ .Data }}'></div>
-
-        <!-- ↓ Local development example ↓ -->
-        <!-- <div
-            id="root"
-            data-panel='{
-            "isFound": true,
-            "user": {
-              "shortUuid": "ZZc4oUR99e_GSU4w",
-              "daysLeft": 143,
-              "trafficUsed": "1022.61 MiB",
-              "trafficLimit": "0",
-              "username": "tester-admin",
-              "expiresAt": "2025-08-02T14:54:07.211Z",
-              "isActive": true,
-              "userStatus": "ACTIVE",
-              "trafficLimitStrategy": "NO_RESET"
-            },
-            "links": [],
-            "ssConfLinks": {},
-            "subscriptionUrl": "https://dev-local.example.com/api/sub/ZZc4oUR99e_GSU4w#tester-admin"
-          }'
-        ></div> -->
-
+        <div id="root" data-panel="{{ .Data }}"></div>
         <script type="module" src="/client/src/main.tsx"></script>
     </body>
 </html>

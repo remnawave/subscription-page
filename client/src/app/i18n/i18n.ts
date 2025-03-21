@@ -9,8 +9,8 @@ i18n.use(initReactI18next)
     .init({
         fallbackLng: 'en',
         debug: process.env.NODE_ENV === 'development',
-        defaultNS: ['remnawave'],
-        ns: ['remnawave'],
+        defaultNS: ['main'],
+        ns: ['main'],
         detection: {
             order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
             caches: ['localStorage']

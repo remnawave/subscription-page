@@ -15,7 +15,7 @@ import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const InstallationGuideWidget = () => {
     const { t } = useTranslation()
-    const { remnawaveSubscription } = useSubscriptionInfoStoreInfo()
+    const { subscription: remnawaveSubscription } = useSubscriptionInfoStoreInfo()
 
     const [defaultTab, setDefaultTab] = useState(() => {
         try {
@@ -23,10 +23,7 @@ export const InstallationGuideWidget = () => {
                 const userAgent = window.navigator.userAgent.toLowerCase()
                 if (userAgent.indexOf('android') !== -1) {
                     return 'android'
-                } else if (
-                    userAgent.indexOf('iphone') !== -1 || 
-                    userAgent.indexOf('ipad') !== -1
-                ) {
+                } else if (userAgent.indexOf('iphone') !== -1 || userAgent.indexOf('ipad') !== -1) {
                     return 'ios'
                 }
             }

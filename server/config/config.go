@@ -17,6 +17,8 @@ var (
 	customSubPrefix string
 	logLevel string
 	requestRemnawaveScheme string
+	metaTitle string
+	metaDescription string
 )
 
 func LoadConfig() error {
@@ -71,6 +73,16 @@ func LoadConfig() error {
 		slog.Error("REQUEST_REMNAWAVE_SCHEME must be either http or https")
 	}
 
+	metaTitle = os.Getenv("META_TITLE")
+	if metaTitle == "" {
+		metaTitle = "Remnawave Subscription"
+	}
+
+	metaDescription = os.Getenv("META_DESCRIPTION")
+	if metaDescription == "" {
+		metaDescription = "Remnawave Subscription Page"
+	}
+
 	return nil
 }
 
@@ -108,4 +120,12 @@ func GetLogLevel() string {
 
 func GetRequestRemnawaveScheme() string {
 	return requestRemnawaveScheme
+}
+
+func GetMetaTitle() string {
+	return metaTitle
+}
+
+func GetMetaDescription() string {
+	return metaDescription
 }

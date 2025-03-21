@@ -14,7 +14,6 @@ import { I18nextProvider } from 'react-i18next'
 import { useMediaQuery } from '@mantine/hooks'
 import dayjs from 'dayjs'
 
-// import { StrictMode } from 'react'
 import { theme } from '@shared/constants'
 
 import { Router } from './app/router/router'
@@ -26,7 +25,6 @@ export function App() {
     const mq = useMediaQuery('(min-width: 40em)')
 
     return (
-        // <StrictMode>
         <I18nextProvider defaultNS={''} i18n={i18n}>
             <DirectionProvider>
                 <MantineProvider defaultColorScheme="dark" theme={theme}>
@@ -39,6 +37,5 @@ export function App() {
                 </MantineProvider>
             </DirectionProvider>
         </I18nextProvider>
-        // </StrictMode>
     )
 }

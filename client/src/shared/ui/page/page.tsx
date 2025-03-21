@@ -18,7 +18,7 @@ export const Page = forwardRef<HTMLDivElement, PageProps>(
 
         return (
             <>
-                <title>{`${title} | Remnawave Subscription`}</title>
+                <title>{`${title} | Subscription`}</title>
                 {meta}
 
                 <AnimatePresence mode="wait">

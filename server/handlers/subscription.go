@@ -102,7 +102,6 @@ func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 			Expires:  time.Now().Add(2 * time.Hour),
 			Path:     "/",
 			HTTPOnly: true,
-			Secure:   true,
 		})
 		
 		return c.Render("./dist/index.html", fiber.Map{

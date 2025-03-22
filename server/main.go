@@ -119,7 +119,7 @@ func httpsAndProxyMiddleware() fiber.Handler {
 
 func staticAuthMiddleware() fiber.Handler {
 	return func(c fiber.Ctx) error {
-		sessionID := c.Cookies("subscription_session")
+		sessionID := c.Cookies("session")
 		if sessionID == "" || !sessions.IsValidSession(sessionID) {
             return c.Drop()
 		}

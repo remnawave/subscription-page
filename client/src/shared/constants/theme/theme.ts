@@ -8,7 +8,7 @@ export const theme = createTheme({
     fontFamily: 'Montserrat, sans-serif',
     fontFamilyMonospace: 'Fira Mono, monospace',
     breakpoints: {
-        xs: '23em',
+        xs: '25em',
         sm: '30em',
         md: '48em',
         lg: '64em',

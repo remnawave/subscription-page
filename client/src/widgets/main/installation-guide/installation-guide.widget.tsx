@@ -15,27 +15,18 @@ import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const InstallationGuideWidget = () => {
     const { t } = useTranslation()
-    const { subscription: remnawaveSubscription } = useSubscriptionInfoStoreInfo()
+    const { subscription } = useSubscriptionInfoStoreInfo()
 
-    const [defaultTab, setDefaultTab] = useState(() => {
-        try {
-            if (typeof window !== 'undefined' && window.navigator) {
-                const userAgent = window.navigator.userAgent.toLowerCase()
-                if (userAgent.indexOf('android') !== -1) {
-                    return 'android'
-                } else if (userAgent.indexOf('iphone') !== -1 || userAgent.indexOf('ipad') !== -1) {
-                    return 'ios'
-                }
-            }
-            return 'desktop'
-        } catch (error) {
-            return 'desktop'
-        }
+    const [defaultTab] = useState(() => {
+        const userAgent = window?.navigator?.userAgent?.toLowerCase() || ''
+        if (userAgent.includes('android')) return 'android'
+        if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'ios'
+        return 'desktop'
     })
 
-    if (!remnawaveSubscription) return null
+    if (!subscription) return null
 
-    const { subscriptionUrl } = remnawaveSubscription
+    const { subscriptionUrl } = subscription
 
     const openHapp = () => {
         window.open(`happ://add/${subscriptionUrl}`, '_blank')

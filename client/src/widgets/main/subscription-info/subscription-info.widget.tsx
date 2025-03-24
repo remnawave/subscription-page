@@ -45,7 +45,7 @@ export const SubscriptionInfoWidget = () => {
 
     return (
         <Grid>
-            <Grid.Col span={{ sm: 6, xs: 6 }}>
+            <Grid.Col span={{ sm: 6, xs: 12 }}>
                 <InfoBlock
                     color="blue"
                     icon={<IconUser size={20} />}
@@ -53,7 +53,7 @@ export const SubscriptionInfoWidget = () => {
                     value={user.username}
                 />
             </Grid.Col>
-            <Grid.Col span={{ sm: 6, xs: 6 }}>
+            <Grid.Col span={{ sm: 6, xs: 12 }}>
                 <InfoBlock
                     color="green"
                     icon={<IconCheck size={20} />}
@@ -65,7 +65,7 @@ export const SubscriptionInfoWidget = () => {
                     }
                 />
             </Grid.Col>
-            <Grid.Col span={{ sm: 6, xs: 6 }}>
+            <Grid.Col span={{ sm: 6, xs: 12 }}>
                 <InfoBlock
                     color="red"
                     icon={<IconCalendar size={20} />}
@@ -73,7 +73,7 @@ export const SubscriptionInfoWidget = () => {
                     value={`${t('subscription-info.widget.at')} ${formatDate(user.expiresAt)}`}
                 />
             </Grid.Col>
-            <Grid.Col span={{ sm: 6, xs: 6 }}>
+            <Grid.Col span={{ sm: 6, xs: 12 }}>
                 <InfoBlock
                     color="yellow"
                     icon={<IconArrowsUpDown size={20} />}

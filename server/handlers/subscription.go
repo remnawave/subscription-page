@@ -86,7 +86,7 @@ func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 	
 
 	if resp.StatusCode != fiber.StatusOK {
-		return c.Render("./dist/index.html", fiber.Map{
+		return c.Render("index", fiber.Map{
 			"Data": string("Request error."),
 		})
 	}
@@ -103,11 +103,14 @@ func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 			Path:     "/",
 			HTTPOnly: true,
 		})
+
+		metaTitle := config.GetMetaTitle()
+		metaDescription := config.GetMetaDescription()
 		
-		return c.Render("./dist/index.html", fiber.Map{
+		return c.Render("index", fiber.Map{
 			"Data": utils.Base64UrlSafeEncode(string(body)),
-			"MetaTitle": config.GetMetaTitle(),
-			"MetaDescription": config.GetMetaDescription(),
+			"MetaTitle": metaTitle,
+			"MetaDescription": metaDescription,
 		})
 	}
 	

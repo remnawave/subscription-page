@@ -15,6 +15,8 @@ import (
 	"subscription-page-template/server/config"
 	"subscription-page-template/server/handlers"
 	"subscription-page-template/server/sessions"
+
+	"github.com/gofiber/template/html/v2"
 )
 
 func main() {
@@ -51,12 +53,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	engine := html.New("./dist", ".html")
 
 
 	app := fiber.New(fiber.Config{
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  11 * time.Second,
+        Views:        engine,
 	})
 
 	app.Use(compress.New())
@@ -64,7 +68,6 @@ func main() {
 
 	app.Use("/assets", staticAuthMiddleware(), static.New("./dist/assets"))
 	app.Use("/locales", staticAuthMiddleware(), static.New("./dist/locales"))
-
 
 	apiClient := api.NewClient(config.GetRemnawavePlainDomain(), config.GetRemnawaveApiToken(), config.GetRequestRemnawaveScheme())
 

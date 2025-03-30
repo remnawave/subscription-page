@@ -18,7 +18,9 @@ export const InstallationGuideAndroidWidget = (props: IPlatformGuideProps) => {
             target="_blank"
             variant="light"
         >
-            {t('installation-guide.android.widget.open-in-google-play')}
+            {app.isNeedCustomDownloadButton
+                ? t('installation-guide.android.widget.download-apk')
+                : t('installation-guide.android.widget.open-in-google-play')}
         </Button>
     )
 

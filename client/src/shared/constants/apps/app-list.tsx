@@ -47,7 +47,8 @@ export const appList: IAppList[] = [
         downloadUrl:
             'https://github.com/MetaCubeX/ClashMetaForAndroid/releases/download/v2.11.7/cmfa-2.11.7-meta-universal-release.apk',
         isFeatured: false,
-        viewPosition: 2
+        viewPosition: 2,
+        isNeedCustomDownloadButton: true
     },
     {
         id: 'hiddify-pc',

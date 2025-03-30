@@ -32,7 +32,8 @@
             "widget": {
                 "install-and-open-app": "Install and open {{appName}}",
                 "install-and-open-app-description": "Open the page in Google Play and install the app.",
-                "open-in-google-play": "Open in Google Play"
+                "open-in-google-play": "Open in Google Play",
+                "download-apk": "Download APK"
             }
         },
         "pc": {

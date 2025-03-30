@@ -8,6 +8,7 @@ export interface IAppList {
     id: `${Lowercase<string>}-${Lowercase<'android' | 'ios' | 'pc'>}`
     isFeatured: boolean
     isNeedBase64Encoding?: boolean
+    isNeedCustomDownloadButton?: boolean
     name: string
     platform: 'android' | 'ios' | 'pc'
     urlScheme: string

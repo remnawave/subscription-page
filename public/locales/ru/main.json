@@ -10,13 +10,13 @@
         "widget": {
             "add-subscription": "Добавить подписку",
             "add-subscription-button": "Добавить подписку",
-            "add-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
+            "add-subscription-description": "Нажмите кнопку ниже — приложение откроется, и подписка добавится автоматически.",
             "connect-and-use": "Подключите и используйте",
-            "connect-and-use-description": "In the main section, click the large power button in the center to connect to VPN. Don't forget to select a server from the server list. If needed, choose a different server from the server list.",
-            "install-app-store-description": "Open the page in the App Store and install the app. Launch it, in the VPN configuration permission window click Allow and enter your passcode.",
+            "connect-and-use-description": "В главном разделе нажмите большую кнопку включения в центре для подключения к VPN. Не забудьте выбрать сервер в списке серверов. При необходимости выберите другой сервер из списка серверов.",
+            "install-app-store-description": "Откройте страницу в App Store и установите приложение. Запустите его, в окне разрешения на добавление конфигураций VPN нажмите Разрешить и введите свой код-пароль.",
             "open-app-store": "Открыть в App Store",
-            "add-ios-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
-            "add-subscription-pc-description": "Click the button below — the app will open and the subscription will be added automatically. If this doesn't happen, close the app and try again.",
+            "add-ios-subscription-description": "Нажмите кнопку ниже — приложение откроется, и подписка добавится автоматически.",
+            "add-subscription-pc-description": "Нажмите кнопку ниже — приложение откроется, и подписка добавится автоматически. Если это не произошло, закройте приложение и попробуйте снова.",
             "installation": "Установка",
             "select-device": "Выберите устройство",
             "pc": "ПК"
@@ -38,8 +38,8 @@
         "pc": {
             "widget": {
                 "download-app": "Скачайте {{appName}}",
-                "download-app-description": "In the main section, click the large power button in the center to connect to VPN. If needed, select a different server in the Proxy section.\"",
-                "connect-description": "In the main section, click the large power button in the center to connect to VPN. Don't forget to select a server from the server list. If needed, choose a different server from the server list."
+                "download-app-description": "В главном разделе нажмите большую кнопку включения в центре для подключения к VPN. При необходимости выберите другой сервер в разделе Прокси.",
+                "connect-description": "В главном разделе нажмите большую кнопку включения в центре для подключения к VPN. Не забудьте выбрать сервер в списке серверов. При необходимости выберите другой сервер из списка серверов."
             }
         }
     },

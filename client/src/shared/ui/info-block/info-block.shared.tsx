@@ -8,10 +8,10 @@ export const InfoBlockShared = (props: IInfoBlockProps) => {
     return (
         <Paper p="xs" radius="lg">
             <Group mb={4}>
-                <ThemeIcon color={color} size="lg" variant="light">
+                <ThemeIcon color={color} size="md" variant="light">
                     {icon}
                 </ThemeIcon>
-                <Text fw={500} size="lg">
+                <Text fw={500} size="md">
                     {title}
                 </Text>
             </Group>

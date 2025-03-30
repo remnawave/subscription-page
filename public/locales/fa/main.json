@@ -8,11 +8,6 @@
     },
     "installation-guide": {
         "widget": {
-            "instrukciya": "Instructions",
-            "pk": "PC",
-            "ustanovite-i-otkroite-happ": "Install and open Happ",
-            "open-google-play": "Open the page in Google Play and install the app.",
-            "open-in-google-play": "Open in Google Play",
             "add-subscription": "Add subscription",
             "add-subscription-button": "Add subscription",
             "add-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
@@ -21,10 +16,31 @@
             "install-app-store-description": "Open the page in the App Store and install the app. Launch it, in the VPN configuration permission window click Allow and enter your passcode.",
             "open-app-store": "Open in App Store",
             "add-ios-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
-            "install-hiddify": "Install and open Hiddify",
-            "install-hiddify-description": "Install the app. Launch it, select Russia region, then click Start.",
             "add-subscription-pc-description": "Click the button below — the app will open and the subscription will be added automatically. If this doesn't happen, close the app and try again.",
-            "select-server-hiddify": "In the main section, click the large power button in the center to connect to VPN. If needed, select a different server in the Proxy section."
+            "installation": "Installation",
+            "select-device": "Select device",
+            "pc": "PC"
+        },
+        "ios": {
+            "widget": {
+                "install-and-open-app": "Install and open {{appName}}",
+                "appstore-description": "Open the page in the App Store and install the app. Launch it, in the VPN configuration permission window click Allow and enter your passcode.",
+                "open-in-app-store": "Open in App Store"
+            }
+        },
+        "android": {
+            "widget": {
+                "install-and-open-app": "Install and open {{appName}}",
+                "install-and-open-app-description": "Open the page in Google Play and install the app.",
+                "open-in-google-play": "Open in Google Play"
+            }
+        },
+        "pc": {
+            "widget": {
+                "download-app": "Download {{appName}}",
+                "download-app-description": "In the main section, click the large power button in the center to connect to VPN. If needed, select a different server in the Proxy section.\"",
+                "connect-description": "In the main section, click the large power button in the center to connect to VPN. Don't forget to select a server from the server list. If needed, choose a different server from the server list."
+            }
         }
     },
     "subscription-link": {
@@ -39,13 +55,20 @@
     },
     "subscription-info": {
         "widget": {
-            "name": "Имя",
-            "status": "Статус",
-            "active": "Активна",
-            "inactive": "Неактивна",
-            "expires": "Срок",
-            "at": "До",
-            "bandwidth": "Трафик"
+            "name": "Username",
+            "status": "Status",
+            "active": "Active",
+            "inactive": "Inactive",
+            "expires": "Expires",
+            "at": "At",
+            "bandwidth": "Bandwidth"
+        }
+    },
+    "get-expiration-text": {
+        "util": {
+            "expires-in": "Expires {{expiration}}",
+            "expired": "Expired {{expiration}}",
+            "unknown": "Unknown"
         }
     }
 }

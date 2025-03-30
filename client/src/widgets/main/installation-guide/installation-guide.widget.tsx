@@ -1,244 +1,113 @@
-import {
-    IconBrandAndroid,
-    IconBrandApple,
-    IconCheck,
-    IconCloudDownload,
-    IconDeviceDesktop,
-    IconDownload,
-    IconExternalLink
-} from '@tabler/icons-react'
-import { Button, Group, Tabs, Text, ThemeIcon, Timeline } from '@mantine/core'
+import { IconBrandAndroid, IconBrandApple, IconDeviceDesktop } from '@tabler/icons-react'
+import { Box, Group, Select, Text } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import { appList } from '@shared/constants/apps/app-list'
+
+import { InstallationGuideAndroidWidget } from './installation-guide.android.widget'
+import { InstallationGuideIosWidget } from './installation-guide.ios.widget'
+import { InstallationGuidePcWidget } from './installation-guide.pc.widget'
 
 export const InstallationGuideWidget = () => {
     const { t } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
 
-    const [defaultTab] = useState(() => {
+    const [defaultTab, setDefaultTab] = useState(() => {
         const userAgent = window?.navigator?.userAgent?.toLowerCase() || ''
         if (userAgent.includes('android')) return 'android'
         if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'ios'
-        return 'desktop'
+        return 'pc'
     })
 
     if (!subscription) return null
 
     const { subscriptionUrl } = subscription
 
-    const openHapp = () => {
-        window.open(`happ://add/${subscriptionUrl}`, '_blank')
+    const openDeepLink = (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => {
+        if (isNeedBase64Encoding) {
+            const encoded = btoa(`${subscriptionUrl}`)
+            const encodedUrl = `${urlScheme}${encoded}`
+            window.open(encodedUrl, '_blank')
+        } else {
+            window.open(`${urlScheme}${subscriptionUrl}`, '_blank')
+        }
     }
 
-    const openHiddify = () => {
-        window.open(`hiddify://import/${subscriptionUrl}`, '_blank')
+    const deviceOptions = [
+        {
+            value: 'android',
+            label: 'Android',
+            icon: <IconBrandAndroid />
+        },
+        {
+            value: 'ios',
+            label: 'iOS',
+            icon: <IconBrandApple />
+        },
+        {
+            value: 'pc',
+            label: t('installation-guide.widget.pc'),
+            icon: <IconDeviceDesktop />
+        }
+    ]
+
+    const getAppsForPlatform = (platform: 'android' | 'ios' | 'pc') => {
+        return appList
+            .filter((app) => app.platform === platform)
+            .sort((a, b) => a.viewPosition - b.viewPosition)
+    }
+
+    const getSelectedAppForPlatform = (platform: 'android' | 'ios' | 'pc') => {
+        const apps = getAppsForPlatform(platform)
+        if (apps.length === 0) return null
+        return apps[0]
     }
 
     return (
-        <Tabs defaultValue={defaultTab}>
-            <Group mb="md">
+        <Box>
+            <Group justify="space-between" mb="md">
                 <Text fw={700} size="xl">
-                    {t('installation-guide.widget.instrukciya')}
+                    {t('installation-guide.widget.installation')}
                 </Text>
-                <Tabs.List>
-                    <Tabs.Tab leftSection={<IconBrandAndroid />} value="android">
-                        Android
-                    </Tabs.Tab>
-                    <Tabs.Tab leftSection={<IconBrandApple />} value="ios">
-                        iOS
-                    </Tabs.Tab>
-                    <Tabs.Tab leftSection={<IconDeviceDesktop />} value="desktop">
-                        {t('installation-guide.widget.pk')}
-                    </Tabs.Tab>
-                </Tabs.List>
+
+                <Select
+                    allowDeselect={false}
+                    data={deviceOptions.map((opt) => ({
+                        value: opt.value,
+                        label: opt.label
+                    }))}
+                    leftSection={deviceOptions.find((opt) => opt.value === defaultTab)?.icon}
+                    onChange={(value) => setDefaultTab(value || '')}
+                    placeholder={t('installation-guide.widget.select-device')}
+                    radius="md"
+                    size="sm"
+                    style={{ width: 130 }}
+                    value={defaultTab}
+                />
             </Group>
-
-            <Tabs.Panel value="android">
-                <Timeline active={1} bulletSize={32} color="teal" lineWidth={2}>
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconDownload size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.ustanovite-i-otkroite-happ')}
-                    >
-                        <Text c="dimmed" mb={16} size="sm">
-                            {t('installation-guide.widget.open-google-play')}
-                        </Text>
-                        <Button
-                            component="a"
-                            href="https://play.google.com/store/apps/details?id=com.happproxy"
-                            leftSection={<IconExternalLink size={16} />}
-                            target="_blank"
-                            variant="light"
-                        >
-                            {t('installation-guide.widget.open-in-google-play')}
-                        </Button>
-                    </Timeline.Item>
-
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconCloudDownload size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.add-subscription')}
-                    >
-                        <Text c="dimmed" mb={16} size="sm">
-                            {t('installation-guide.widget.add-subscription-description')}
-                        </Text>
-                        <Button onClick={openHapp} variant="filled">
-                            {t('installation-guide.widget.add-subscription-button')}
-                        </Button>
-                    </Timeline.Item>
-
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconCheck size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.connect-and-use')}
-                    >
-                        <Text c="dimmed" size="sm">
-                            {t('installation-guide.widget.connect-and-use-description')}
-                        </Text>
-                    </Timeline.Item>
-                </Timeline>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="ios">
-                <Timeline active={1} bulletSize={32} color="teal" lineWidth={2}>
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconDownload size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.ustanovite-i-otkroite-happ')}
-                    >
-                        <Text c="dimmed" mb={16} size="sm">
-                            {t('installation-guide.widget.install-app-store-description')}
-                        </Text>
-                        <Button
-                            component="a"
-                            href="https://apps.apple.com/us/app/happ-proxy-utility/id6504287215"
-                            leftSection={<IconExternalLink size={16} />}
-                            target="_blank"
-                            variant="light"
-                        >
-                            {t('installation-guide.widget.open-app-store')}
-                        </Button>
-                    </Timeline.Item>
-
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconCloudDownload size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.add-subscription')}
-                    >
-                        <Text c="dimmed" mb={16} size="sm">
-                            {t('installation-guide.widget.add-ios-subscription-description')}
-                        </Text>
-                        <Button onClick={openHapp} variant="filled">
-                            {t('installation-guide.widget.add-subscription-button')}
-                        </Button>
-                    </Timeline.Item>
-
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconCheck size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.connect-and-use')}
-                    >
-                        <Text c="dimmed" size="sm">
-                            {t('installation-guide.widget.connect-and-use-description')}
-                        </Text>
-                    </Timeline.Item>
-                </Timeline>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="desktop">
-                <Timeline active={1} bulletSize={32} color="teal" lineWidth={2}>
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconDownload size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.install-hiddify')}
-                    >
-                        <Text c="dimmed" mb={16} size="sm">
-                            {t('installation-guide.widget.install-hiddify-description')}
-                        </Text>
-                        <Group>
-                            <Button
-                                component="a"
-                                href="https://github.com/hiddify/hiddify-app/releases/download/v2.5.7/Hiddify-Windows-Setup-x64.exe"
-                                leftSection={<IconExternalLink size={16} />}
-                                target="_blank"
-                                variant="light"
-                            >
-                                Windows
-                            </Button>
-                            <Button
-                                component="a"
-                                href="https://github.com/hiddify/hiddify-app/releases/download/v2.5.7/Hiddify-MacOS.dmg"
-                                leftSection={<IconExternalLink size={16} />}
-                                target="_blank"
-                                variant="light"
-                            >
-                                macOS
-                            </Button>
-                            <Button
-                                component="a"
-                                href="https://github.com/hiddify/hiddify-app/releases/download/v2.5.7/Hiddify-Linux-x64.AppImage"
-                                leftSection={<IconExternalLink size={16} />}
-                                target="_blank"
-                                variant="light"
-                            >
-                                Linux
-                            </Button>
-                        </Group>
-                    </Timeline.Item>
-
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconCloudDownload size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.add-subscription')}
-                    >
-                        <Text c="dimmed" mb={16} size="sm">
-                            {t('installation-guide.widget.add-subscription-pc-description')}
-                        </Text>
-                        <Button onClick={openHiddify} variant="filled">
-                            {t('installation-guide.widget.add-subscription-button')}
-                        </Button>
-                    </Timeline.Item>
-
-                    <Timeline.Item
-                        bullet={
-                            <ThemeIcon color="teal.5" radius="xl" size={26}>
-                                <IconCheck size={16} />
-                            </ThemeIcon>
-                        }
-                        title={t('installation-guide.widget.connect-and-use')}
-                    >
-                        <Text c="dimmed" size="sm">
-                            {t('installation-guide.widget.select-server-hiddify')}
-                        </Text>
-                    </Timeline.Item>
-                </Timeline>
-            </Tabs.Panel>
-        </Tabs>
+            {defaultTab === 'ios' && (
+                <InstallationGuideIosWidget
+                    getAppsForPlatform={getAppsForPlatform}
+                    getSelectedAppForPlatform={getSelectedAppForPlatform}
+                    openDeepLink={openDeepLink}
+                />
+            )}
+            {defaultTab === 'android' && (
+                <InstallationGuideAndroidWidget
+                    getAppsForPlatform={getAppsForPlatform}
+                    getSelectedAppForPlatform={getSelectedAppForPlatform}
+                    openDeepLink={openDeepLink}
+                />
+            )}
+            {defaultTab === 'pc' && (
+                <InstallationGuidePcWidget
+                    getAppsForPlatform={getAppsForPlatform}
+                    getSelectedAppForPlatform={getSelectedAppForPlatform}
+                    openDeepLink={openDeepLink}
+                />
+            )}
+        </Box>
     )
 }

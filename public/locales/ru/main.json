@@ -8,23 +8,39 @@
     },
     "installation-guide": {
         "widget": {
-            "instrukciya": "Инструкция",
-            "pk": "ПК",
-            "ustanovite-i-otkroite-happ": "Установите и откройте Happ",
-            "open-google-play": "Откройте страницу в Google Play и установите приложение.",
-            "open-in-google-play": "Открыть в Google Play",
-            "add-subscription": "Добавьте подписку",
+            "add-subscription": "Добавить подписку",
             "add-subscription-button": "Добавить подписку",
-            "add-subscription-description": "Нажмите кнопку ниже — приложение откроется, и подписка добавится автоматически.",
-            "connect-and-use": "Подключитесь и пользуйтесь",
-            "connect-and-use-description": "В главном разделе нажмите большую кнопку включения в центре для подключения к VPN. Не забудьте выбрать сервер в списке серверов. При необходимости выберите другой сервер в списке серверов.",
-            "install-app-store-description": "Откройте страницу в App Store и установите приложение. Запустите его, в окне разрешения на добавление конфигураций VPN нажмите Разрешить и введите свой код-пароль.",
+            "add-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
+            "connect-and-use": "Подключите и используйте",
+            "connect-and-use-description": "In the main section, click the large power button in the center to connect to VPN. Don't forget to select a server from the server list. If needed, choose a different server from the server list.",
+            "install-app-store-description": "Open the page in the App Store and install the app. Launch it, in the VPN configuration permission window click Allow and enter your passcode.",
             "open-app-store": "Открыть в App Store",
-            "add-ios-subscription-description": "Нажмите на кнопку ниже — откроется приложение, и подписка добавится автоматически.",
-            "install-hiddify": "Установите и откройте Hiddify",
-            "install-hiddify-description": "Установите приложение. Запустите его, выберите регион Россия, затем нажмите Старт.",
-            "add-subscription-pc-description": "Нажмите кнопку ниже — приложение откроется, и подписка добавится автоматически. Если это не произошло, закройте приложение и попробуйте снова.",
-            "select-server-hiddify": "В главном разделе нажмите большую кнопку включения в центре для подключения к VPN. При необходимости выберите другой сервер в разделе Прокси."
+            "add-ios-subscription-description": "Click the button below — the app will open and the subscription will be added automatically.",
+            "add-subscription-pc-description": "Click the button below — the app will open and the subscription will be added automatically. If this doesn't happen, close the app and try again.",
+            "installation": "Установка",
+            "select-device": "Выберите устройство",
+            "pc": "ПК"
+        },
+        "ios": {
+            "widget": {
+                "install-and-open-app": "Установите и откройте {{appName}}",
+                "appstore-description": "Откройте страницу в App Store и установите приложение. Запустите его, в окне разрешения VPN-конфигурации нажмите Allow и введите свой пароль.",
+                "open-in-app-store": "Открыть в App Store"
+            }
+        },
+        "android": {
+            "widget": {
+                "install-and-open-app": "Установите и откройте {{appName}}",
+                "install-and-open-app-description": "Откройте страницу в Google Play и установите приложение.",
+                "open-in-google-play": "Открыть в Google Play"
+            }
+        },
+        "pc": {
+            "widget": {
+                "download-app": "Скачайте {{appName}}",
+                "download-app-description": "In the main section, click the large power button in the center to connect to VPN. If needed, select a different server in the Proxy section.\"",
+                "connect-description": "In the main section, click the large power button in the center to connect to VPN. Don't forget to select a server from the server list. If needed, choose a different server from the server list."
+            }
         }
     },
     "subscription-link": {
@@ -32,20 +48,27 @@
             "link-copied": "Ссылка скопирована",
             "link-copied-to-clipboard": "Ссылка скопирована в буфер обмена",
             "get-link": "Получить ссылку",
-            "scan-qr-code": "Отсканируйте QR-код выше в клиенте",
-            "line-1": "Простое добавление подписки в любой клиент. Есть и другой вариант: скопируйте ссылку ниже и вставьте в клиент",
+            "scan-qr-code": "Сканируйте QR-код выше в клиенте",
+            "line-1": "Простое добавление подписки в любой клиент. Есть и другой вариант: скопируйте ссылку ниже и вставьте в клиент.",
             "copy-link": "Скопировать ссылку"
         }
     },
     "subscription-info": {
         "widget": {
-            "name": "Имя",
+            "name": "Имя пользователя",
             "status": "Статус",
             "active": "Активна",
             "inactive": "Неактивна",
-            "expires": "Срок",
-            "at": "До",
+            "expires": "Истекает",
+            "at": "В",
             "bandwidth": "Трафик"
+        }
+    },
+    "get-expiration-text": {
+        "util": {
+            "expires-in": "Истекает {{expiration}}",
+            "expired": "Истекла {{expiration}}",
+            "unknown": "Неизвестно"
         }
     }
 }

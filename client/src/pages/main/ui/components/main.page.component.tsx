@@ -1,4 +1,4 @@
-import { Container, Group, Stack, Title } from '@mantine/core'
+import { Center, Container, Group, Stack, Title } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
@@ -19,11 +19,18 @@ export const MainPageComponent = () => {
                     </Group>
                     <Group gap="xs">
                         <SubscriptionLinkWidget />
-                        <LanguagePicker />
                     </Group>
                 </Group>
-                <SubscriptionInfoWidget />
-                <InstallationGuideWidget />
+                <Container p={0} size={'xl'}>
+                    <Stack gap="xl">
+                        <SubscriptionInfoWidget />
+                        <InstallationGuideWidget />
+                    </Stack>
+                </Container>
+
+                <Center>
+                    <LanguagePicker />
+                </Center>
             </Stack>
         </Container>
     )

@@ -39,7 +39,6 @@
         },
         {
             "id": "streisand",
-            "viewPosition": 2,
             "name": "Streisand",
             "isFeatured": false,
             "urlScheme": "streisand://import/",
@@ -77,7 +76,6 @@
         },
         {
             "id": "shadowrocket",
-            "viewPosition": 3,
             "name": "Shadowrocket",
             "isFeatured": false,
             "urlScheme": "sub://",

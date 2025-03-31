@@ -114,7 +114,7 @@ export const SubscriptionInfoWidget = () => {
                             color="red"
                             icon={<IconCalendar size={20} />}
                             title={t('subscription-info.widget.expires')}
-                            value={`${t('subscription-info.widget.at')} ${formatDate(user.expiresAt)}`}
+                            value={formatDate(user.expiresAt)}
                         />
 
                         <InfoBlockShared

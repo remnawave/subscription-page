@@ -1,13 +1,14 @@
 import { Center, Container, Group, Stack, Title } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 
+import { IPlatformConfig } from '@shared/constants/apps-config/interfaces/app-list.interface'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
 
 import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
 import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
 
-export const MainPageComponent = () => {
+export const MainPageComponent = ({ appsConfig }: { appsConfig: IPlatformConfig }) => {
     const { t } = useTranslation()
 
     return (
@@ -21,12 +22,11 @@ export const MainPageComponent = () => {
                         <SubscriptionLinkWidget />
                     </Group>
                 </Group>
-                <Container p={0} size={'xl'}>
-                    <Stack gap="xl">
-                        <SubscriptionInfoWidget />
-                        <InstallationGuideWidget />
-                    </Stack>
-                </Container>
+
+                <Stack gap="xl">
+                    <SubscriptionInfoWidget />
+                    <InstallationGuideWidget appsConfig={appsConfig} />
+                </Stack>
 
                 <Center>
                     <LanguagePicker />

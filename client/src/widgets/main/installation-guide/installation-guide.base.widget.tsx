@@ -1,33 +1,28 @@
-import { IconCheck, IconCloudDownload, IconDownload, IconStar } from '@tabler/icons-react'
+import {
+    IconCheck,
+    IconCloudDownload,
+    IconDownload,
+    IconInfoCircle,
+    IconStar
+} from '@tabler/icons-react'
 import { Box, Button, Group, Text, ThemeIcon, Timeline } from '@mantine/core'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { IAppList } from '@shared/constants/apps/interfaces/app-list.interface'
+import { IAppConfig } from '@shared/constants/apps-config/interfaces/app-list.interface'
 
 import { IPlatformGuideProps } from './interfaces/platform-guide.props.interface'
 
 export interface IBaseGuideProps extends IPlatformGuideProps {
-    firstStepDescription: string
     firstStepTitle: string
     platform: 'android' | 'ios' | 'pc'
-    renderFirstStepButton: (app: IAppList) => React.ReactNode
-    secondStepDescription: string
-    thirdStepDescription?: string
+    renderFirstStepButton: (app: IAppConfig) => React.ReactNode
 }
 
 export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
-    const { t } = useTranslation()
-    const {
-        openDeepLink,
-        getAppsForPlatform,
-        platform,
-        firstStepTitle,
-        firstStepDescription,
-        secondStepDescription,
-        thirdStepDescription,
-        renderFirstStepButton
-    } = props
+    const { t, i18n } = useTranslation()
+    const { openDeepLink, getAppsForPlatform, platform, firstStepTitle, renderFirstStepButton } =
+        props
 
     const platformApps = getAppsForPlatform(platform)
     const [activeTabId, setActiveTabId] = useState<string>('')
@@ -52,11 +47,45 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
         ? firstStepTitle.replace(/{appName}/g, selectedApp.name)
         : firstStepTitle
 
+    const getAppDescription = (
+        app: IAppConfig | null,
+        step: 'addSubscriptionStep' | 'connectAndUseStep' | 'installationStep'
+    ) => {
+        if (!app) return ''
+
+        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
+        const fallbackLang = 'en'
+
+        const stepData = app[step]
+        if (!stepData) return ''
+
+        return stepData.description[currentLang] || stepData.description[fallbackLang] || ''
+    }
+
+    const getButtonText = (button: { buttonText: { en: string; fa: string; ru: string } }) => {
+        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
+        const fallbackLang = 'en'
+
+        return button.buttonText[currentLang] || button.buttonText[fallbackLang] || ''
+    }
+
+    const getStepTitle = (
+        stepData: { title?: { en: string; fa: string; ru: string } },
+        defaultTitle: string
+    ) => {
+        if (!stepData || !stepData.title) return defaultTitle
+
+        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
+        const fallbackLang = 'en'
+
+        return stepData.title[currentLang] || stepData.title[fallbackLang] || defaultTitle
+    }
+
     return (
         <Box>
             {platformApps.length > 0 && (
                 <Group gap="xs" mb="lg">
-                    {platformApps.map((app: IAppList) => {
+                    {platformApps.map((app: IAppConfig) => {
                         const isActive = app.id === activeTabId
                         return (
                             <Button
@@ -94,10 +123,45 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     title={formattedTitle}
                 >
                     <Text c="dimmed" mb={16} size="sm">
-                        {firstStepDescription}
+                        {selectedApp ? getAppDescription(selectedApp, 'installationStep') : ''}
                     </Text>
                     {selectedApp && renderFirstStepButton(selectedApp)}
                 </Timeline.Item>
+
+                {selectedApp && selectedApp.additionalBeforeAddSubscriptionStep && (
+                    <Timeline.Item
+                        bullet={
+                            <ThemeIcon color="teal.5" radius="xl" size={26}>
+                                <IconInfoCircle size={20} />
+                            </ThemeIcon>
+                        }
+                        title={getStepTitle(
+                            selectedApp.additionalBeforeAddSubscriptionStep,
+                            'Additional step title is not set'
+                        )}
+                    >
+                        <Text c="dimmed" mb={16} size="sm">
+                            {selectedApp.additionalBeforeAddSubscriptionStep.description[
+                                i18n.language as 'en' | 'fa' | 'ru'
+                            ] || selectedApp.additionalBeforeAddSubscriptionStep.description.en}
+                        </Text>
+                        <Group>
+                            {selectedApp.additionalBeforeAddSubscriptionStep.buttons.map(
+                                (button, index) => (
+                                    <Button
+                                        component="a"
+                                        href={button.buttonLink}
+                                        key={index}
+                                        target="_blank"
+                                        variant="light"
+                                    >
+                                        {getButtonText(button)}
+                                    </Button>
+                                )
+                            )}
+                        </Group>
+                    </Timeline.Item>
+                )}
 
                 <Timeline.Item
                     bullet={
@@ -108,7 +172,9 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     title={t('installation-guide.widget.add-subscription')}
                 >
                     <Text c="dimmed" mb={16} size="sm">
-                        {secondStepDescription}
+                        {selectedApp
+                            ? getAppDescription(selectedApp, 'addSubscriptionStep')
+                            : 'Add subscription description is not set'}
                     </Text>
                     {selectedApp && (
                         <Button
@@ -125,6 +191,41 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     )}
                 </Timeline.Item>
 
+                {selectedApp && selectedApp.additionalAfterAddSubscriptionStep && (
+                    <Timeline.Item
+                        bullet={
+                            <ThemeIcon color="teal.5" radius="xl" size={26}>
+                                <IconStar size={16} />
+                            </ThemeIcon>
+                        }
+                        title={getStepTitle(
+                            selectedApp.additionalAfterAddSubscriptionStep,
+                            'Additional step title is not set'
+                        )}
+                    >
+                        <Text c="dimmed" mb={16} size="sm">
+                            {selectedApp.additionalAfterAddSubscriptionStep.description[
+                                i18n.language as 'en' | 'fa' | 'ru'
+                            ] || selectedApp.additionalAfterAddSubscriptionStep.description.en}
+                        </Text>
+                        <Group>
+                            {selectedApp.additionalAfterAddSubscriptionStep.buttons.map(
+                                (button, index) => (
+                                    <Button
+                                        component="a"
+                                        href={button.buttonLink}
+                                        key={index}
+                                        target="_blank"
+                                        variant="light"
+                                    >
+                                        {getButtonText(button)}
+                                    </Button>
+                                )
+                            )}
+                        </Group>
+                    </Timeline.Item>
+                )}
+
                 <Timeline.Item
                     bullet={
                         <ThemeIcon color="teal.5" radius="xl" size={26}>
@@ -134,8 +235,9 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     title={t('installation-guide.widget.connect-and-use')}
                 >
                     <Text c="dimmed" size="sm">
-                        {thirdStepDescription ||
-                            t('installation-guide.widget.connect-and-use-description')}
+                        {selectedApp
+                            ? getAppDescription(selectedApp, 'connectAndUseStep')
+                            : 'Connect and use description is not set'}
                     </Text>
                 </Timeline.Item>
             </Timeline>

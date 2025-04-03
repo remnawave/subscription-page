@@ -82,7 +82,7 @@ func main() {
 
 	routes := app.Group(routePrefix)
 
-	clientTypes := []string{"json", "stash", "singbox", "singbox-legacy", "mihomo", "clash"}
+	clientTypes := []string{"json", "stash", "singbox", "singbox-legacy", "mihomo", "clash", "v2ray-json"}
 	for _, t := range clientTypes {
 		clientType := t
 		routes.Get("/:shortId/" + clientType, func(c fiber.Ctx) error {

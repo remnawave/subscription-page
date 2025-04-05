@@ -29,6 +29,16 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '22.x'
+
+            - name: Install dependencies and build
+              run: |
+                  npm ci
+                  npm run start:build
+
             - name: Set up QEMU
               uses: docker/setup-qemu-action@v2
 

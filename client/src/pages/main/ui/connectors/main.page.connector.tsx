@@ -16,9 +16,12 @@ export const MainPageConnector = () => {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const config = await ofetch<IPlatformConfig>('/assets/app-config.json', {
-                    parseResponse: JSON.parse
-                })
+                const config = await ofetch<IPlatformConfig>(
+                    `/assets/app-config.json?v=${Date.now()}`,
+                    {
+                        parseResponse: JSON.parse
+                    }
+                )
                 setAppsConfig(config)
             } catch (error) {
                 consola.error('Failed to fetch app config:', error)

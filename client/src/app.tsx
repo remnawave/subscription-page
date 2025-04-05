@@ -5,15 +5,17 @@ import '@mantine/nprogress/styles.layer.css'
 
 import './global.css'
 
-import { DirectionProvider, MantineProvider } from '@mantine/core'
+import { Center, DirectionProvider, MantineProvider } from '@mantine/core'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { NavigationProgress } from '@mantine/nprogress'
 import { Notifications } from '@mantine/notifications'
 import { ModalsProvider } from '@mantine/modals'
 import { I18nextProvider } from 'react-i18next'
 import { useMediaQuery } from '@mantine/hooks'
+import { Suspense } from 'react'
 import dayjs from 'dayjs'
 
+import { LoadingScreen } from '@shared/ui/loading-screen'
 import { theme } from '@shared/constants'
 
 import { Router } from './app/router/router'
@@ -31,8 +33,15 @@ export function App() {
                     <ModalsProvider>
                         <Notifications position={mq ? 'top-right' : 'bottom-right'} />
                         <NavigationProgress />
-
-                        <Router />
+                        <Suspense
+                            fallback={
+                                <Center h={'100%'}>
+                                    <LoadingScreen height="60vh" />
+                                </Center>
+                            }
+                        >
+                            <Router />
+                        </Suspense>
                     </ModalsProvider>
                 </MantineProvider>
             </DirectionProvider>

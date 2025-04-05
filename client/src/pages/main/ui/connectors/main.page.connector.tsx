@@ -30,7 +30,7 @@ export const MainPageConnector = () => {
         fetchConfig()
     }, [])
 
-    if (isLoading || !subscription || !appsConfig) return <LoadingScreen />
+    if (isLoading || !subscription || !appsConfig) return <LoadingScreen height="100vh" />
 
     return <MainPageComponent appsConfig={appsConfig} />
 }

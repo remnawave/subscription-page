@@ -18,10 +18,9 @@ export function LanguagePicker() {
     const { i18n } = useTranslation()
 
     useEffect(() => {
-        const savedLanguage = localStorage.getItem('i18nextLng')
-        if (savedLanguage) {
-            i18n.changeLanguage(savedLanguage)
+        const savedLanguage = i18n.language
 
+        if (savedLanguage) {
             if (savedLanguage === 'fa') {
                 if (dir === 'ltr') {
                     toggleDirection()

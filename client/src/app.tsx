@@ -6,6 +6,7 @@ import '@mantine/nprogress/styles.layer.css'
 import './global.css'
 
 import { Center, DirectionProvider, MantineProvider } from '@mantine/core'
+import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { NavigationProgress } from '@mantine/nprogress'
 import { Notifications } from '@mantine/notifications'
@@ -23,11 +24,13 @@ import i18n from './app/i18n/i18n'
 
 dayjs.extend(customParseFormat)
 
+polyfillCountryFlagEmojis()
+
 export function App() {
     const mq = useMediaQuery('(min-width: 40em)')
 
     return (
-        <I18nextProvider defaultNS={''} i18n={i18n}>
+        <I18nextProvider defaultNS={'main'} i18n={i18n}>
             <DirectionProvider>
                 <MantineProvider defaultColorScheme="dark" theme={theme}>
                     <ModalsProvider>

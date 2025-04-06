@@ -16,6 +16,7 @@ i18n.use(initReactI18next)
             caches: ['localStorage']
         },
         load: 'languageOnly',
+        preload: ['en', 'ru', 'fa'],
         backend: {
             loadPath: '/locales/{{lng}}/{{ns}}.json'
         },

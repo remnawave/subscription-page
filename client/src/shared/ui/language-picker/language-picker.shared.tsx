@@ -13,6 +13,7 @@ const data = [
 
 export function LanguagePicker() {
     const [opened, setOpened] = useState(false)
+    const [selectedLanguage, setSelectedLanguage] = useState('en')
     const { toggleDirection, dir } = useDirection()
 
     const { i18n } = useTranslation()
@@ -29,6 +30,10 @@ export function LanguagePicker() {
         }
     }, [i18n])
 
+    useEffect(() => {
+        setSelectedLanguage(i18n.language)
+    }, [i18n])
+
     const changeLanguage = (value: string) => {
         i18n.changeLanguage(value)
 
@@ -39,9 +44,11 @@ export function LanguagePicker() {
         if (dir === 'rtl' && value !== 'fa') {
             toggleDirection()
         }
+
+        setSelectedLanguage(value)
     }
 
-    const selected = data.find((item) => item.value === i18n.language) || data[0]
+    const selected = data.find((item) => selectedLanguage.startsWith(item.value)) || data[0]
 
     const items = data.map((item) => (
         <Menu.Item

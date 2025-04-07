@@ -6,8 +6,8 @@ import {
     IconStar
 } from '@tabler/icons-react'
 import { Box, Button, Group, Text, ThemeIcon, Timeline } from '@mantine/core'
-import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
 
 import { IAppConfig } from '@shared/constants/apps-config/interfaces/app-list.interface'
 
@@ -17,21 +17,26 @@ export interface IBaseGuideProps extends IPlatformGuideProps {
     firstStepTitle: string
     platform: 'android' | 'ios' | 'pc'
     renderFirstStepButton: (app: IAppConfig) => React.ReactNode
+    currentLang: 'en' | 'fa' | 'ru'
 }
 
 export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
-    const { t, i18n } = useTranslation()
-    const { openDeepLink, getAppsForPlatform, platform, firstStepTitle, renderFirstStepButton } =
-        props
+    const { t } = useTranslation()
+    const {
+        openDeepLink,
+        getAppsForPlatform,
+        platform,
+        firstStepTitle,
+        renderFirstStepButton,
+        currentLang
+    } = props
 
     const platformApps = getAppsForPlatform(platform)
     const [activeTabId, setActiveTabId] = useState<string>('')
-    const isInitializedRef = useRef<{ [key: string]: boolean }>({})
 
     useEffect(() => {
-        if (platformApps.length > 0 && !isInitializedRef.current[platform]) {
+        if (platformApps.length > 0) {
             setActiveTabId(platformApps[0].id)
-            isInitializedRef.current[platform] = true
         }
     }, [platform, platformApps])
 
@@ -53,20 +58,14 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
     ) => {
         if (!app) return ''
 
-        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
-        const fallbackLang = 'en'
-
         const stepData = app[step]
         if (!stepData) return ''
 
-        return stepData.description[currentLang] || stepData.description[fallbackLang] || ''
+        return stepData.description[currentLang] || stepData.description[currentLang] || ''
     }
 
     const getButtonText = (button: { buttonText: { en: string; fa: string; ru: string } }) => {
-        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
-        const fallbackLang = 'en'
-
-        return button.buttonText[currentLang] || button.buttonText[fallbackLang] || ''
+        return button.buttonText[currentLang] || button.buttonText[currentLang] || ''
     }
 
     const getStepTitle = (
@@ -75,10 +74,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
     ) => {
         if (!stepData || !stepData.title) return defaultTitle
 
-        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
-        const fallbackLang = 'en'
-
-        return stepData.title[currentLang] || stepData.title[fallbackLang] || defaultTitle
+        return stepData.title[currentLang] || stepData.title[currentLang] || defaultTitle
     }
 
     return (
@@ -142,7 +138,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     >
                         <Text c="dimmed" mb={16} size="sm">
                             {selectedApp.additionalBeforeAddSubscriptionStep.description[
-                                i18n.language as 'en' | 'fa' | 'ru'
+                                currentLang
                             ] || selectedApp.additionalBeforeAddSubscriptionStep.description.en}
                         </Text>
                         <Group>
@@ -205,7 +201,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     >
                         <Text c="dimmed" mb={16} size="sm">
                             {selectedApp.additionalAfterAddSubscriptionStep.description[
-                                i18n.language as 'en' | 'fa' | 'ru'
+                                currentLang
                             ] || selectedApp.additionalAfterAddSubscriptionStep.description.en}
                         </Text>
                         <Group>

@@ -109,8 +109,8 @@ func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 		
 		return c.Render("index", fiber.Map{
 			"Data": utils.Base64UrlSafeEncode(string(body)),
-			"MetaTitle": metaTitle,
-			"MetaDescription": metaDescription,
+			"MetaTitle": strings.Trim(metaTitle, "\""),
+			"MetaDescription": strings.Trim(metaDescription, "\""),
 		})
 	}
 	

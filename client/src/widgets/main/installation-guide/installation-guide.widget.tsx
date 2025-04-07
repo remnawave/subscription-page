@@ -5,8 +5,9 @@ import {
     IconExternalLink
 } from '@tabler/icons-react'
 import { Box, Button, Group, Select, Text } from '@mantine/core'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useOs } from '@mantine/hooks'
 
 import {
     IAppConfig,
@@ -19,13 +20,42 @@ import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
 export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformConfig }) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
+    const os = useOs()
 
-    const [defaultTab, setDefaultTab] = useState(() => {
-        const userAgent = window?.navigator?.userAgent?.toLowerCase() || ''
-        if (userAgent.includes('android')) return 'android'
-        if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'ios'
-        return 'pc'
-    })
+    const [currentLang, setCurrentLang] = useState<'en' | 'fa' | 'ru'>('en')
+    const [defaultTab, setDefaultTab] = useState('pc')
+
+    useEffect(() => {
+        const lang = i18n.language
+        if (lang.startsWith('en')) {
+            setCurrentLang('en')
+        } else if (lang.startsWith('fa')) {
+            setCurrentLang('fa')
+        } else if (lang.startsWith('ru')) {
+            setCurrentLang('ru')
+        } else {
+            setCurrentLang('en')
+        }
+    }, [i18n.language])
+
+    useLayoutEffect(() => {
+        switch (os) {
+            case 'android':
+                setDefaultTab('android')
+                break
+            case 'ios':
+                setDefaultTab('ios')
+                break
+            case 'linux':
+            case 'macos':
+            case 'windows':
+                setDefaultTab('pc')
+                break
+            default:
+                setDefaultTab('pc')
+                break
+        }
+    }, [os])
 
     if (!subscription) return null
 
@@ -95,7 +125,6 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
             return (
                 <Group>
                     {app.installationStep.buttons.map((button, index) => {
-                        const currentLang = i18n.language as 'en' | 'fa' | 'ru'
                         const buttonText = button.buttonText[currentLang] || button.buttonText.en
 
                         return (
@@ -164,6 +193,7 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
             {hasPlatformApps[defaultTab as keyof typeof hasPlatformApps] && (
                 <BaseInstallationGuideWidget
                     appsConfig={appsConfig}
+                    currentLang={currentLang}
                     firstStepTitle={getPlatformTitle(defaultTab as 'android' | 'ios' | 'pc')}
                     getAppsForPlatform={getAppsForPlatform}
                     getSelectedAppForPlatform={getSelectedAppForPlatform}

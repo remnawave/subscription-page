@@ -21,7 +21,18 @@ export function getExpirationTextUtil(
         })
     }
 
+    if (expiration.year() === 2099) {
+        return t('get-expiration-text.util.indefinitely')
+    }
+
     return t('get-expiration-text.util.expires-in', {
         expiration: expiration.fromNow(false)
     })
+}
+
+export const formatDate = (dateStr: Date | string, t: TFunction, i18nProps: i18n) => {
+    if (dayjs(dateStr).year() === 2099) {
+        return t('get-expiration-text.util.indefinitely')
+    }
+    return dayjs(dateStr).locale(i18nProps.language).format('DD.MM.YYYY')
 }

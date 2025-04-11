@@ -11,7 +11,10 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 
-import { getExpirationTextUtil } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
+import {
+    formatDate,
+    getExpirationTextUtil
+} from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
 
@@ -23,10 +26,6 @@ export const SubscriptionInfoWidget = () => {
     if (!subscription) return null
 
     const { user } = subscription
-
-    const formatDate = (dateStr: Date | string) => {
-        return dayjs(dateStr).format('DD.MM.YYYY')
-    }
 
     const getStatusAndIcon = (): {
         color: string
@@ -114,7 +113,7 @@ export const SubscriptionInfoWidget = () => {
                             color="red"
                             icon={<IconCalendar size={20} />}
                             title={t('subscription-info.widget.expires')}
-                            value={formatDate(user.expiresAt)}
+                            value={formatDate(user.expiresAt, t, i18n)}
                         />
 
                         <InfoBlockShared

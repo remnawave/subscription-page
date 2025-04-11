@@ -56,7 +56,8 @@
         "util": {
             "expires-in": "Истекает {{expiration}}",
             "expired": "Истекла {{expiration}}",
-            "unknown": "Неизвестно"
+            "unknown": "Неизвестно",
+            "indefinitely": "Бессрочно"
         }
     }
 }

@@ -56,7 +56,8 @@
         "util": {
             "expires-in": "Expires {{expiration}}",
             "expired": "Expired {{expiration}}",
-            "unknown": "Unknown"
+            "unknown": "Unknown",
+            "indefinitely": "Indefinitely"
         }
     }
 }

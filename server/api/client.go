@@ -57,6 +57,20 @@ func (c *Client) FetchAPI(path string, headers http.Header, clientType string) (
 		request.SetHeader("Accept", accept)
 	}
 
+	// HWID Support
+	optionalHeaders := []string{
+		"x-hwid",
+		"x-device-os",
+		"x-ver-os", 
+		"x-device-model",
+	}
+
+	for _, header := range optionalHeaders {
+		if value := headers.Get(header); value != "" {
+			request.SetHeader(header, value)
+		}
+	}
+
 	resp, err := request.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("error making request: %w", err)

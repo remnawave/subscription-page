@@ -114,22 +114,8 @@ func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 		})
 	}
 	
-	filteredHeaders := []string{
-		"Profile-Title",
-		"Profile-Update-Interval",
-		"Subscription-Userinfo",
-		"Profile-Web-Page-Url",
-		"Content-Disposition",
-		"Content-Type",
-		"Support-Url",
-		"Routing",
-		"Announce",
-	}
-
-	for _, header := range filteredHeaders {
-		if values, found := resp.Header[header]; found {
-			c.Set(header, strings.Join(values, ","))
-		}
+	for header, values := range resp.Header {
+		c.Set(header, strings.Join(values, ","))
 	}
 	
 	return c.Status(resp.StatusCode).Send(body)

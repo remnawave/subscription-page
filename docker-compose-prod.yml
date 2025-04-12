@@ -5,7 +5,7 @@ services:
         hostname: remnawave-subscription-page
         restart: always
         environment:
-            - REMNAWAVE_PLAIN_DOMAIN=domain.com
+            - REMNAWAVE_PLAIN_DOMAIN=domain.com    # Domain for the PANEL, not the subscription page
             - SUBSCRIPTION_PAGE_PORT=3010
         ports:
             - '127.0.0.1:3010:3010'

@@ -19,11 +19,12 @@ export function RootLayout() {
             const subscriptionUrl = rootDiv.dataset.panel
 
             if (subscriptionUrl) {
-                const subscription: GetSubscriptionInfoByShortUuidCommand.Response['response'] =
-                    JSON.parse(atob(subscriptionUrl))
+                const subscription: GetSubscriptionInfoByShortUuidCommand.Response = JSON.parse(
+                    atob(subscriptionUrl)
+                )
 
                 actions.setSubscriptionInfo({
-                    subscription
+                    subscription: subscription.response
                 })
             }
         }

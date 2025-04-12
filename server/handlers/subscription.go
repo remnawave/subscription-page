@@ -67,16 +67,16 @@ func (h *SubscriptionHandler) HandleSubscription(c fiber.Ctx) error {
 	if clientType != nil {
 		clientTypeStr = clientType.(string)
 	}
+
+	userAgent := c.Get("User-Agent")
+	isBrowser := utils.IsBrowser(userAgent)
 	
-	resp, err := h.apiClient.FetchAPI(shortId, headers, clientTypeStr)
+	resp, err := h.apiClient.FetchAPI(shortId, headers, clientTypeStr, isBrowser)
 	
 	if err != nil {
 		slog.Error("Error fetching API", "error", err)
 		return c.Status(fiber.StatusInternalServerError).SendString("Request error.")
 	}
-
-	userAgent := c.Get("User-Agent")
-	isBrowser := utils.IsBrowser(userAgent)
 
 	if resp.StatusCode == fiber.StatusNotFound {
 		slog.Error("Subscription not found", "shortId", shortId)

@@ -33,16 +33,21 @@ func NewClient(domain string, token string, requestRemnawaveScheme string) *Clie
 	}
 }
 
-func (c *Client) FetchAPI(path string, headers http.Header, clientType string) (*req.Response, error) {
+func (c *Client) FetchAPI(path string, headers http.Header, clientType string, isBrowser bool) (*req.Response, error) {
 	if path == "" {
 		return nil, fmt.Errorf("error creating request")
 	}
 
 	var url string
-	if clientType == "" {
-		url = fmt.Sprintf("%s://%s/api/sub/%s", c.requestRemnawaveScheme, c.domain, path)
+
+	if isBrowser {
+		url = fmt.Sprintf("%s://%s/api/sub/%s/info", c.requestRemnawaveScheme, c.domain, path)
 	} else {
-		url = fmt.Sprintf("%s://%s/api/sub/%s/%s", c.requestRemnawaveScheme, c.domain, path, clientType)
+		if clientType == "" {
+			url = fmt.Sprintf("%s://%s/api/sub/%s", c.requestRemnawaveScheme, c.domain, path)
+		} else {
+			url = fmt.Sprintf("%s://%s/api/sub/%s/%s", c.requestRemnawaveScheme, c.domain, path, clientType)
+		}
 	}
 
 	slog.Debug("Fetching API", "url", url, "clientType", clientType)

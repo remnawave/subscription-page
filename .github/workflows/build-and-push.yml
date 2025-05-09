@@ -3,7 +3,9 @@ name: Build and push
 on:
   push:
     tags:
-      - "*"
+      - '*'
+
+  workflow_dispatch:
 
 jobs:
   send-start-deploy-telegram-message:
@@ -20,8 +22,8 @@ jobs:
           chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
           thread_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
           status: info
-          notify_fields: "repository,branch,commit,workflow"
-          title: "Build started"
+          notify_fields: 'repository,branch,commit,workflow'
+          title: 'Build started'
 
   build-docker-image:
     runs-on: ubuntu-latest
@@ -32,7 +34,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "22.x"
+          node-version: '22.x'
 
       - name: Build frontend
         run: |
@@ -85,8 +87,8 @@ jobs:
           chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
           thread_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
           status: success
-          notify_fields: "repository,branch,commit,workflow"
-          title: "Build finished"
+          notify_fields: 'repository,branch,commit,workflow'
+          title: 'Build finished'
 
   notify-on-error:
     runs-on: ubuntu-latest
@@ -103,5 +105,5 @@ jobs:
           chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
           thread_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
           status: error
-          notify_fields: "repository,branch,commit,workflow"
-          title: "Build failed"
+          notify_fields: 'repository,branch,commit,workflow'
+          title: 'Build failed'

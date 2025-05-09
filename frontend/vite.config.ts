@@ -14,42 +14,42 @@ export default defineConfig({
         react(),
         tsconfigPaths(),
         removeConsole(),
-        webfontDownload(undefined, {})
-        // obfuscatorPlugin({
-        //     exclude: [/node_modules/, /app.tsx/],
-        //     apply: 'build',
-        //     debugger: false,
-        //     options: {
-        //         compact: true,
-        //         controlFlowFlattening: false,
-        //         deadCodeInjection: false,
-        //         debugProtection: true,
-        //         debugProtectionInterval: 0,
-        //         domainLock: [],
-        //         disableConsoleOutput: true,
-        //         identifierNamesGenerator: 'hexadecimal',
-        //         log: false,
-        //         numbersToExpressions: false,
-        //         renameGlobals: false,
-        //         selfDefending: false,
-        //         simplify: true,
-        //         splitStrings: false,
-        //         stringArray: true,
-        //         stringArrayCallsTransform: false,
-        //         stringArrayCallsTransformThreshold: 0.5,
-        //         stringArrayEncoding: [],
-        //         stringArrayIndexShift: true,
-        //         stringArrayRotate: true,
-        //         stringArrayShuffle: true,
-        //         stringArrayWrappersCount: 1,
-        //         stringArrayWrappersChainedCalls: true,
-        //         stringArrayWrappersParametersMaxCount: 2,
-        //         stringArrayWrappersType: 'variable',
-        //         stringArrayThreshold: 0.75,
-        //         unicodeEscapeSequence: false
-        //         // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
-        //     }
-        // })
+        webfontDownload(undefined, {}),
+        obfuscatorPlugin({
+            exclude: [/node_modules/, /app.tsx/],
+            apply: 'build',
+            debugger: false,
+            options: {
+                compact: true,
+                controlFlowFlattening: false,
+                deadCodeInjection: false,
+                debugProtection: true,
+                debugProtectionInterval: 0,
+                domainLock: [],
+                disableConsoleOutput: true,
+                identifierNamesGenerator: 'hexadecimal',
+                log: false,
+                numbersToExpressions: false,
+                renameGlobals: false,
+                selfDefending: false,
+                simplify: true,
+                splitStrings: false,
+                stringArray: true,
+                stringArrayCallsTransform: false,
+                stringArrayCallsTransformThreshold: 0.5,
+                stringArrayEncoding: [],
+                stringArrayIndexShift: true,
+                stringArrayRotate: true,
+                stringArrayShuffle: true,
+                stringArrayWrappersCount: 1,
+                stringArrayWrappersChainedCalls: true,
+                stringArrayWrappersParametersMaxCount: 2,
+                stringArrayWrappersType: 'variable',
+                stringArrayThreshold: 0.75,
+                unicodeEscapeSequence: false
+                // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
+            }
+        })
         // visualizer() as PluginOption
     ],
     optimizeDeps: {

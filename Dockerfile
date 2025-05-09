@@ -1,27 +1,34 @@
-FROM golang:1.24-alpine AS builder
+FROM node:22 AS backend-build
+WORKDIR /opt/app
 
-WORKDIR /app
+COPY backend/package*.json ./
+COPY backend/tsconfig.json ./
+COPY backend/tsconfig.build.json ./
 
-COPY server ./
+RUN npm ci
 
-RUN apk update && apk add --no-cache ca-certificates
-RUN update-ca-certificates
+COPY backend/ .
 
-RUN go mod download
+RUN npm run build
 
-ARG TARGETARCH
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -o /bin/app .
+RUN npm cache clean --force 
+
+RUN npm prune --omit=dev
+
+FROM node:22-alpine
+WORKDIR /opt/app
+
+COPY --from=backend-build /opt/app/dist ./dist
+COPY --from=backend-build /opt/app/node_modules ./node_modules
+
+COPY frontend/dist/ ./frontend/
+
+COPY backend/package*.json ./
 
 
-FROM scratch
+COPY backend/ecosystem.config.js ./
+COPY backend/docker-entrypoint.sh ./
 
-COPY --from=builder /bin/app /app/app
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+RUN npm install pm2 -g
 
-COPY ./dist ./app/dist
-
-USER 1000
-
-WORKDIR /app
-
-CMD ["./app"]
+CMD [ "/bin/sh", "docker-entrypoint.sh" ]

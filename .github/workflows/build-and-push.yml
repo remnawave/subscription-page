@@ -1,9 +1,9 @@
-name: Build and push
+name: Build and push (branch backend-nestjs)
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - backend-nestjs
 
   workflow_dispatch:
 

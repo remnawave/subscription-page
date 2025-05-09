@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Send Telegram message
         uses: proDreams/actions-telegram-notifier@main
@@ -62,7 +62,7 @@ jobs:
           password: ${{ secrets.TOKEN_GH_DEPLOY }}
 
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile

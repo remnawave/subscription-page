@@ -35,7 +35,7 @@ import { AppModule } from './app.module';
 
 process.env.INTERNAL_JWT_SECRET = nanoid(64);
 
-const instanedId = process.env.INSTANCE_ID || '0';
+const instanceId = process.env.INSTANCE_ID || '0';
 
 const logger = createLogger({
     transports: [new winston.transports.Console()],
@@ -45,7 +45,7 @@ const logger = createLogger({
             format: 'YYYY-MM-DD HH:mm:ss.SSS',
         }),
         winston.format.ms(),
-        nestWinstonModuleUtilities.format.nestLike(`#${instanedId}`, {
+        nestWinstonModuleUtilities.format.nestLike(`#${instanceId}`, {
             colors: true,
             prettyPrint: true,
             processId: false,

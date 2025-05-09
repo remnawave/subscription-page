@@ -24,7 +24,7 @@ export function checkAssetsCookieMiddleware(req: Request, res: Response, next: N
         }
 
         try {
-            jwt.verify(req.cookies.session, secret!);
+            jwt.verify(req.cookies.session, secret);
         } catch (error) {
             logger.debug(error);
             res.socket?.destroy();

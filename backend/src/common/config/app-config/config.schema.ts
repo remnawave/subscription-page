@@ -42,7 +42,7 @@ export const configSchema = z
                         'MARZBAN_SECRET_KEY is required when MARZBAN_LEGACY_LINK_ENABLED is true',
                 });
             }
-            if (data.REMNAWAVE_API_TOKEN) {
+            if (!data.REMNAWAVE_API_TOKEN) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
                     message:

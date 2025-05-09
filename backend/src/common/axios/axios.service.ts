@@ -45,7 +45,7 @@ export class AxiosService {
     ): Promise<ICommandResponse<GetUserByUsernameCommand.Response>> {
         try {
             const response = await this.axiosInstance.request<GetUserByUsernameCommand.Response>({
-                method: 'GET',
+                method: GetUserByUsernameCommand.endpointDetails.REQUEST_METHOD,
                 url: GetUserByUsernameCommand.url(username),
             });
 
@@ -76,7 +76,7 @@ export class AxiosService {
         try {
             const response =
                 await this.axiosInstance.request<GetSubscriptionInfoByShortUuidCommand.Response>({
-                    method: 'GET',
+                    method: GetSubscriptionInfoByShortUuidCommand.endpointDetails.REQUEST_METHOD,
                     url: GetSubscriptionInfoByShortUuidCommand.url(shortUuid),
                 });
 
@@ -105,8 +105,6 @@ export class AxiosService {
         headers: RawAxiosResponseHeaders | AxiosResponseHeaders;
     } | null> {
         try {
-            // TODO: fix with 1.6.x release
-
             let basePath = 'api/sub/' + shortUuid;
 
             if (withClientType && clientType) {

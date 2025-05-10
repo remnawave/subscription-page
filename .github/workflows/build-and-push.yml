@@ -1,9 +1,9 @@
-name: Build and push (branch backend-nestjs)
+name: Build and push
 
 on:
   push:
-    branches:
-      - backend-nestjs
+    tags:
+      - '*'
 
   workflow_dispatch:
 
@@ -69,8 +69,10 @@ jobs:
           platforms: linux/amd64, linux/arm64
           push: true
           tags: |
-            remnawave/subscription-page:backend-nestjs
-            ghcr.io/remnawave/subscription-page:backend-nestjs
+            remnawave/subscription-page:latest
+            remnawave/subscription-page:${{github.ref_name}}
+            ghcr.io/remnawave/subscription-page:latest
+            ghcr.io/remnawave/subscription-page:${{github.ref_name}}
 
   send-telegram-message:
     name: Send Telegram message

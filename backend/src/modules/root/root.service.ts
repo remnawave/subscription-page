@@ -44,15 +44,19 @@ export class RootService {
             let shortUuidLocal = shortUuid;
 
             if (this.isMarzbanLegacyLinkEnabled) {
-                const username = await this.decodeMarzbanLink(sanitizeUsername(shortUuid));
+                const username = await this.decodeMarzbanLink(shortUuid);
 
                 if (username) {
-                    this.logger.log(`Decoded Marzban username: ${username.username}`);
+                    const sanitizedUsername = sanitizeUsername(username.username);
 
-                    const userInfo = await this.axiosService.getUserByUsername(username.username);
+                    this.logger.log(
+                        `Decoded Marzban username: ${username.username}, sanitized username: ${sanitizedUsername}`,
+                    );
+
+                    const userInfo = await this.axiosService.getUserByUsername(sanitizedUsername);
                     if (!userInfo.isOk || !userInfo.response) {
                         this.logger.error(
-                            `Decoded Marzban username is not found in Remnawave, decoded username: ${username.username}`,
+                            `Decoded Marzban username is not found in Remnawave, decoded username: ${sanitizedUsername}`,
                         );
 
                         res.socket?.destroy();

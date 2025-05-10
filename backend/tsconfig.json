@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@common/*": [
+        "./src/common/*"
+      ],
+      "@integration-modules/*": [
+        "./src/integration-modules/*"
+      ],
+      "@modules/*": [
+        "./src/modules/*"
+      ],
+      "@libs/contracts/*": [
+        "./libs/contract/*"
+      ],
+      "@contract/*": [
+        "./libs/contract/*"
+      ],
+      "@queue/*": [
+        "./src/queue/*"
+      ],
+      "@scheduler/*": [
+        "./src/scheduler/*"
+      ]
+    },
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": true,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "useDefineForClassFields": true
+  }
+}

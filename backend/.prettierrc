@@ -6,13 +6,23 @@
   "trailingComma": "all",
   "overrides": [
     {
-      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      "files": [
+        "*.js",
+        "*.jsx",
+        "*.ts",
+        "*.tsx"
+      ],
       "options": {
         "parser": "typescript"
       }
     },
     {
-      "files": ["*.md", "*.json", "*.yaml", "*.yml"],
+      "files": [
+        "*.md",
+        "*.json",
+        "*.yaml",
+        "*.yml"
+      ],
       "options": {
         "tabWidth": 2
       }

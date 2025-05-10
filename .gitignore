@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-server/.env
+.env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -135,3 +135,8 @@ stats.html
 fsd-high-level-dependencies.html
 
 docker-compose-local.yml
+
+/frontend/node_modules
+/backend/dev_frontend
+
+/backend/.env

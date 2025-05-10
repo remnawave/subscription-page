@@ -91,7 +91,7 @@ export class RootService {
             if (subscriptionDataResponse.headers) {
                 Object.entries(subscriptionDataResponse.headers)
                     .filter(([key]) => {
-                        const ignoredHeaders = ['Transfer-Encoding', 'Content-Length', 'server'];
+                        const ignoredHeaders = ['transfer-encoding', 'content-length', 'server'];
                         return !ignoredHeaders.includes(key.toLowerCase());
                     })
                     .forEach(([key, value]) => {

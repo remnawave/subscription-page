@@ -89,9 +89,14 @@ export class RootService {
             }
 
             if (subscriptionDataResponse.headers) {
-                Object.entries(subscriptionDataResponse.headers).forEach(([key, value]) => {
-                    res.setHeader(key, value);
-                });
+                Object.entries(subscriptionDataResponse.headers)
+                    .filter(([key]) => {
+                        const ignoredHeaders = ['Transfer-Encoding', 'Content-Length', 'server'];
+                        return !ignoredHeaders.includes(key.toLowerCase());
+                    })
+                    .forEach(([key, value]) => {
+                        res.setHeader(key, value);
+                    });
             }
 
             res.status(200).send(subscriptionDataResponse.response);

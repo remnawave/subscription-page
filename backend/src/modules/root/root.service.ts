@@ -12,6 +12,7 @@ import { Logger } from '@nestjs/common';
 import { TRequestTemplateTypeKeys } from '@remnawave/backend-contract';
 
 import { AxiosService } from '@common/axios/axios.service';
+import { sanitizeUsername } from '@common/utils';
 
 @Injectable()
 export class RootService {
@@ -43,7 +44,7 @@ export class RootService {
             let shortUuidLocal = shortUuid;
 
             if (this.isMarzbanLegacyLinkEnabled) {
-                const username = await this.decodeMarzbanLink(shortUuid);
+                const username = await this.decodeMarzbanLink(sanitizeUsername(shortUuid));
 
                 if (username) {
                     this.logger.log(`Decoded Marzban username: ${username.username}`);

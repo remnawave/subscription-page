@@ -21,6 +21,11 @@ export class RootController {
         @Param('shortUuid') shortUuid: string,
         @Param('clientType') clientType: string,
     ) {
+        if (request.path.startsWith('/assets') || request.path.startsWith('/locales')) {
+            response.socket?.destroy();
+            return;
+        }
+
         if (clientType === undefined) {
             return await this.rootService.serveSubscriptionPage(request, response, shortUuid);
         }

@@ -155,8 +155,12 @@ export class RootService {
             });
 
             res.render('index', {
-                metaTitle: this.configService.getOrThrow<string>('META_TITLE'),
-                metaDescription: this.configService.getOrThrow<string>('META_DESCRIPTION'),
+                metaTitle: this.configService
+                    .getOrThrow<string>('META_TITLE')
+                    .replace(/^"|"$/g, ''),
+                metaDescription: this.configService
+                    .getOrThrow<string>('META_DESCRIPTION')
+                    .replace(/^"|"$/g, ''),
                 panelData: Buffer.from(JSON.stringify(subscriptionData)).toString('base64'),
             });
         } catch (error) {

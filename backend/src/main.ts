@@ -88,7 +88,7 @@ async function bootstrap(): Promise<void> {
 
     const config = app.get(ConfigService);
 
-    app.use(helmet({}));
+    app.use(helmet({ contentSecurityPolicy: false }));
 
     app.use(compression());
 

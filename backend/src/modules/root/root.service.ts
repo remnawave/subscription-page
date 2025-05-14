@@ -178,9 +178,33 @@ export class RootService {
         const token = shortUuid;
         this.logger.debug('Verifying token', { token });
 
-        if (token.length < 10) {
+        if (!token || token.length < 10) {
             this.logger.debug('Token too short');
             return null;
+        }
+
+        if (token.split('.').length === 3) {
+            try {
+                const payload = this.jwtService.verify(token, {
+                    secret: this.marzbanSecretKey!,
+                    algorithms: ['HS256'],
+                });
+
+                if (payload.access !== 'subscription') {
+                    this.logger.debug('JWT access field is not subscription');
+                    return null;
+                }
+
+                this.logger.debug('JWT verified successfully', { payload });
+
+                return {
+                    username: payload.sub,
+                    createdAt: new Date(payload.iat * 1000),
+                };
+            } catch (err) {
+                this.logger.debug('JWT verification failed', { error: err });
+                //return null;
+            }
         }
 
         const uToken = token.slice(0, token.length - 10);

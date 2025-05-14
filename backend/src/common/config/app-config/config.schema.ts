@@ -16,6 +16,8 @@ export const configSchema = z
         MARZBAN_LEGACY_SECRET_KEY: z.optional(z.string()),
         REMNAWAVE_API_TOKEN: z.optional(z.string()),
 
+        MARZBAN_LEGACY_SUBSCRIPTION_VALID_FROM: z.optional(z.string()),
+
         CUSTOM_SUB_PREFIX: z.optional(z.string()),
 
         CADDY_AUTH_API_TOKEN: z.optional(z.string()),

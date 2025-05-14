@@ -176,47 +176,51 @@ export class RootService {
         createdAt: Date;
     } | null> {
         const token = shortUuid;
-        this.logger.debug('Verifying token', { token });
+        this.logger.debug(`Verifying token: ${token}`);
 
         if (!token || token.length < 10) {
-            this.logger.debug('Token too short');
+            this.logger.debug(`Token too short: ${token}`);
             return null;
         }
 
         if (token.split('.').length === 3) {
             try {
-                const payload = this.jwtService.verify(token, {
+                const payload = await this.jwtService.verifyAsync(token, {
                     secret: this.marzbanSecretKey!,
                     algorithms: ['HS256'],
                 });
 
                 if (payload.access !== 'subscription') {
-                    this.logger.debug('JWT access field is not subscription');
+                    throw new Error('JWT access field is not subscription');
+                }
+
+                const jwtCreatedAt = new Date(payload.iat * 1000);
+
+                if (!this.checkSubscriptionValidity(jwtCreatedAt, payload.sub)) {
                     return null;
                 }
 
-                this.logger.debug('JWT verified successfully', { payload });
+                this.logger.debug(`JWT verified successfully, ${JSON.stringify(payload)}`);
 
                 return {
                     username: payload.sub,
-                    createdAt: new Date(payload.iat * 1000),
+                    createdAt: jwtCreatedAt,
                 };
             } catch (err) {
-                this.logger.debug('JWT verification failed', { error: err });
-                //return null;
+                this.logger.debug(`JWT verification failed: ${err}`);
             }
         }
 
         const uToken = token.slice(0, token.length - 10);
         const uSignature = token.slice(token.length - 10);
 
-        this.logger.debug('Token parts', { base: uToken, signature: uSignature });
+        this.logger.debug(`Token parts: base: ${uToken}, signature: ${uSignature}`);
 
         let decoded: string;
         try {
             decoded = Buffer.from(uToken, 'base64url').toString();
         } catch (err) {
-            this.logger.debug('Base64 decode error', { error: err });
+            this.logger.debug(`Base64 decode error: ${err}`);
             return null;
         }
 
@@ -226,10 +230,7 @@ export class RootService {
 
         const expectedSignature = Buffer.from(digest).toString('base64url').slice(0, 10);
 
-        this.logger.debug('Expected signature', {
-            expected: expectedSignature,
-            actual: uSignature,
-        });
+        this.logger.debug(`Expected signature: ${expectedSignature}, actual: ${uSignature}`);
 
         if (uSignature !== expectedSignature) {
             this.logger.debug('Signature mismatch');
@@ -238,7 +239,7 @@ export class RootService {
 
         const parts = decoded.split(',');
         if (parts.length < 2) {
-            this.logger.debug('Invalid token format', { decoded });
+            this.logger.debug(`Invalid token format: ${decoded}`);
             return null;
         }
 
@@ -246,17 +247,46 @@ export class RootService {
         const createdAtInt = parseInt(parts[1], 10);
 
         if (isNaN(createdAtInt)) {
-            this.logger.debug('Invalid created_at timestamp', { value: parts[1] });
+            this.logger.debug(`Invalid created_at timestamp: ${parts[1]}`);
             return null;
         }
 
         const createdAt = new Date(createdAtInt * 1000);
 
-        this.logger.debug('Token decoded', { username, createdAt });
+        if (!this.checkSubscriptionValidity(createdAt, username)) {
+            return null;
+        }
+
+        this.logger.debug(`Token decoded. Username: ${username}, createdAt: ${createdAt}`);
 
         return {
             username,
             createdAt,
         };
+    }
+
+    private checkSubscriptionValidity(createdAt: Date, username: string): boolean {
+        const validFrom = this.configService.get<string | undefined>(
+            'MARZBAN_LEGACY_SUBSCRIPTION_VALID_FROM',
+        );
+
+        if (!validFrom) {
+            return true;
+        }
+
+        const validFromDate = new Date(validFrom);
+        if (createdAt < validFromDate) {
+            this.logger.debug(
+                `createdAt JWT: ${createdAt.toISOString()} is before validFrom: ${validFromDate.toISOString()}`,
+            );
+
+            this.logger.warn(
+                `${JSON.stringify({ username, createdAt })} – subscription createdAt is before validFrom`,
+            );
+
+            return false;
+        }
+
+        return true;
     }
 }

@@ -20,6 +20,7 @@ import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
 export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformConfig }) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
+
     const os = useOs()
 
     const [currentLang, setCurrentLang] = useState<'en' | 'fa' | 'ru'>('en')
@@ -69,7 +70,7 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
         return null
     }
 
-    const { subscriptionUrl } = subscription
+    const subscriptionUrl = window.location.href
 
     const openDeepLink = (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => {
         if (isNeedBase64Encoding) {

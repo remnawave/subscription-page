@@ -14,20 +14,22 @@ export const SubscriptionLinkWidget = () => {
 
     if (!subscription) return null
 
+    const subscriptionUrl = window.location.href
+
     const handleCopy = () => {
         notifications.show({
             title: t('subscription-link.widget.link-copied'),
             message: t('subscription-link.widget.link-copied-to-clipboard'),
             color: 'teal'
         })
-        clipboard.copy(subscription.subscriptionUrl)
+        clipboard.copy(subscriptionUrl)
     }
 
     return (
         <>
             <Button
                 onClick={() => {
-                    const subscriptionQrCode = renderSVG(subscription.subscriptionUrl, {
+                    const subscriptionQrCode = renderSVG(subscriptionUrl, {
                         whiteColor: '#161B22',
                         blackColor: '#3CC9DB'
                     })

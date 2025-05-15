@@ -8,8 +8,8 @@
     "node_modules/@mantine/core/styles.css"
   ],
   "i18n-ally.localesPaths": [
-    "public/locales",
-    "src/app/i18n"
+    "frontend/public/locales",
+    "frontend/src/app/i18n"
   ],
   "i18n-ally.displayLanguage": "en",
   "i18n-ally.refactor.templates": [

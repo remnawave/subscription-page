@@ -118,7 +118,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     }
                     title={formattedTitle}
                 >
-                    <Text c="dimmed" mb={16} size="sm">
+                    <Text c="dimmed" mb={16} size="sm" style={{ whiteSpace: 'pre-line' }}>
                         {selectedApp ? getAppDescription(selectedApp, 'installationStep') : ''}
                     </Text>
                     {selectedApp && renderFirstStepButton(selectedApp)}
@@ -136,7 +136,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                             'Additional step title is not set'
                         )}
                     >
-                        <Text c="dimmed" mb={16} size="sm">
+                        <Text c="dimmed" mb={16} size="sm" style={{ whiteSpace: 'pre-line' }}>
                             {selectedApp.additionalBeforeAddSubscriptionStep.description[
                                 currentLang
                             ] || selectedApp.additionalBeforeAddSubscriptionStep.description.en}
@@ -167,7 +167,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     }
                     title={t('installation-guide.widget.add-subscription')}
                 >
-                    <Text c="dimmed" mb={16} size="sm">
+                    <Text c="dimmed" mb={16} size="sm" style={{ whiteSpace: 'pre-line' }}>
                         {selectedApp
                             ? getAppDescription(selectedApp, 'addSubscriptionStep')
                             : 'Add subscription description is not set'}
@@ -199,7 +199,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                             'Additional step title is not set'
                         )}
                     >
-                        <Text c="dimmed" mb={16} size="sm">
+                        <Text c="dimmed" mb={16} size="sm" style={{ whiteSpace: 'pre-line' }}>
                             {selectedApp.additionalAfterAddSubscriptionStep.description[
                                 currentLang
                             ] || selectedApp.additionalAfterAddSubscriptionStep.description.en}
@@ -230,7 +230,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                     }
                     title={t('installation-guide.widget.connect-and-use')}
                 >
-                    <Text c="dimmed" size="sm">
+                    <Text c="dimmed" size="sm" style={{ whiteSpace: 'pre-line' }}>
                         {selectedApp
                             ? getAppDescription(selectedApp, 'connectAndUseStep')
                             : 'Connect and use description is not set'}

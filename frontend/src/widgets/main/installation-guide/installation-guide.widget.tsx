@@ -8,6 +8,7 @@ import { Box, Button, Group, Select, Text } from '@mantine/core'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOs } from '@mantine/hooks'
+import { withoutFragment } from 'ufo'
 
 import {
     IAppConfig,
@@ -70,7 +71,7 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
         return null
     }
 
-    const subscriptionUrl = window.location.href
+    const subscriptionUrl = withoutFragment(window.location.href)
 
     const openDeepLink = (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => {
         if (isNeedBase64Encoding) {

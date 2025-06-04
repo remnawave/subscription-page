@@ -8,12 +8,12 @@ import { Box, Button, Group, Select, Text } from '@mantine/core'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOs } from '@mantine/hooks'
-import { withoutFragment } from 'ufo'
 
 import {
     IAppConfig,
     IPlatformConfig
 } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
@@ -61,11 +61,10 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
 
     if (!subscription) return null
 
-    const { origin, pathname } = window.location
-    const segments = pathname.split('/').filter(Boolean)
-    const baseSegments = segments.slice(0, -1)
-    const base = baseSegments.length > 0 ? `${origin}/${baseSegments.join('/')}` : origin
-    const subscriptionUrl = withoutFragment(`${base}/${subscription.user.shortUuid}`)
+    const subscriptionUrl = constructSubscriptionUrl(
+        window.location.href,
+        subscription.user.shortUuid
+    )
 
     const hasPlatformApps = {
         ios: appsConfig.ios && appsConfig.ios.length > 0,

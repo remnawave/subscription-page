@@ -3,9 +3,9 @@ import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
 import { modals } from '@mantine/modals'
-import { withoutFragment } from 'ufo'
 import { renderSVG } from 'uqr'
 
+import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const SubscriptionLinkWidget = () => {
@@ -15,11 +15,10 @@ export const SubscriptionLinkWidget = () => {
 
     if (!subscription) return null
 
-    const { origin, pathname } = window.location
-    const segments = pathname.split('/').filter(Boolean)
-    const baseSegments = segments.slice(0, -1)
-    const base = baseSegments.length > 0 ? `${origin}/${baseSegments.join('/')}` : origin
-    const subscriptionUrl = withoutFragment(`${base}/${subscription.user.shortUuid}`)
+    const subscriptionUrl = constructSubscriptionUrl(
+        window.location.href,
+        subscription.user.shortUuid
+    )
 
     const handleCopy = () => {
         notifications.show({

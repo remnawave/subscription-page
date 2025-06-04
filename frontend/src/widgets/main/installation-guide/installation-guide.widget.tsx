@@ -61,6 +61,12 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
 
     if (!subscription) return null
 
+    const { origin, pathname } = window.location
+    const segments = pathname.split('/').filter(Boolean)
+    const baseSegments = segments.slice(0, -1)
+    const base = baseSegments.length > 0 ? `${origin}/${baseSegments.join('/')}` : origin
+    const subscriptionUrl = withoutFragment(`${base}/${subscription.user.shortUuid}`)
+
     const hasPlatformApps = {
         ios: appsConfig.ios && appsConfig.ios.length > 0,
         android: appsConfig.android && appsConfig.android.length > 0,
@@ -70,8 +76,6 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
     if (!hasPlatformApps.ios && !hasPlatformApps.android && !hasPlatformApps.pc) {
         return null
     }
-
-    const subscriptionUrl = withoutFragment(window.location.href)
 
     const openDeepLink = (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => {
         if (isNeedBase64Encoding) {

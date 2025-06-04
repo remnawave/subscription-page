@@ -15,7 +15,11 @@ export const SubscriptionLinkWidget = () => {
 
     if (!subscription) return null
 
-    const subscriptionUrl = withoutFragment(window.location.href)
+    const { origin, pathname } = window.location
+    const segments = pathname.split('/').filter(Boolean)
+    const baseSegments = segments.slice(0, -1)
+    const base = baseSegments.length > 0 ? `${origin}/${baseSegments.join('/')}` : origin
+    const subscriptionUrl = withoutFragment(`${base}/${subscription.user.shortUuid}`)
 
     const handleCopy = () => {
         notifications.show({

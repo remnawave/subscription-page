@@ -8,12 +8,12 @@ import { Box, Button, Group, Select, Text } from '@mantine/core'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOs } from '@mantine/hooks'
-import { withoutFragment } from 'ufo'
 
 import {
     IAppConfig,
     IPlatformConfig
 } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
@@ -61,6 +61,11 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
 
     if (!subscription) return null
 
+    const subscriptionUrl = constructSubscriptionUrl(
+        window.location.href,
+        subscription.user.shortUuid
+    )
+
     const hasPlatformApps = {
         ios: appsConfig.ios && appsConfig.ios.length > 0,
         android: appsConfig.android && appsConfig.android.length > 0,
@@ -70,8 +75,6 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
     if (!hasPlatformApps.ios && !hasPlatformApps.android && !hasPlatformApps.pc) {
         return null
     }
-
-    const subscriptionUrl = withoutFragment(window.location.href)
 
     const openDeepLink = (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => {
         if (isNeedBase64Encoding) {

@@ -8,7 +8,7 @@ export const constructSubscriptionUrl = (currentUrl: string, shortUuid: string):
     url.auth = ''
 
     const segments = url.pathname.split('/').filter(Boolean)
-    const lastSegment = segments[segments.length - 1]
+    const lastSegment = segments.at(-1)
 
     if (lastSegment !== shortUuid) {
         segments.pop()

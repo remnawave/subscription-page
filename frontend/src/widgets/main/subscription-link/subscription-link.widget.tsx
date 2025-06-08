@@ -3,9 +3,9 @@ import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
 import { modals } from '@mantine/modals'
-import { withoutFragment } from 'ufo'
 import { renderSVG } from 'uqr'
 
+import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 export const SubscriptionLinkWidget = () => {

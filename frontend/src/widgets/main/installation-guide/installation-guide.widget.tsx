@@ -8,12 +8,12 @@ import { Box, Button, Group, Select, Text } from '@mantine/core'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOs } from '@mantine/hooks'
-import { withoutFragment } from 'ufo'
 
 import {
     IAppConfig,
     IPlatformConfig
 } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 import { BaseInstallationGuideWidget } from './installation-guide.base.widget'

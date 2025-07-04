@@ -10,9 +10,17 @@
                     {
                         "buttonLink": "https://apps.apple.com/us/app/happ-proxy-utility/id6504287215",
                         "buttonText": {
-                            "en": "Open in App Store",
-                            "fa": "باز کردن در App Store",
-                            "ru": "Открыть в App Store"
+                            "en": "Open in App Store [EU]",
+                            "fa": "باز کردن در App Store [EU]",
+                            "ru": "Открыть в App Store [EU]"
+                        }
+                    },
+                    {
+                        "buttonLink": "https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973",
+                        "buttonText": {
+                            "en": "Open in App Store [RU]",
+                            "fa": "باز کردن در App Store [RU]",
+                            "ru": "Открыть в App Store [RU]"
                         }
                     }
                 ],

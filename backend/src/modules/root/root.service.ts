@@ -43,6 +43,11 @@ export class RootService {
 
             let shortUuidLocal = shortUuid;
 
+            if (this.isGenericPath(req.path)) {
+                res.socket?.destroy();
+                return;
+            }
+
             if (this.isMarzbanLegacyLinkEnabled) {
                 const username = await this.decodeMarzbanLink(shortUuid);
 
@@ -131,6 +136,12 @@ export class RootService {
         ];
 
         return browserKeywords.some((keyword) => userAgent.includes(keyword));
+    }
+
+    private isGenericPath(path: string): boolean {
+        const genericPaths = ['favicon.ico', 'robots.txt'];
+
+        return genericPaths.some((genericPath) => path.includes(genericPath));
     }
 
     private async returnWebpage(req: Request, res: Response, shortUuid: string): Promise<void> {

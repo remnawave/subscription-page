@@ -15,7 +15,10 @@ export const SubscriptionLinkWidget = () => {
 
     if (!subscription) return null
 
-    const subscriptionUrl = subscription.subscriptionUrl
+    const subscriptionUrl = constructSubscriptionUrl(
+        window.location.href,
+        subscription.user.shortUuid
+    )
 
     const handleCopy = () => {
         notifications.show({

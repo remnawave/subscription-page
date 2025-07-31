@@ -61,7 +61,10 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
 
     if (!subscription) return null
 
-    const subscriptionUrl = subscription.subscriptionUrl
+    const subscriptionUrl = constructSubscriptionUrl(
+        window.location.href,
+        subscription.user.shortUuid
+    )
 
     const hasPlatformApps = {
         ios: appsConfig.ios && appsConfig.ios.length > 0,

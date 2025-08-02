@@ -1,11 +1,12 @@
 import {
     IAppConfig,
-    IPlatformConfig
+    ISubscriptionPageAppConfig,
+    TPlatform
 } from '@shared/constants/apps-config/interfaces/app-list.interface'
 
 export interface IPlatformGuideProps {
-    getAppsForPlatform: (platform: 'android' | 'ios' | 'pc') => IAppConfig[]
-    getSelectedAppForPlatform: (platform: 'android' | 'ios' | 'pc') => IAppConfig | null
+    getAppsForPlatform: (platform: TPlatform) => IAppConfig[]
+    getSelectedAppForPlatform: (platform: TPlatform) => IAppConfig | null
     openDeepLink: (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => void
-    appsConfig: IPlatformConfig
+    appsConfig: ISubscriptionPageAppConfig['platforms']
 }

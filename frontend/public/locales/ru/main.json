@@ -25,7 +25,17 @@
                 "install-and-open-app": "Установите и откройте {{appName}}"
             }
         },
-        "pc": {
+        "linux": {
+            "widget": {
+                "download-app": "Скачайте {{appName}}"
+            }
+        },
+        "macos": {
+            "widget": {
+                "download-app": "Скачайте {{appName}}"
+            }
+        },
+        "windows": {
             "widget": {
                 "download-app": "Скачайте {{appName}}"
             }

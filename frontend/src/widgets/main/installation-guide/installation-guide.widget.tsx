@@ -1,6 +1,7 @@
 import {
     IconBrandAndroid,
     IconBrandApple,
+    IconBrandWindows,
     IconDeviceDesktop,
     IconExternalLink
 } from '@tabler/icons-react'
@@ -11,30 +12,41 @@ import { useOs } from '@mantine/hooks'
 
 import {
     IAppConfig,
-    IPlatformConfig
+    ISubscriptionPageAppConfig,
+    TEnabledLocales,
+    TPlatform
 } from '@shared/constants/apps-config/interfaces/app-list.interface'
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
 
-export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformConfig }) => {
+export const InstallationGuideWidget = ({
+    appsConfig,
+    enabledLocales
+}: {
+    appsConfig: ISubscriptionPageAppConfig['platforms']
+    enabledLocales: TEnabledLocales[]
+}) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
 
     const os = useOs()
 
-    const [currentLang, setCurrentLang] = useState<'en' | 'fa' | 'ru'>('en')
-    const [defaultTab, setDefaultTab] = useState('pc')
+    const [currentLang, setCurrentLang] = useState<TEnabledLocales>('en')
+    const [defaultTab, setDefaultTab] = useState('windows')
 
     useEffect(() => {
         const lang = i18n.language
+
         if (lang.startsWith('en')) {
             setCurrentLang('en')
-        } else if (lang.startsWith('fa')) {
+        } else if (lang.startsWith('fa') && enabledLocales.includes('fa')) {
             setCurrentLang('fa')
-        } else if (lang.startsWith('ru')) {
+        } else if (lang.startsWith('ru') && enabledLocales.includes('ru')) {
             setCurrentLang('ru')
+        } else if (lang.startsWith('zh') && enabledLocales.includes('zh')) {
+            setCurrentLang('zh')
         } else {
             setCurrentLang('en')
         }
@@ -49,12 +61,16 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
                 setDefaultTab('ios')
                 break
             case 'linux':
+                setDefaultTab('linux')
+                break
             case 'macos':
+                setDefaultTab('macos')
+                break
             case 'windows':
-                setDefaultTab('pc')
+                setDefaultTab('windows')
                 break
             default:
-                setDefaultTab('pc')
+                setDefaultTab('windows')
                 break
         }
     }, [os])
@@ -69,10 +85,18 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
     const hasPlatformApps = {
         ios: appsConfig.ios && appsConfig.ios.length > 0,
         android: appsConfig.android && appsConfig.android.length > 0,
-        pc: appsConfig.pc && appsConfig.pc.length > 0
+        linux: appsConfig.linux && appsConfig.linux.length > 0,
+        macos: appsConfig.macos && appsConfig.macos.length > 0,
+        windows: appsConfig.windows && appsConfig.windows.length > 0
     }
 
-    if (!hasPlatformApps.ios && !hasPlatformApps.android && !hasPlatformApps.pc) {
+    if (
+        !hasPlatformApps.ios &&
+        !hasPlatformApps.android &&
+        !hasPlatformApps.linux &&
+        !hasPlatformApps.macos &&
+        !hasPlatformApps.windows
+    ) {
         return null
     }
 
@@ -97,9 +121,19 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
             label: 'iOS',
             icon: <IconBrandApple />
         },
-        hasPlatformApps.pc && {
-            value: 'pc',
-            label: t('installation-guide.widget.pc'),
+        hasPlatformApps.macos && {
+            value: 'macos',
+            label: 'macOS',
+            icon: <IconBrandApple />
+        },
+        hasPlatformApps.windows && {
+            value: 'windows',
+            label: 'Windows',
+            icon: <IconBrandWindows />
+        },
+        hasPlatformApps.linux && {
+            value: 'linux',
+            label: 'Linux',
             icon: <IconDeviceDesktop />
         }
     ].filter(Boolean) as {
@@ -115,11 +149,11 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
         setDefaultTab(availablePlatforms[0].value)
     }
 
-    const getAppsForPlatform = (platform: 'android' | 'ios' | 'pc') => {
+    const getAppsForPlatform = (platform: TPlatform) => {
         return appsConfig[platform] || []
     }
 
-    const getSelectedAppForPlatform = (platform: 'android' | 'ios' | 'pc') => {
+    const getSelectedAppForPlatform = (platform: TPlatform) => {
         const apps = getAppsForPlatform(platform)
         if (apps.length === 0) return null
         return apps[0]
@@ -152,7 +186,7 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
         return null
     }
 
-    const getPlatformTitle = (platform: 'android' | 'ios' | 'pc') => {
+    const getPlatformTitle = (platform: TPlatform) => {
         if (platform === 'android') {
             return t('installation-guide.android.widget.install-and-open-app', {
                 appName: '{appName}'
@@ -163,9 +197,23 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
                 appName: '{appName}'
             })
         }
-        return t('installation-guide.pc.widget.download-app', {
-            appName: '{appName}'
-        })
+        if (platform === 'linux') {
+            return t('installation-guide.linux.widget.download-app', {
+                appName: '{appName}'
+            })
+        }
+        if (platform === 'macos') {
+            return t('installation-guide.macos.widget.download-app', {
+                appName: '{appName}'
+            })
+        }
+        if (platform === 'windows') {
+            return t('installation-guide.windows.widget.download-app', {
+                appName: '{appName}'
+            })
+        }
+
+        return 'Unknown platform'
     }
 
     return (
@@ -199,11 +247,11 @@ export const InstallationGuideWidget = ({ appsConfig }: { appsConfig: IPlatformC
                 <BaseInstallationGuideWidget
                     appsConfig={appsConfig}
                     currentLang={currentLang}
-                    firstStepTitle={getPlatformTitle(defaultTab as 'android' | 'ios' | 'pc')}
+                    firstStepTitle={getPlatformTitle(defaultTab as TPlatform)}
                     getAppsForPlatform={getAppsForPlatform}
                     getSelectedAppForPlatform={getSelectedAppForPlatform}
                     openDeepLink={openDeepLink}
-                    platform={defaultTab as 'android' | 'ios' | 'pc'}
+                    platform={defaultTab as TPlatform}
                     renderFirstStepButton={renderFirstStepButton}
                 />
             )}

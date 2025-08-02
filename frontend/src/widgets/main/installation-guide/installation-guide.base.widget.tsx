@@ -9,15 +9,20 @@ import { Box, Button, Group, Text, ThemeIcon, Timeline } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
-import { IAppConfig } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import {
+    IAppConfig,
+    ILocalizedText,
+    TEnabledLocales,
+    TPlatform
+} from '@shared/constants/apps-config/interfaces/app-list.interface'
 
 import { IPlatformGuideProps } from './interfaces/platform-guide.props.interface'
 
 export interface IBaseGuideProps extends IPlatformGuideProps {
     firstStepTitle: string
-    platform: 'android' | 'ios' | 'pc'
+    platform: TPlatform
     renderFirstStepButton: (app: IAppConfig) => React.ReactNode
-    currentLang: 'en' | 'fa' | 'ru'
+    currentLang: TEnabledLocales
 }
 
 export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
@@ -61,20 +66,17 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
         const stepData = app[step]
         if (!stepData) return ''
 
-        return stepData.description[currentLang] || stepData.description[currentLang] || ''
+        return stepData.description[currentLang] || ''
     }
 
-    const getButtonText = (button: { buttonText: { en: string; fa: string; ru: string } }) => {
-        return button.buttonText[currentLang] || button.buttonText[currentLang] || ''
+    const getButtonText = (button: { buttonText: ILocalizedText }) => {
+        return button.buttonText[currentLang] || ''
     }
 
-    const getStepTitle = (
-        stepData: { title?: { en: string; fa: string; ru: string } },
-        defaultTitle: string
-    ) => {
+    const getStepTitle = (stepData: { title?: ILocalizedText }, defaultTitle: string) => {
         if (!stepData || !stepData.title) return defaultTitle
 
-        return stepData.title[currentLang] || stepData.title[currentLang] || defaultTitle
+        return stepData.title[currentLang] || defaultTitle
     }
 
     return (

@@ -1,6 +1,7 @@
 import { GetSubscriptionInfoByShortUuidCommand } from '@remnawave/backend-contract'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import consola from 'consola/browser'
 
 import { useSubscriptionInfoStoreActions } from '@entities/subscription-info-store/subscription-info-store'
 import { LoadingScreen } from '@shared/ui/loading-screen/loading-screen'
@@ -19,13 +20,17 @@ export function RootLayout() {
             const subscriptionUrl = rootDiv.dataset.panel
 
             if (subscriptionUrl) {
-                const subscription: GetSubscriptionInfoByShortUuidCommand.Response = JSON.parse(
-                    atob(subscriptionUrl)
-                )
+                try {
+                    const subscription: GetSubscriptionInfoByShortUuidCommand.Response = JSON.parse(
+                        atob(subscriptionUrl)
+                    )
 
-                actions.setSubscriptionInfo({
-                    subscription: subscription.response
-                })
+                    actions.setSubscriptionInfo({
+                        subscription: subscription.response
+                    })
+                } catch (error) {
+                    consola.log(error)
+                }
             }
         }
     }, [])

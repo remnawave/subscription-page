@@ -25,7 +25,17 @@
                 "install-and-open-app": "安装并打开 {{appName}}"
             }
         },
-        "pc": {
+        "linux": {
+            "widget": {
+                "download-app": "下载 {{appName}}"
+            }
+        },
+        "macos": {
+            "widget": {
+                "download-app": "下载 {{appName}}"
+            }
+        },
+        "windows": {
             "widget": {
                 "download-app": "下载 {{appName}}"
             }

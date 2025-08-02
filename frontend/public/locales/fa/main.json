@@ -29,6 +29,16 @@
             "widget": {
                 "download-app": "دانلود {{appName}}"
             }
+        },
+        "macos": {
+            "widget": {
+                "download-app": "دانلود {{appName}}"
+            }
+        },
+        "windows": {
+            "widget": {
+                "download-app": "دانلود {{appName}}"
+            }
         }
     },
     "subscription-link": {

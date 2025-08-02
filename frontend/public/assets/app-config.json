@@ -562,6 +562,8 @@
                 }
             }
         ],
-        "linux": []
+        "linux": [],
+        "androidTV": [],
+        "appleTV": []
     }
 }

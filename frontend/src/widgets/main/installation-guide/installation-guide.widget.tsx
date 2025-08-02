@@ -87,7 +87,9 @@ export const InstallationGuideWidget = ({
         android: appsConfig.android && appsConfig.android.length > 0,
         linux: appsConfig.linux && appsConfig.linux.length > 0,
         macos: appsConfig.macos && appsConfig.macos.length > 0,
-        windows: appsConfig.windows && appsConfig.windows.length > 0
+        windows: appsConfig.windows && appsConfig.windows.length > 0,
+        androidTV: appsConfig.androidTV && appsConfig.androidTV.length > 0,
+        appleTV: appsConfig.appleTV && appsConfig.appleTV.length > 0
     }
 
     if (
@@ -95,7 +97,9 @@ export const InstallationGuideWidget = ({
         !hasPlatformApps.android &&
         !hasPlatformApps.linux &&
         !hasPlatformApps.macos &&
-        !hasPlatformApps.windows
+        !hasPlatformApps.windows &&
+        !hasPlatformApps.androidTV &&
+        !hasPlatformApps.appleTV
     ) {
         return null
     }
@@ -135,6 +139,16 @@ export const InstallationGuideWidget = ({
             value: 'linux',
             label: 'Linux',
             icon: <IconDeviceDesktop />
+        },
+        hasPlatformApps.androidTV && {
+            value: 'androidTV',
+            label: 'Android TV',
+            icon: <IconBrandAndroid />
+        },
+        hasPlatformApps.appleTV && {
+            value: 'appleTV',
+            label: 'Apple TV',
+            icon: <IconBrandApple />
         }
     ].filter(Boolean) as {
         icon: React.ReactNode
@@ -197,17 +211,13 @@ export const InstallationGuideWidget = ({
                 appName: '{appName}'
             })
         }
-        if (platform === 'linux') {
-            return t('installation-guide.linux.widget.download-app', {
-                appName: '{appName}'
-            })
-        }
-        if (platform === 'macos') {
-            return t('installation-guide.macos.widget.download-app', {
-                appName: '{appName}'
-            })
-        }
-        if (platform === 'windows') {
+        if (
+            platform === 'windows' ||
+            platform === 'androidTV' ||
+            platform === 'appleTV' ||
+            platform === 'linux' ||
+            platform === 'macos'
+        ) {
             return t('installation-guide.windows.widget.download-app', {
                 appName: '{appName}'
             })

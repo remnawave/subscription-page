@@ -28,7 +28,10 @@ export interface IAppConfig {
     addSubscriptionStep: IStep
     connectAndUseStep: IStep
     id: string
-    installationStep: ITitleStep
+    installationStep: {
+        buttons: IButton[]
+        description: ILocalizedText
+    }
     isFeatured: boolean
     isNeedBase64Encoding?: boolean
     name: string

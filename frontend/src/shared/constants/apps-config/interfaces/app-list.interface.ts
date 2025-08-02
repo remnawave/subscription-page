@@ -36,7 +36,6 @@ export interface IAppConfig {
     isNeedBase64Encoding?: boolean
     name: string
     urlScheme: string
-    viewPosition?: number
 }
 
 export interface ISubscriptionPageConfiguration {

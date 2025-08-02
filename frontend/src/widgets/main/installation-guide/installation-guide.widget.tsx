@@ -249,6 +249,7 @@ export const InstallationGuideWidget = ({
                         size="sm"
                         style={{ width: 130 }}
                         value={defaultTab}
+                        withScrollArea={false}
                     />
                 )}
             </Group>

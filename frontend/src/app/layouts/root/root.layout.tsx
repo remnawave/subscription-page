@@ -30,6 +30,8 @@ export function RootLayout() {
                     })
                 } catch (error) {
                     consola.log(error)
+                } finally {
+                    delete rootDiv.dataset.panel
                 }
             }
         }

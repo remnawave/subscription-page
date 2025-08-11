@@ -247,7 +247,7 @@ export const InstallationGuideWidget = ({
                         placeholder={t('installation-guide.widget.select-device')}
                         radius="md"
                         size="sm"
-                        style={{ width: 130 }}
+                        style={{ width: 160 }}
                         value={defaultTab}
                         withScrollArea={false}
                     />

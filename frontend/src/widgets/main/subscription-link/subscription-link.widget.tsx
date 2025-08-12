@@ -1,4 +1,5 @@
-import { Button, Image, Stack, Text } from '@mantine/core'
+import { ActionIcon, Button, Group, Image, Stack, Text } from '@mantine/core'
+import { IconHelpCircle, IconLink } from '@tabler/icons-react'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
@@ -8,7 +9,7 @@ import { renderSVG } from 'uqr'
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
-export const SubscriptionLinkWidget = () => {
+export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) => {
     const { t } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
     const clipboard = useClipboard({ timeout: 10000 })
@@ -30,8 +31,8 @@ export const SubscriptionLinkWidget = () => {
     }
 
     return (
-        <>
-            <Button
+        <Group gap="xs">
+            <ActionIcon
                 onClick={() => {
                     const subscriptionQrCode = renderSVG(subscriptionUrl, {
                         whiteColor: '#161B22',
@@ -62,10 +63,25 @@ export const SubscriptionLinkWidget = () => {
                         )
                     })
                 }}
-                variant="outline"
+                size="xl"
+                variant="default"
             >
-                {t('subscription-link.widget.get-link')}
-            </Button>
-        </>
+                <IconLink />
+            </ActionIcon>
+
+            {supportUrl && (
+                <ActionIcon
+                    c="teal"
+                    component="a"
+                    href={supportUrl}
+                    rel="noopener noreferrer"
+                    size="xl"
+                    target="_blank"
+                    variant="default"
+                >
+                    <IconHelpCircle />
+                </ActionIcon>
+            )}
+        </Group>
     )
 }

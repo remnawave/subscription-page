@@ -4,7 +4,12 @@
             "ru",
             "zh",
             "fa"
-        ]
+        ],
+        "branding": {
+            "name": "Subscription",
+            "logoUrl": "https://remna.st/img/logo.svg",
+            "supportUrl": "https://t.me"
+        }
     },
     "platforms": {
         "ios": [

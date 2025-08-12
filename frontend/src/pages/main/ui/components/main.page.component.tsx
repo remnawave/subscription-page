@@ -1,5 +1,4 @@
-import { Center, Container, Group, Stack, Title } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
+import { Center, Container, Group, Image, Stack, Title } from '@mantine/core'
 
 import {
     ISubscriptionPageAppConfig,
@@ -16,8 +15,6 @@ export const MainPageComponent = ({
 }: {
     subscriptionPageAppConfig: ISubscriptionPageAppConfig
 }) => {
-    const { t } = useTranslation()
-
     let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh']
 
     if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
@@ -33,11 +30,35 @@ export const MainPageComponent = ({
         <Container my="xl" size="xl">
             <Stack gap="xl">
                 <Group justify="space-between">
-                    <Group gap="xs">
-                        <Title order={4}>{t('main.page.component.podpiska')}</Title>
+                    <Group
+                        gap="xs"
+                        style={{
+                            userSelect: 'none'
+                        }}
+                    >
+                        {subscriptionPageAppConfig.config.branding?.logoUrl && (
+                            <Image
+                                alt="logo"
+                                fit="contain"
+                                src={subscriptionPageAppConfig.config.branding.logoUrl}
+                                style={{
+                                    maxWidth: '36px',
+                                    maxHeight: '36px',
+                                    width: 'auto',
+                                    height: 'auto'
+                                }}
+                            />
+                        )}
+
+                        <Title order={4} size="md">
+                            {subscriptionPageAppConfig.config.branding?.name || 'Subscription'}
+                        </Title>
                     </Group>
+
                     <Group gap="xs">
-                        <SubscriptionLinkWidget />
+                        <SubscriptionLinkWidget
+                            supportUrl={subscriptionPageAppConfig.config.branding?.supportUrl}
+                        />
                     </Group>
                 </Group>
 

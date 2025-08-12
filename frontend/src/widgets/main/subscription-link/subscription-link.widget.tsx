@@ -1,5 +1,11 @@
+import {
+    IconBrandDiscord,
+    IconBrandTelegram,
+    IconBrandVk,
+    IconLink,
+    IconMessageChatbot
+} from '@tabler/icons-react'
 import { ActionIcon, Button, Group, Image, Stack, Text } from '@mantine/core'
-import { IconHelpCircle, IconLink } from '@tabler/icons-react'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
@@ -28,6 +34,36 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
             color: 'teal'
         })
         clipboard.copy(subscriptionUrl)
+    }
+
+    const renderSupportLink = (supportUrl: string) => {
+        const iconConfig = {
+            't.me': { icon: IconBrandTelegram, color: '#0088cc' },
+            'discord.gg': { icon: IconBrandDiscord, color: '#5865F2' },
+            'vk.com': { icon: IconBrandVk, color: '#0077FF' }
+        }
+
+        const matchedPlatform = Object.entries(iconConfig).find(([domain]) =>
+            supportUrl.includes(domain)
+        )
+
+        const { icon: Icon, color } = matchedPlatform
+            ? matchedPlatform[1]
+            : { icon: IconMessageChatbot, color: 'teal' }
+
+        return (
+            <ActionIcon
+                c={color}
+                component="a"
+                href={supportUrl}
+                rel="noopener noreferrer"
+                size="xl"
+                target="_blank"
+                variant="default"
+            >
+                <Icon />
+            </ActionIcon>
+        )
     }
 
     return (
@@ -68,20 +104,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
             >
                 <IconLink />
             </ActionIcon>
-
-            {supportUrl && (
-                <ActionIcon
-                    c="teal"
-                    component="a"
-                    href={supportUrl}
-                    rel="noopener noreferrer"
-                    size="xl"
-                    target="_blank"
-                    variant="default"
-                >
-                    <IconHelpCircle />
-                </ActionIcon>
-            )}
+            {supportUrl && renderSupportLink(supportUrl)}
         </Group>
     )
 }

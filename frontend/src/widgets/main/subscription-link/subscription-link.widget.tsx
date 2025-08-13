@@ -39,7 +39,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
     const renderSupportLink = (supportUrl: string) => {
         const iconConfig = {
             't.me': { icon: IconBrandTelegram, color: '#0088cc' },
-            'discord.gg': { icon: IconBrandDiscord, color: '#5865F2' },
+            'discord.com': { icon: IconBrandDiscord, color: '#5865F2' },
             'vk.com': { icon: IconBrandVk, color: '#0077FF' }
         }
 

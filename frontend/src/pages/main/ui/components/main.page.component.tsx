@@ -1,35 +1,77 @@
-import { Center, Container, Group, Stack, Title } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
+import { Center, Container, Group, Image, Stack, Title } from '@mantine/core'
 
-import { IPlatformConfig } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import {
+    ISubscriptionPageAppConfig,
+    TEnabledLocales
+} from '@shared/constants/apps-config/interfaces/app-list.interface'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
 
 import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
 import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
 
-export const MainPageComponent = ({ appsConfig }: { appsConfig: IPlatformConfig }) => {
-    const { t } = useTranslation()
+export const MainPageComponent = ({
+    subscriptionPageAppConfig
+}: {
+    subscriptionPageAppConfig: ISubscriptionPageAppConfig
+}) => {
+    let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh']
+
+    if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
+        additionalLocales = [
+            'en',
+            ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
+                ['fa', 'ru', 'zh'].includes(locale)
+            )
+        ]
+    }
 
     return (
         <Container my="xl" size="xl">
             <Stack gap="xl">
                 <Group justify="space-between">
-                    <Group gap="xs">
-                        <Title order={4}>{t('main.page.component.podpiska')}</Title>
+                    <Group
+                        gap="xs"
+                        style={{
+                            userSelect: 'none'
+                        }}
+                    >
+                        {subscriptionPageAppConfig.config.branding?.logoUrl && (
+                            <Image
+                                alt="logo"
+                                fit="contain"
+                                src={subscriptionPageAppConfig.config.branding.logoUrl}
+                                style={{
+                                    maxWidth: '36px',
+                                    maxHeight: '36px',
+                                    width: 'auto',
+                                    height: 'auto'
+                                }}
+                            />
+                        )}
+
+                        <Title order={4} size="md">
+                            {subscriptionPageAppConfig.config.branding?.name || 'Subscription'}
+                        </Title>
                     </Group>
+
                     <Group gap="xs">
-                        <SubscriptionLinkWidget />
+                        <SubscriptionLinkWidget
+                            supportUrl={subscriptionPageAppConfig.config.branding?.supportUrl}
+                        />
                     </Group>
                 </Group>
 
                 <Stack gap="xl">
                     <SubscriptionInfoWidget />
-                    <InstallationGuideWidget appsConfig={appsConfig} />
+                    <InstallationGuideWidget
+                        appsConfig={subscriptionPageAppConfig.platforms}
+                        enabledLocales={additionalLocales}
+                    />
                 </Stack>
 
                 <Center>
-                    <LanguagePicker />
+                    <LanguagePicker enabledLocales={additionalLocales} />
                 </Center>
             </Stack>
         </Container>

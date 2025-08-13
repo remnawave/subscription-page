@@ -54,6 +54,7 @@ module.exports = {
         ],
         'perfectionist/sort-objects': ['off'],
         'perfectionist/sort-interfaces': ['off'],
+        'perfectionist/sort-modules': ['off'],
         indent: ['error', 4, { SwitchCase: 1 }],
         'max-classes-per-file': 'off',
         'import/no-extraneous-dependencies': ['off'],

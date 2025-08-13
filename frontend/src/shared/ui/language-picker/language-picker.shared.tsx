@@ -3,18 +3,25 @@ import { IconChevronDown } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
+import { TEnabledLocales } from '@shared/constants/apps-config/interfaces/app-list.interface'
+
 import classes from './LanguagePicker.module.css'
 
 const data = [
     { label: 'English', emoji: '🇺🇸', value: 'en' },
     { label: 'Русский', emoji: '🇷🇺', value: 'ru' },
-    { label: 'فارسی', emoji: '🇮🇷', value: 'fa' }
+    { label: 'فارسی', emoji: '🇮🇷', value: 'fa' },
+    { label: '简体中文', emoji: '🇨🇳', value: 'zh' }
 ]
 
-export function LanguagePicker() {
+export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLocales[] }) {
     const [opened, setOpened] = useState(false)
     const [selectedLanguage, setSelectedLanguage] = useState('en')
     const { toggleDirection, dir } = useDirection()
+
+    const filteredData = data.filter((item) =>
+        enabledLocales.includes(item.value as TEnabledLocales)
+    )
 
     const { i18n } = useTranslation()
 
@@ -48,9 +55,10 @@ export function LanguagePicker() {
         setSelectedLanguage(value)
     }
 
-    const selected = data.find((item) => selectedLanguage.startsWith(item.value)) || data[0]
+    const selected =
+        filteredData.find((item) => selectedLanguage.startsWith(item.value)) || filteredData[0]
 
-    const items = data.map((item) => (
+    const items = filteredData.map((item) => (
         <Menu.Item
             key={item.value}
             leftSection={<Text>{item.emoji}</Text>}

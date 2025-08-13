@@ -1,4 +1,11 @@
-import { Button, Image, Stack, Text } from '@mantine/core'
+import {
+    IconBrandDiscord,
+    IconBrandTelegram,
+    IconBrandVk,
+    IconLink,
+    IconMessageChatbot
+} from '@tabler/icons-react'
+import { ActionIcon, Button, Group, Image, Stack, Text } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
@@ -8,7 +15,7 @@ import { renderSVG } from 'uqr'
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
-export const SubscriptionLinkWidget = () => {
+export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) => {
     const { t } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
     const clipboard = useClipboard({ timeout: 10000 })
@@ -29,9 +36,39 @@ export const SubscriptionLinkWidget = () => {
         clipboard.copy(subscriptionUrl)
     }
 
+    const renderSupportLink = (supportUrl: string) => {
+        const iconConfig = {
+            't.me': { icon: IconBrandTelegram, color: '#0088cc' },
+            'discord.com': { icon: IconBrandDiscord, color: '#5865F2' },
+            'vk.com': { icon: IconBrandVk, color: '#0077FF' }
+        }
+
+        const matchedPlatform = Object.entries(iconConfig).find(([domain]) =>
+            supportUrl.includes(domain)
+        )
+
+        const { icon: Icon, color } = matchedPlatform
+            ? matchedPlatform[1]
+            : { icon: IconMessageChatbot, color: 'teal' }
+
+        return (
+            <ActionIcon
+                c={color}
+                component="a"
+                href={supportUrl}
+                rel="noopener noreferrer"
+                size="xl"
+                target="_blank"
+                variant="default"
+            >
+                <Icon />
+            </ActionIcon>
+        )
+    }
+
     return (
-        <>
-            <Button
+        <Group gap="xs">
+            <ActionIcon
                 onClick={() => {
                     const subscriptionQrCode = renderSVG(subscriptionUrl, {
                         whiteColor: '#161B22',
@@ -62,10 +99,12 @@ export const SubscriptionLinkWidget = () => {
                         )
                     })
                 }}
-                variant="outline"
+                size="xl"
+                variant="default"
             >
-                {t('subscription-link.widget.get-link')}
-            </Button>
-        </>
+                <IconLink />
+            </ActionIcon>
+            {supportUrl && renderSupportLink(supportUrl)}
+        </Group>
     )
 }

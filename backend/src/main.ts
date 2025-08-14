@@ -16,10 +16,10 @@ import { NestFactory } from '@nestjs/core';
 import { checkAssetsCookieMiddleware } from '@common/middlewares/check-assets-cookie.middleware';
 import { NotFoundExceptionFilter } from '@common/exception/not-found-exception.filter';
 import { isDevelopment, isDevOrDebugLogsEnabled } from '@common/utils/startup-app';
+import { noRobotsMiddleware, proxyCheckMiddleware } from '@common/middlewares';
 import { getStartMessage } from '@common/utils/startup-app/get-start-message';
 import { customLogFilter } from '@common/utils/filter-logs/filter-logs';
 import { getRealIp } from '@common/middlewares/get-real-ip';
-import { proxyCheckMiddleware } from '@common/middlewares';
 
 import { AppModule } from './app.module';
 
@@ -66,9 +66,11 @@ async function bootstrap(): Promise<void> {
         }),
     });
 
+    app.disable('x-powered-by');
+
     app.use(cookieParser());
 
-    app.use(proxyCheckMiddleware, checkAssetsCookieMiddleware);
+    app.use(noRobotsMiddleware, proxyCheckMiddleware, checkAssetsCookieMiddleware);
 
     app.useGlobalFilters(new NotFoundExceptionFilter());
 

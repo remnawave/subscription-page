@@ -31,4 +31,4 @@ COPY backend/docker-entrypoint.sh ./
 
 RUN npm install pm2 -g
 
-CMD [ "/bin/sh", "docker-entrypoint.sh" ]
+CMD [ "pm2-runtime", "start", "ecosystem.config.js", "--env", "production" ]

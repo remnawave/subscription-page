@@ -1,6 +1,6 @@
 # Makefile for version bumping and dependency installation
 
-.PHONY: bump-patch bump-minor bump-major install help
+.PHONY: bump-patch bump-minor bump-major install help tag-release
 
 # Default target
 help:
@@ -12,6 +12,7 @@ help:
 	@echo "  bump-and-install-patch  - Bump patch version and install dependencies"
 	@echo "  bump-and-install-minor  - Bump minor version and install dependencies"
 	@echo "  bump-and-install-major  - Bump major version and install dependencies"
+	@echo "  tag-release - Create and push git tag for current version"
 
 # Bump patch version (x.x.X)
 bump-patch:
@@ -58,3 +59,11 @@ show-versions:
 	@echo "Current versions:"
 	@echo "Backend: $(shell cd backend && node -p "require('./package.json').version")"
 	@echo "Frontend: $(shell cd frontend && node -p "require('./package.json').version")"
+
+
+tag-release:
+	@VERSION=$$(cd backend && node -p "require('./package.json').version") && \
+	echo "Creating signed tag for version $$VERSION..." && \
+	git tag -s "$$VERSION" -m "Release $$VERSION" && \
+	git push origin --follow-tags && \
+	echo "Signed tag $$VERSION created and pushed"

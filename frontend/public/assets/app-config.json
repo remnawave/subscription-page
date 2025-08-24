@@ -225,7 +225,7 @@
                 "installationStep": {
                     "buttons": [
                         {
-                            "buttonLink": "https://github.com/MetaCubeX/ClashMetaForAndroid/releases/download/v2.11.7/cmfa-2.11.7-meta-universal-release.apk",
+                            "buttonLink": "https://github.com/MetaCubeX/ClashMetaForAndroid/releases/download/v2.11.15/cmfa-2.11.15-meta-universal-release.apk",
                             "buttonText": {
                                 "en": "Download APK",
                                 "fa": "دانلود APK",
@@ -282,7 +282,7 @@
                 "installationStep": {
                     "buttons": [
                         {
-                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.2/Clash.Verge_2.2.2_x64-setup.exe",
+                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.4.0/Clash.Verge_2.4.0_x64-setup.exe",
                             "buttonText": {
                                 "en": "Windows",
                                 "fa": "ویندوز",
@@ -292,7 +292,7 @@
                             }
                         },
                         {
-                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.2/Clash.Verge_2.2.2_x64.dmg",
+                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.4.0/Clash.Verge_2.4.0_x64.dmg",
                             "buttonText": {
                                 "en": "macOS (Intel)",
                                 "fa": "مک (اینتل)",
@@ -302,7 +302,7 @@
                             }
                         },
                         {
-                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.2/Clash.Verge_2.2.2_aarch64.dmg",
+                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.4.0/Clash.Verge_2.4.0_aarch64.dmg",
                             "buttonText": {
                                 "en": "macOS (Apple Silicon)",
                                 "fa": "مک (Apple Silicon)",
@@ -458,7 +458,7 @@
                 "installationStep": {
                     "buttons": [
                         {
-                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.2/Clash.Verge_2.2.2_x64-setup.exe",
+                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.4.0/Clash.Verge_2.4.0_x64-setup.exe",
                             "buttonText": {
                                 "en": "Windows",
                                 "fa": "ویندوز",
@@ -468,7 +468,7 @@
                             }
                         },
                         {
-                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.2/Clash.Verge_2.2.2_x64.dmg",
+                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.4.0/Clash.Verge_2.4.0_x64.dmg",
                             "buttonText": {
                                 "en": "macOS (Intel)",
                                 "fa": "مک (اینتل)",
@@ -478,7 +478,7 @@
                             }
                         },
                         {
-                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.2/Clash.Verge_2.2.2_aarch64.dmg",
+                            "buttonLink": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.4.0/Clash.Verge_2.4.0_aarch64.dmg",
                             "buttonText": {
                                 "en": "macOS (Apple Silicon)",
                                 "fa": "مک (Apple Silicon)",

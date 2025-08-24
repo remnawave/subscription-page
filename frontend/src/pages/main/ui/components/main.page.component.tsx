@@ -15,15 +15,15 @@ export const MainPageComponent = ({
 }: {
     subscriptionPageAppConfig: ISubscriptionPageAppConfig
 }) => {
-    let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh']
+    let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh', 'fr']
 
     if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
-        additionalLocales = [
-            'en',
-            ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
-                ['fa', 'ru', 'zh'].includes(locale)
-            )
-        ]
+                    additionalLocales = [
+                'en',
+                ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
+                    ['fa', 'ru', 'zh', 'fr'].includes(locale)
+                )
+            ]
     }
 
     return (

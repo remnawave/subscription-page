@@ -30,7 +30,7 @@ export const MainPageConnector = () => {
                     consola.warn('Old config format detected, migrating to new format...')
                     newConfig = {
                         config: {
-                            additionalLocales: ['ru', 'fa', 'zh']
+                            additionalLocales: ['ru', 'fa', 'zh', 'fr']
                         },
                         platforms: {
                             ios: tempConfig.ios,

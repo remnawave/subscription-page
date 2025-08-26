@@ -89,7 +89,7 @@
                     ],
                     "description": {
                         "en": "Open the page in App Store and install the app. Launch it, in the VPN configuration permission window click Allow and enter your passcode.",
-                        "fa": "صفحه را در App Store باز کنید و برنامه را نصب کنید. آن را اجرا کنید، در پنجره مجوز پیکرب konfigurieren VPN روی Allow کلیک کنید و رمز عبور خود را وارد کنید.",
+                        "fa": "صفحه را در App Store باز کنید و برنامه را نصب کنید. آن را اجرا کنید، در پنجره مجوز پیکربندی VPN روی Allow کلیک کنید و رمز عبور خود را وارد کنید.",
                         "ru": "Откройте страницу в App Store и установите приложение. Запустите его, в окне разрешения VPN-конфигурации нажмите Allow и введите свой пароль.",
                         "zh": "在 App Store 中打开页面并安装应用。启动应用后，在 VPN 配置权限窗口中点击\"允许\"并输入您的密码。",
                         "fr": "Ouvrez la page dans l'App Store et installez l'application. Lancez-la. Dans la fenêtre de permission de configuration VPN, cliquez sur « Autoriser » et entrez votre code d'accès."

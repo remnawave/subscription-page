@@ -18,7 +18,7 @@ export const MainPageComponent = ({
     let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh', 'fr']
 
     if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
-                    additionalLocales = [
+        additionalLocales = [
             'en',
             ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
                 ['fa', 'ru', 'zh', 'fr'].includes(locale)

@@ -1,11 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
-import { getClientIp } from '@supercharge/request-ip';
+import { getClientIp } from '@kastov/request-ip';
 import morgan from 'morgan';
 
-morgan.token('remote-addr', (req: Request) => {
-    return getClientIp(req) || '0.0.0.0';
+morgan.token('remote-addr', (req: { clientIp: string } & Request) => {
+    return req.clientIp;
 });
 
-export const getRealIp = function (req: Request, res: Response, next: NextFunction) {
+export const getRealIp = function (
+    req: { clientIp: string } & Request,
+    res: Response,
+    next: NextFunction,
+) {
+    const ip = getClientIp(req);
+    if (ip) {
+        req.clientIp = ip;
+    } else {
+        req.clientIp = '0.0.0.0';
+    }
+
     next();
 };

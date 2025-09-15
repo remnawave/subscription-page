@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import {
     GetSubscriptionInfoByShortUuidCommand,
     GetUserByUsernameCommand,
+    REMNAWAVE_REAL_IP_HEADER,
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
 
@@ -28,7 +29,7 @@ export class AxiosService {
             headers: {
                 'x-forwarded-for': '127.0.0.1',
                 'x-forwarded-proto': 'https',
-                'user-agent': 'remnawave-subscription-page',
+                'user-agent': 'Remnawave Subscription Page',
                 Authorization: `Bearer ${this.configService.get('REMNAWAVE_API_TOKEN')}`,
             },
         });
@@ -41,12 +42,16 @@ export class AxiosService {
     }
 
     public async getUserByUsername(
+        clientIp: string,
         username: string,
     ): Promise<ICommandResponse<GetUserByUsernameCommand.Response>> {
         try {
             const response = await this.axiosInstance.request<GetUserByUsernameCommand.Response>({
                 method: GetUserByUsernameCommand.endpointDetails.REQUEST_METHOD,
                 url: GetUserByUsernameCommand.url(username),
+                headers: {
+                    [REMNAWAVE_REAL_IP_HEADER]: clientIp,
+                },
             });
 
             return {
@@ -71,6 +76,7 @@ export class AxiosService {
     }
 
     public async getSubscriptionInfo(
+        clientIp: string,
         shortUuid: string,
     ): Promise<ICommandResponse<GetSubscriptionInfoByShortUuidCommand.Response>> {
         try {
@@ -78,6 +84,9 @@ export class AxiosService {
                 await this.axiosInstance.request<GetSubscriptionInfoByShortUuidCommand.Response>({
                     method: GetSubscriptionInfoByShortUuidCommand.endpointDetails.REQUEST_METHOD,
                     url: GetSubscriptionInfoByShortUuidCommand.url(shortUuid),
+                    headers: {
+                        [REMNAWAVE_REAL_IP_HEADER]: clientIp,
+                    },
                 });
 
             return {
@@ -96,6 +105,7 @@ export class AxiosService {
     }
 
     public async getSubscription(
+        clientIp: string,
         shortUuid: string,
         headers: NodeJS.Dict<string | string[]>,
         withClientType: boolean = false,
@@ -114,7 +124,10 @@ export class AxiosService {
             const response = await this.axiosInstance.request<unknown>({
                 method: 'GET',
                 url: basePath,
-                headers: this.filterHeaders(headers),
+                headers: {
+                    ...this.filterHeaders(headers),
+                    [REMNAWAVE_REAL_IP_HEADER]: clientIp,
+                },
             });
 
             return {
@@ -142,6 +155,9 @@ export class AxiosService {
             'x-device-os',
             'x-ver-os',
             'x-device-model',
+            'x-app-version',
+            'x-device-locale',
+            'x-client',
         ];
 
         const filteredHeaders = Object.fromEntries(

@@ -70,7 +70,7 @@ async function bootstrap(): Promise<void> {
 
     app.use(cookieParser());
 
-    app.use(noRobotsMiddleware, proxyCheckMiddleware, checkAssetsCookieMiddleware);
+    app.use(noRobotsMiddleware, proxyCheckMiddleware, checkAssetsCookieMiddleware, getRealIp);
 
     app.useGlobalFilters(new NotFoundExceptionFilter());
 
@@ -93,8 +93,6 @@ async function bootstrap(): Promise<void> {
     app.use(helmet({ contentSecurityPolicy: false }));
 
     app.use(compression());
-
-    app.use(getRealIp);
 
     app.use(
         morgan(

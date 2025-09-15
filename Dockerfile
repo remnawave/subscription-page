@@ -29,6 +29,8 @@ COPY backend/package*.json ./
 COPY backend/ecosystem.config.js ./
 COPY backend/docker-entrypoint.sh ./
 
+ENV PM2_DISABLE_VERSION_CHECK=true
+
 RUN npm install pm2 -g
 
 CMD [ "pm2-runtime", "start", "ecosystem.config.js", "--env", "production" ]

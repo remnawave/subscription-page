@@ -34,10 +34,26 @@ export class AxiosService {
             },
         });
 
-        const caddyAuthApiToken = this.configService.get('CADDY_AUTH_API_TOKEN');
+        const caddyAuthApiToken = this.configService.get<string | undefined>(
+            'CADDY_AUTH_API_TOKEN',
+        );
+
+        const cloudflareZeroTrustClientId = this.configService.get<string | undefined>(
+            'CLOUDFLARE_ZERO_TRUST_CLIENT_ID',
+        );
+        const cloudflareZeroTrustClientSecret = this.configService.get<string | undefined>(
+            'CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET',
+        );
 
         if (caddyAuthApiToken) {
             this.axiosInstance.defaults.headers.common['X-Api-Key'] = caddyAuthApiToken;
+        }
+
+        if (cloudflareZeroTrustClientId && cloudflareZeroTrustClientSecret) {
+            this.axiosInstance.defaults.headers.common['CF-Access-Client-Id'] =
+                cloudflareZeroTrustClientId;
+            this.axiosInstance.defaults.headers.common['CF-Access-Client-Secret'] =
+                cloudflareZeroTrustClientSecret;
         }
     }
 

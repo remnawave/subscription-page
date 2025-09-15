@@ -24,6 +24,9 @@ export const configSchema = z
 
         META_TITLE: z.string(),
         META_DESCRIPTION: z.string(),
+
+        CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.optional(z.string()),
+        CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.optional(z.string()),
     })
     .superRefine((data, ctx) => {
         if (

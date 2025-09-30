@@ -7,6 +7,8 @@ import {
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
 
+import { ClientIp } from '@common/decorators/get-ip';
+
 import { RootService } from './root.service';
 
 @Controller()
@@ -16,6 +18,7 @@ export class RootController {
     constructor(private readonly rootService: RootService) {}
     @Get([':shortUuid', ':shortUuid/:clientType'])
     async root(
+        @ClientIp() clientIp: string,
         @Req() request: Request,
         @Res() response: Response,
         @Param('shortUuid') shortUuid: string,
@@ -27,7 +30,12 @@ export class RootController {
         }
 
         if (clientType === undefined) {
-            return await this.rootService.serveSubscriptionPage(request, response, shortUuid);
+            return await this.rootService.serveSubscriptionPage(
+                clientIp,
+                request,
+                response,
+                shortUuid,
+            );
         }
 
         if (!REQUEST_TEMPLATE_TYPE_VALUES.includes(clientType as TRequestTemplateTypeKeys)) {
@@ -37,6 +45,7 @@ export class RootController {
             return;
         } else {
             return await this.rootService.serveSubscriptionPage(
+                clientIp,
                 request,
                 response,
                 shortUuid,

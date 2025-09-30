@@ -33,6 +33,7 @@ export class RootService {
     }
 
     public async serveSubscriptionPage(
+        clientIp: string,
         req: Request,
         res: Response,
         shortUuid: string,
@@ -58,7 +59,10 @@ export class RootService {
                         `Decoded Marzban username: ${username.username}, sanitized username: ${sanitizedUsername}`,
                     );
 
-                    const userInfo = await this.axiosService.getUserByUsername(sanitizedUsername);
+                    const userInfo = await this.axiosService.getUserByUsername(
+                        clientIp,
+                        sanitizedUsername,
+                    );
                     if (!userInfo.isOk || !userInfo.response) {
                         this.logger.error(
                             `Decoded Marzban username is not found in Remnawave, decoded username: ${sanitizedUsername}`,
@@ -73,7 +77,7 @@ export class RootService {
             }
 
             if (userAgent && this.isBrowser(userAgent)) {
-                return this.returnWebpage(req, res, shortUuidLocal);
+                return this.returnWebpage(clientIp, req, res, shortUuidLocal);
             }
 
             let subscriptionDataResponse: {
@@ -82,6 +86,7 @@ export class RootService {
             } | null = null;
 
             subscriptionDataResponse = await this.axiosService.getSubscription(
+                clientIp,
                 shortUuidLocal,
                 req.headers,
                 !!clientType,
@@ -144,11 +149,19 @@ export class RootService {
         return genericPaths.some((genericPath) => path.includes(genericPath));
     }
 
-    private async returnWebpage(req: Request, res: Response, shortUuid: string): Promise<void> {
+    private async returnWebpage(
+        clientIp: string,
+        req: Request,
+        res: Response,
+        shortUuid: string,
+    ): Promise<void> {
         try {
             const cookieJwt = await this.generateJwtForCookie();
 
-            const subscriptionDataResponse = await this.axiosService.getSubscriptionInfo(shortUuid);
+            const subscriptionDataResponse = await this.axiosService.getSubscriptionInfo(
+                clientIp,
+                shortUuid,
+            );
 
             if (!subscriptionDataResponse.isOk) {
                 this.logger.error(`Get subscription info failed, shortUuid: ${shortUuid}`);

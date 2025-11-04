@@ -1,4 +1,4 @@
-export type TAdditionalLocales = 'fa' | 'ru' | 'zh' | 'fr'
+export type TAdditionalLocales = 'fa' | 'fr' | 'ru' | 'zh'
 export type TEnabledLocales = 'en' | TAdditionalLocales
 export type TPlatform = 'android' | 'androidTV' | 'appleTV' | 'ios' | 'linux' | 'macos' | 'windows'
 

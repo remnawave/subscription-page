@@ -21,7 +21,7 @@ export const MainPageComponent = ({
         additionalLocales = [
             'en',
             ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
-                ['fa', 'ru', 'zh', 'fr'].includes(locale)
+                ['fa', 'fr', 'ru', 'zh'].includes(locale)
             )
         ]
     }

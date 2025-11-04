@@ -25,10 +25,8 @@ export class AxiosService {
     constructor(private readonly configService: ConfigService) {
         this.axiosInstance = axios.create({
             baseURL: this.configService.getOrThrow('REMNAWAVE_PANEL_URL'),
-            timeout: 45_000,
+            timeout: 10_000,
             headers: {
-                'x-forwarded-for': '127.0.0.1',
-                'x-forwarded-proto': 'https',
                 'user-agent': 'Remnawave Subscription Page',
                 Authorization: `Bearer ${this.configService.get('REMNAWAVE_API_TOKEN')}`,
             },
@@ -54,6 +52,11 @@ export class AxiosService {
                 cloudflareZeroTrustClientId;
             this.axiosInstance.defaults.headers.common['CF-Access-Client-Secret'] =
                 cloudflareZeroTrustClientSecret;
+        }
+
+        if (this.configService.getOrThrow('REMNAWAVE_PANEL_URL').startsWith('http://')) {
+            this.axiosInstance.defaults.headers.common['X-Forwarded-For'] = '127.0.0.1';
+            this.axiosInstance.defaults.headers.common['X-Forwarded-Proto'] = 'https';
         }
     }
 

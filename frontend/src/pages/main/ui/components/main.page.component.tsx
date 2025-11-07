@@ -29,9 +29,9 @@ export const MainPageComponent = ({
     return (
         <Container my="xl" size="xl">
             <Stack gap="xl">
-                <Group justify="space-between">
-                    <Group
-                        gap="xs"
+                <Group justify="space-between" align="flex-start">
+                    <Stack
+                        gap="lg"
                         style={{
                             userSelect: 'none'
                         }}
@@ -42,10 +42,8 @@ export const MainPageComponent = ({
                                 fit="contain"
                                 src={subscriptionPageAppConfig.config.branding.logoUrl}
                                 style={{
-                                    maxWidth: '36px',
-                                    maxHeight: '36px',
-                                    width: 'auto',
-                                    height: 'auto'
+                                    height: '36px',
+                                    width: 'auto'
                                 }}
                             />
                         )}
@@ -53,7 +51,7 @@ export const MainPageComponent = ({
                         <Title order={4} size="md">
                             {subscriptionPageAppConfig.config.branding?.name || 'Subscription'}
                         </Title>
-                    </Group>
+                    </Stack>
 
                     <Group gap="xs">
                         <SubscriptionLinkWidget

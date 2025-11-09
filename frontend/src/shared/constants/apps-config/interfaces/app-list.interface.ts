@@ -1,4 +1,4 @@
-export type TAdditionalLocales = 'fa' | 'ru' | 'zh'
+export type TAdditionalLocales = 'fa' | 'fr' | 'ru' | 'zh'
 export type TEnabledLocales = 'en' | TAdditionalLocales
 export type TPlatform = 'android' | 'androidTV' | 'appleTV' | 'ios' | 'linux' | 'macos' | 'windows'
 
@@ -7,6 +7,7 @@ export interface ILocalizedText {
     fa?: string
     ru?: string
     zh?: string
+    fr?: string
 }
 
 export interface IStep {

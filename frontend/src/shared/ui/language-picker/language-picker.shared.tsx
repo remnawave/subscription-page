@@ -11,7 +11,8 @@ const data = [
     { label: 'English', emoji: '🇺🇸', value: 'en' },
     { label: 'Русский', emoji: '🇷🇺', value: 'ru' },
     { label: 'فارسی', emoji: '🇮🇷', value: 'fa' },
-    { label: '简体中文', emoji: '🇨🇳', value: 'zh' }
+    { label: '简体中文', emoji: '🇨🇳', value: 'zh' },
+    { label: 'Français', emoji: '🇫🇷', value: 'fr' }
 ]
 
 export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLocales[] }) {

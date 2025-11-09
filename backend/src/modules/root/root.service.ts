@@ -138,6 +138,7 @@ export class RootService {
             'Opera',
             'Edge',
             'TelegramBot',
+            'WhatsApp',
         ];
 
         return browserKeywords.some((keyword) => userAgent.includes(keyword));

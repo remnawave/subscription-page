@@ -100,7 +100,15 @@ async function bootstrap(): Promise<void> {
         ),
     );
 
-    app.setGlobalPrefix(config.get<string>('CUSTOM_SUB_PREFIX') || '');
+    const customSubPrefix = config.get<string>('CUSTOM_SUB_PREFIX') || '';
+
+    app.setGlobalPrefix(customSubPrefix);
+
+    if (customSubPrefix) {
+        logger.info('[CONFIG] CUSTOM_SUB_PREFIX: ' + customSubPrefix);
+    } else {
+        logger.info('[CONFIG] CUSTOM_SUB_PREFIX: not set');
+    }
 
     app.enableCors({
         origin: '*',

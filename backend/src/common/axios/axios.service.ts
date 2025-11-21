@@ -4,7 +4,6 @@ import axios, {
     AxiosResponseHeaders,
     RawAxiosResponseHeaders,
 } from 'axios';
-import { exit } from 'node:process';
 import { table } from 'table';
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
@@ -86,7 +85,7 @@ export class AxiosService implements OnModuleInit {
             );
             this.logger.error(authStatus.error);
 
-            exit(1);
+            // exit(1);
         }
         this.logger.log('Connection to Remnawave established successfully.');
     }

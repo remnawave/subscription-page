@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: marzban
       - uses: actions/setup-node@v4
         with:
           node-version: '22.21.1'

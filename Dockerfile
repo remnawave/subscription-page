@@ -1,4 +1,4 @@
-FROM node:22.18.0 AS backend-build
+FROM node:22.21-alpine AS backend-build
 WORKDIR /opt/app
 
 COPY backend/package*.json ./
@@ -15,7 +15,7 @@ RUN npm cache clean --force
 
 RUN npm prune --omit=dev
 
-FROM node:22.18.0-alpine
+FROM node:22.21-alpine
 WORKDIR /opt/app
 
 COPY --from=backend-build /opt/app/dist ./dist

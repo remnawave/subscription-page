@@ -4,7 +4,7 @@ import { readPackageJSON } from 'pkg-types';
 export async function getStartMessage() {
     const pkg = await readPackageJSON();
 
-    return table([['Docs → https://remna.st\nCommunity → https://t.me/remnawave']], {
+    return table([['Docs → https://docs.rw\nCommunity → https://t.me/remnawave']], {
         header: {
             content: `Remnawave Subscription Page v${pkg.version}`,
             alignment: 'center',

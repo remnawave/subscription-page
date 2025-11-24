@@ -34,7 +34,7 @@ jobs:
       - name: Add remote host to known_hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H "PANEL_HOST" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$PANEL_HOST" >> ~/.ssh/known_hosts
         env:
           PANEL_HOST: ${{ secrets.STAGE_PANEL_HOST }}
       - name: Create assets folder if not exists

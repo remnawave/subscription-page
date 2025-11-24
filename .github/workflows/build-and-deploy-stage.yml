@@ -39,8 +39,11 @@ jobs:
           PANEL_HOST: ${{ secrets.STAGE_PANEL_HOST }}
       - name: Create assets folder if not exists
         run: |
-          ssh $REMOTE_USER@$REMOTE_HOST '
+          ssh $REMOTE_USER@PANEL_HOST '
             mkdir -p /var/lib/marzban/nexus-sub
+        env:
+          PANEL_HOST: ${{ secrets.STAGE_PANEL_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
       - name: Upload assets to remote host
         run: |
           scp -r ./dist/assets $REMOTE_USER@$PANEL_HOST:/var/lib/marzban/nexus-sub

@@ -1,0 +1,51 @@
+name: Build and deploy frontend to prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: marzban
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.1'
+          registry-url: https://npm.pkg.github.com/
+          always-auth: true
+      - run: npm i
+      - run: npm run start:build
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add remote host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "$PANEL_HOST" >> ~/.ssh/known_hosts
+        env:
+          PANEL_HOST: ${{ secrets.PANEL_HOST }}
+      - name: Create assets folder if not exists
+        run: |
+          ssh $REMOTE_USER@$PANEL_HOST '
+            mkdir -p /var/lib/marzban/nexus-sub
+          '
+        env:
+          PANEL_HOST: ${{ secrets.PANEL_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+      - name: Upload assets to remote host
+        run: |
+          scp -r ./dist/assets $REMOTE_USER@$PANEL_HOST:/var/lib/marzban/nexus-sub
+          scp -r ./dist/locales $REMOTE_USER@$PANEL_HOST:/var/lib/marzban/nexus-sub
+          scp -r ./dist/index.html $REMOTE_USER@$PANEL_HOST:/var/lib/marzban/templates/subscription/index.html
+        env:
+          PANEL_HOST: ${{ secrets.PANEL_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}

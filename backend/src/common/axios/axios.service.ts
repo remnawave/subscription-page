@@ -4,11 +4,13 @@ import axios, {
     AxiosResponseHeaders,
     RawAxiosResponseHeaders,
 } from 'axios';
+import { table } from 'table';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import {
+    GetStatusCommand,
     GetSubscriptionInfoByShortUuidCommand,
     GetUserByUsernameCommand,
     REMNAWAVE_REAL_IP_HEADER,
@@ -18,17 +20,15 @@ import {
 import { ICommandResponse } from '../types/command-response.type';
 
 @Injectable()
-export class AxiosService {
+export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
     private readonly logger = new Logger(AxiosService.name);
 
     constructor(private readonly configService: ConfigService) {
         this.axiosInstance = axios.create({
             baseURL: this.configService.getOrThrow('REMNAWAVE_PANEL_URL'),
-            timeout: 45_000,
+            timeout: 10_000,
             headers: {
-                'x-forwarded-for': '127.0.0.1',
-                'x-forwarded-proto': 'https',
                 'user-agent': 'Remnawave Subscription Page',
                 Authorization: `Bearer ${this.configService.get('REMNAWAVE_API_TOKEN')}`,
             },
@@ -54,6 +54,67 @@ export class AxiosService {
                 cloudflareZeroTrustClientId;
             this.axiosInstance.defaults.headers.common['CF-Access-Client-Secret'] =
                 cloudflareZeroTrustClientSecret;
+        }
+
+        if (this.configService.getOrThrow('REMNAWAVE_PANEL_URL').startsWith('http://')) {
+            this.axiosInstance.defaults.headers.common['X-Forwarded-For'] = '127.0.0.1';
+            this.axiosInstance.defaults.headers.common['X-Forwarded-Proto'] = 'https';
+        }
+    }
+
+    async onModuleInit(): Promise<void> {
+        this.logger.log(`Remnawave API URL: ${this.axiosInstance.defaults.baseURL}`);
+
+        const authStatus = await this.getAuthStatus();
+        if (!authStatus.isOk) {
+            this.logger.error(
+                '\n' +
+                    table([['Is the panel online and reachable from this server?']], {
+                        header: {
+                            content: `Connection to Remnawave Panel failed!`,
+                            alignment: 'center',
+                        },
+                        columnDefault: {
+                            width: 70,
+                            alignment: 'center',
+                            wrapWord: true,
+                        },
+                        drawVerticalLine: () => false,
+                    }) +
+                    '\n',
+            );
+            this.logger.error(authStatus.error);
+
+            // exit(1);
+        }
+        this.logger.log('Connection to Remnawave established successfully.');
+    }
+
+    public async getAuthStatus(): Promise<{
+        isOk: boolean;
+        error?: unknown;
+    }> {
+        try {
+            await this.axiosInstance.request<GetStatusCommand.Response>({
+                method: GetStatusCommand.endpointDetails.REQUEST_METHOD,
+                url: GetStatusCommand.TSQ_url,
+            });
+
+            return {
+                isOk: true,
+            };
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                return {
+                    isOk: false,
+                    error: error.message,
+                };
+            } else {
+                return {
+                    isOk: false,
+                    error: error,
+                };
+            }
         }
     }
 

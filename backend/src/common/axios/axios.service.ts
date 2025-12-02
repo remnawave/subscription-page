@@ -86,8 +86,9 @@ export class AxiosService implements OnModuleInit {
             this.logger.error(authStatus.error);
 
             // exit(1);
+        } else {
+            this.logger.log('Connection to Remnawave established successfully.');
         }
-        this.logger.log('Connection to Remnawave established successfully.');
     }
 
     public async getAuthStatus(): Promise<{

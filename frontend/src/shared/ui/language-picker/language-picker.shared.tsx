@@ -1,11 +1,9 @@
-import { Button, Group, Menu, Text, useDirection } from '@mantine/core'
-import { IconChevronDown } from '@tabler/icons-react'
+import { ActionIcon, Menu, Text, useDirection } from '@mantine/core'
+import { IconLanguage } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
 import { TEnabledLocales } from '@shared/constants/apps-config/interfaces/app-list.interface'
-
-import classes from './LanguagePicker.module.css'
 
 const data = [
     { label: 'English', emoji: '🇺🇸', value: 'en' },
@@ -16,7 +14,6 @@ const data = [
 ]
 
 export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLocales[] }) {
-    const [opened, setOpened] = useState(false)
     const [selectedLanguage, setSelectedLanguage] = useState('en')
     const { toggleDirection, dir } = useDirection()
 
@@ -56,9 +53,6 @@ export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLoc
         setSelectedLanguage(value)
     }
 
-    const selected =
-        filteredData.find((item) => selectedLanguage.startsWith(item.value)) || filteredData[0]
-
     const items = filteredData.map((item) => (
         <Menu.Item
             key={item.value}
@@ -70,21 +64,21 @@ export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLoc
     ))
 
     return (
-        <Menu
-            onClose={() => setOpened(false)}
-            onOpen={() => setOpened(true)}
-            radius="md"
-            width="target"
-            withinPortal
-        >
+        <Menu position="bottom-end" width={150} withinPortal>
             <Menu.Target>
-                <Button color="grape" data-expanded={opened || undefined}>
-                    <Group gap="xs">
-                        <Text>{selected.emoji}</Text>
-                        <span>{selected.label}</span>
-                        <IconChevronDown className={classes.icon} size={16} stroke={1.5} />
-                    </Group>
-                </Button>
+                <ActionIcon
+                    color="gray"
+                    size="xl"
+                    radius="md"
+                    variant="default"
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.2s ease'
+                    }}
+                >
+                    <IconLanguage size={22} />
+                </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>{items}</Menu.Dropdown>
         </Menu>

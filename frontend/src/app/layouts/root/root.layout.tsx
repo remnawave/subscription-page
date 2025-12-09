@@ -53,12 +53,10 @@ export function RootLayout() {
 
     return (
         <div className={classes.root}>
+            <AnimatedBackground />
             <div className={classes.content}>
                 <main className={classes.main}>
-                    <Box className="subscription-page-wrapper">
-                        <AnimatedBackground />
-                        <Outlet />
-                    </Box>
+                    <Outlet />
                 </main>
             </div>
         </div>

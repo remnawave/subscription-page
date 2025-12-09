@@ -42,7 +42,7 @@
         "widget": {
             "title": "Ключи подключения",
             "keys-count": "ключей",
-            "scan-to-import": "Сканируйте для импорта ключа"
+            "scan-to-import": "Отсканируйте QR-код для импорта ключа"
         }
     },
     "get-expiration-text": {

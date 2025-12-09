@@ -35,7 +35,7 @@ export function App() {
                     <NavigationProgress />
                     <Suspense
                         fallback={
-                            <Center h={'100%'}>
+                            <Center h="100%">
                                 <LoadingScreen height="60vh" />
                             </Center>
                         }

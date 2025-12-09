@@ -101,7 +101,7 @@ export const RawKeysWidget = ({ isMobile }: { isMobile: boolean }) => {
                     </Text>
                 </Group>
 
-                <ScrollArea.Autosize mah={300} offsetScrollbars>
+                <ScrollArea.Autosize mah={300}>
                     <Stack gap="xs">
                         {parsedLinks.map((link, index) => (
                             <Box

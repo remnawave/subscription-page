@@ -154,7 +154,6 @@ export class RootService {
             '.gif',
             '.svg',
             '.webp',
-            '.png',
             '.ico',
         ];
 

@@ -10,6 +10,7 @@ import { Page, RemnawaveLogo } from '@shared/ui'
 import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
 import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
+import { RawKeysWidget } from '../../../../widgets/main/raw-keys/raw-keys.widget'
 
 export const MainPageComponent = ({
     subscriptionPageAppConfig,
@@ -88,6 +89,7 @@ export const MainPageComponent = ({
                         enabledLocales={additionalLocales}
                         isMobile={isMobile}
                     />
+                    <RawKeysWidget isMobile={isMobile} />
 
                     <Center>
                         <LanguagePicker enabledLocales={additionalLocales} />

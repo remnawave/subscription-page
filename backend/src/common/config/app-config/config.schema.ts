@@ -27,6 +27,11 @@ export const configSchema = z
 
         CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.optional(z.string()),
         CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.optional(z.string()),
+
+        SUBSCRIPTION_UI_DISPLAY_RAW_KEYS: z
+            .string()
+            .default('false')
+            .transform((val) => val === 'true'),
     })
     .superRefine((data, ctx) => {
         if (

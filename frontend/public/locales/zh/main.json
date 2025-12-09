@@ -38,6 +38,13 @@
             "bandwidth": "流量"
         }
     },
+    "raw-keys": {
+        "widget": {
+            "title": "连接密钥",
+            "keys-count": "个密钥",
+            "scan-to-import": "扫描以导入此密钥"
+        }
+    },
     "get-expiration-text": {
         "util": {
             "expires-in": "{{expiration}} 后到期",

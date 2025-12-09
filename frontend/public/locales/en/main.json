@@ -37,6 +37,13 @@
             "bandwidth": "Bandwidth"
         }
     },
+    "raw-keys": {
+        "widget": {
+            "title": "Connection Keys",
+            "keys-count": "keys",
+            "scan-to-import": "Scan to import this key"
+        }
+    },
     "get-expiration-text": {
         "util": {
             "expires-in": "Expires {{expiration}}",

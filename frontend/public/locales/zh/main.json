@@ -13,32 +13,8 @@
             "connect-and-use": "连接并使用",
             "installation": "安装",
             "select-device": "选择设备",
-            "pc": "PC"
-        },
-        "ios": {
-            "widget": {
-                "install-and-open-app": "安装并打开 {{appName}}"
-            }
-        },
-        "android": {
-            "widget": {
-                "install-and-open-app": "安装并打开 {{appName}}"
-            }
-        },
-        "linux": {
-            "widget": {
-                "download-app": "下载 {{appName}}"
-            }
-        },
-        "macos": {
-            "widget": {
-                "download-app": "下载 {{appName}}"
-            }
-        },
-        "windows": {
-            "widget": {
-                "download-app": "下载 {{appName}}"
-            }
+            "pc": "PC",
+            "install-app": "安装应用程序"
         }
     },
     "subscription-link": {

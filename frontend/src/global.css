@@ -7,15 +7,136 @@ body {
 
 #root {
     height: 100vh;
+    min-height: 100vh;
+    background-color: #161b23;
+    background-image:
+        linear-gradient(to right, rgba(128, 128, 128, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(128, 128, 128, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-attachment: fixed;
+    position: relative;
+}
 
-    @mixin dark {
-        .mrt-table-head-sort-button {
-            border-radius: 0;
-            border: none;
-        }
-        .mrt-table-head-cell-filter-label-icon {
-            border-radius: 0;
-            border: none;
-        }
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.blob-1 {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(151, 117, 250, 0.15) 0%, transparent 50%);
+    filter: blur(60px);
+}
+
+.blob-2 {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 50%);
+    filter: blur(60px);
+}
+
+@media (max-width: 48em) {
+    .blob-1,
+    .blob-2 {
+        width: 300px;
+        height: 300px;
     }
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(34, 211, 238, 0.3) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+.step-card {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.step-card:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(34, 211, 238, 0.3) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+.header-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(22, 27, 35, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo-text-highlight {
+    color: var(--mantine-color-cyan-4);
+}
+
+.logo-text-normal {
+    color: white;
+}
+
+.info-card-cyan {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.info-card-violet {
+    background: linear-gradient(135deg, rgba(151, 117, 250, 0.1) 0%, rgba(132, 94, 247, 0.05) 100%);
+    border: 1px solid rgba(151, 117, 250, 0.2);
+}
+
+.info-card-green {
+    background: linear-gradient(135deg, rgba(64, 192, 87, 0.1) 0%, rgba(55, 178, 77, 0.05) 100%);
+    border: 1px solid rgba(64, 192, 87, 0.2);
+}
+
+.info-card-red {
+    background: linear-gradient(135deg, rgba(250, 82, 82, 0.1) 0%, rgba(224, 49, 49, 0.05) 100%);
+    border: 1px solid rgba(250, 82, 82, 0.2);
+}
+
+.info-card-yellow {
+    background: linear-gradient(135deg, rgba(250, 176, 5, 0.1) 0%, rgba(245, 159, 0, 0.05) 100%);
+    border: 1px solid rgba(250, 176, 5, 0.2);
+}
+
+.info-card-blue {
+    background: linear-gradient(135deg, rgba(34, 139, 230, 0.1) 0%, rgba(28, 126, 214, 0.05) 100%);
+    border: 1px solid rgba(34, 139, 230, 0.2);
+}
+
+.info-card-teal {
+    background: linear-gradient(135deg, rgba(32, 201, 151, 0.1) 0%, rgba(18, 184, 134, 0.05) 100%);
+    border: 1px solid rgba(32, 201, 151, 0.2);
+}
+
+.info-card-orange {
+    background: linear-gradient(135deg, rgba(253, 126, 20, 0.1) 0%, rgba(247, 103, 7, 0.05) 100%);
+    border: 1px solid rgba(253, 126, 20, 0.2);
 }

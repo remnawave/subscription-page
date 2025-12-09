@@ -90,6 +90,7 @@ export const theme = createTheme({
     autoContrast: true,
     luminanceThreshold: 0.3,
     headings: {
+        fontFamily: 'Unbounded, sans-serif',
         fontWeight: '600'
     },
     defaultRadius: 'md'

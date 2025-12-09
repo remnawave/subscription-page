@@ -6,8 +6,8 @@ export default {
     Card: Card.extend({
         classNames: classes,
         defaultProps: {
-            radius: 'md',
-            withBorder: true
+            radius: 'lg',
+            withBorder: false
         }
     })
 }

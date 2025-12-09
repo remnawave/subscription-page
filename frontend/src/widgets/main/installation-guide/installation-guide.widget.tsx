@@ -5,7 +5,7 @@ import {
     IconDeviceDesktop,
     IconExternalLink
 } from '@tabler/icons-react'
-import { Box, Button, Group, Select, Text } from '@mantine/core'
+import { Box, Button, Card, Group, Select, Stack, Text, Title } from '@mantine/core'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOs } from '@mantine/hooks'
@@ -23,10 +23,12 @@ import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
 
 export const InstallationGuideWidget = ({
     appsConfig,
-    enabledLocales
+    enabledLocales,
+    isMobile
 }: {
     appsConfig: ISubscriptionPageAppConfig['platforms']
     enabledLocales: TEnabledLocales[]
+    isMobile: boolean
 }) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
@@ -118,37 +120,37 @@ export const InstallationGuideWidget = ({
         hasPlatformApps.android && {
             value: 'android',
             label: 'Android',
-            icon: <IconBrandAndroid />
+            icon: <IconBrandAndroid size={20} />
         },
         hasPlatformApps.ios && {
             value: 'ios',
             label: 'iOS',
-            icon: <IconBrandApple />
+            icon: <IconBrandApple size={20} />
         },
         hasPlatformApps.macos && {
             value: 'macos',
             label: 'macOS',
-            icon: <IconBrandApple />
+            icon: <IconBrandApple size={20} />
         },
         hasPlatformApps.windows && {
             value: 'windows',
             label: 'Windows',
-            icon: <IconBrandWindows />
+            icon: <IconBrandWindows size={20} />
         },
         hasPlatformApps.linux && {
             value: 'linux',
             label: 'Linux',
-            icon: <IconDeviceDesktop />
+            icon: <IconDeviceDesktop size={20} />
         },
         hasPlatformApps.androidTV && {
             value: 'androidTV',
             label: 'Android TV',
-            icon: <IconBrandAndroid />
+            icon: <IconBrandAndroid size={20} />
         },
         hasPlatformApps.appleTV && {
             value: 'appleTV',
             label: 'Apple TV',
-            icon: <IconBrandApple />
+            icon: <IconBrandApple size={20} />
         }
     ].filter(Boolean) as {
         icon: React.ReactNode
@@ -176,7 +178,7 @@ export const InstallationGuideWidget = ({
     const renderFirstStepButton = (app: IAppConfig) => {
         if (app.installationStep.buttons.length > 0) {
             return (
-                <Group>
+                <Group gap="xs" wrap="wrap">
                     {app.installationStep.buttons.map((button, index) => {
                         const buttonText = button.buttonText[currentLang] || button.buttonText.en
 
@@ -185,9 +187,11 @@ export const InstallationGuideWidget = ({
                                 component="a"
                                 href={button.buttonLink}
                                 key={index}
-                                leftSection={<IconExternalLink size={16} />}
+                                leftSection={<IconExternalLink size={14} />}
                                 target="_blank"
                                 variant="light"
+                                radius="md"
+                                size="sm"
                             >
                                 {buttonText}
                             </Button>
@@ -200,72 +204,56 @@ export const InstallationGuideWidget = ({
         return null
     }
 
-    const getPlatformTitle = (platform: TPlatform) => {
-        if (platform === 'android') {
-            return t('installation-guide.android.widget.install-and-open-app', {
-                appName: '{appName}'
-            })
-        }
-        if (platform === 'ios') {
-            return t('installation-guide.ios.widget.install-and-open-app', {
-                appName: '{appName}'
-            })
-        }
-        if (
-            platform === 'windows' ||
-            platform === 'androidTV' ||
-            platform === 'appleTV' ||
-            platform === 'linux' ||
-            platform === 'macos'
-        ) {
-            return t('installation-guide.windows.widget.download-app', {
-                appName: '{appName}'
-            })
-        }
-
-        return 'Unknown platform'
-    }
-
     return (
-        <Box>
-            <Group justify="space-between" mb="md">
-                <Text fw={700} size="xl">
-                    {t('installation-guide.widget.installation')}
-                </Text>
+        <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
+            <Stack gap="md">
+                <Group justify="space-between" gap="sm">
+                    <Title order={4} c="white" fw={600}>
+                        {t('installation-guide.widget.installation')}
+                    </Title>
 
-                {availablePlatforms.length > 1 && (
-                    <Select
-                        allowDeselect={false}
-                        data={availablePlatforms.map((opt) => ({
-                            value: opt.value,
-                            label: opt.label
-                        }))}
-                        leftSection={
-                            availablePlatforms.find((opt) => opt.value === defaultTab)?.icon
-                        }
-                        onChange={(value) => setDefaultTab(value || '')}
-                        placeholder={t('installation-guide.widget.select-device')}
-                        radius="md"
-                        size="sm"
-                        style={{ width: 160 }}
-                        value={defaultTab}
-                        withScrollArea={false}
+                    {availablePlatforms.length > 1 && (
+                        <Select
+                            allowDeselect={false}
+                            data={availablePlatforms.map((opt) => ({
+                                value: opt.value,
+                                label: opt.label
+                            }))}
+                            leftSection={
+                                availablePlatforms.find((opt) => opt.value === defaultTab)?.icon
+                            }
+                            onChange={(value) => setDefaultTab(value || '')}
+                            placeholder={t('installation-guide.widget.select-device')}
+                            radius="md"
+                            size="sm"
+                            style={{ width: 140 }}
+                            value={defaultTab}
+                            withScrollArea={false}
+                            styles={{
+                                input: {
+                                    background: 'rgba(255, 255, 255, 0.02)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    color: 'white'
+                                }
+                            }}
+                        />
+                    )}
+                </Group>
+
+                {hasPlatformApps[defaultTab as keyof typeof hasPlatformApps] && (
+                    <BaseInstallationGuideWidget
+                        appsConfig={appsConfig}
+                        isMobile={isMobile}
+                        currentLang={currentLang}
+                        firstStepTitle={t('installation-guide.widget.install-app')}
+                        getAppsForPlatform={getAppsForPlatform}
+                        getSelectedAppForPlatform={getSelectedAppForPlatform}
+                        openDeepLink={openDeepLink}
+                        platform={defaultTab as TPlatform}
+                        renderFirstStepButton={renderFirstStepButton}
                     />
                 )}
-            </Group>
-
-            {hasPlatformApps[defaultTab as keyof typeof hasPlatformApps] && (
-                <BaseInstallationGuideWidget
-                    appsConfig={appsConfig}
-                    currentLang={currentLang}
-                    firstStepTitle={getPlatformTitle(defaultTab as TPlatform)}
-                    getAppsForPlatform={getAppsForPlatform}
-                    getSelectedAppForPlatform={getSelectedAppForPlatform}
-                    openDeepLink={openDeepLink}
-                    platform={defaultTab as TPlatform}
-                    renderFirstStepButton={renderFirstStepButton}
-                />
-            )}
-        </Box>
+            </Stack>
+        </Card>
     )
 }

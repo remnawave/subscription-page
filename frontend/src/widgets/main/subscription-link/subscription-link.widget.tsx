@@ -2,6 +2,7 @@ import {
     IconBrandDiscord,
     IconBrandTelegram,
     IconBrandVk,
+    IconCopy,
     IconLink,
     IconMessageChatbot
 } from '@tabler/icons-react'
@@ -31,7 +32,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
         notifications.show({
             title: t('subscription-link.widget.link-copied'),
             message: t('subscription-link.widget.link-copied-to-clipboard'),
-            color: 'teal'
+            color: 'cyan'
         })
         clipboard.copy(subscriptionUrl)
     }
@@ -49,7 +50,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
 
         const { icon: Icon, color } = matchedPlatform
             ? matchedPlatform[1]
-            : { icon: IconMessageChatbot, color: 'teal' }
+            : { icon: IconMessageChatbot, color: 'cyan' }
 
         return (
             <ActionIcon
@@ -58,52 +59,85 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
                 href={supportUrl}
                 rel="noopener noreferrer"
                 size="xl"
+                radius="md"
                 target="_blank"
                 variant="default"
+                style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    transition: 'all 0.2s ease'
+                }}
             >
                 <Icon />
             </ActionIcon>
         )
     }
 
+    const handleGetLink = () => {
+        const subscriptionQrCode = renderSVG(subscriptionUrl, {
+            whiteColor: '#161B22',
+            blackColor: '#22d3ee'
+        })
+
+        modals.open({
+            centered: true,
+            title: t('subscription-link.widget.get-link'),
+            styles: {
+                content: {
+                    background: 'rgba(22, 27, 35, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                },
+                header: {
+                    background: 'transparent'
+                },
+                title: {
+                    fontWeight: 600,
+                    color: 'white'
+                }
+            },
+            children: (
+                <Stack align="center">
+                    <Image
+                        src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
+                        style={{ borderRadius: 'var(--mantine-radius-md)' }}
+                    />
+                    <Text fw={600} size="lg" ta="center" c="white">
+                        {t('subscription-link.widget.scan-qr-code')}
+                    </Text>
+                    <Text c="dimmed" size="sm" ta="center">
+                        {t('subscription-link.widget.line-1')}
+                    </Text>
+
+                    <Button
+                        fullWidth
+                        onClick={handleCopy}
+                        variant="light"
+                        radius="md"
+                        leftSection={<IconCopy />}
+                    >
+                        {t('subscription-link.widget.copy-link')}
+                    </Button>
+                </Stack>
+            )
+        })
+    }
     return (
         <Group gap="xs">
             <ActionIcon
-                onClick={() => {
-                    const subscriptionQrCode = renderSVG(subscriptionUrl, {
-                        whiteColor: '#161B22',
-                        blackColor: '#3CC9DB'
-                    })
-
-                    modals.open({
-                        centered: true,
-                        title: t('subscription-link.widget.get-link'),
-                        children: (
-                            <>
-                                <Stack align="center">
-                                    <Image
-                                        src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
-                                    />
-                                    <Text fw={600} size="lg" ta="center">
-                                        {t('subscription-link.widget.scan-qr-code')}
-                                    </Text>
-                                    <Text c="dimmed" size="sm" ta="center">
-                                        {t('subscription-link.widget.line-1')}
-                                    </Text>
-
-                                    <Button fullWidth onClick={handleCopy} variant="filled">
-                                        {t('subscription-link.widget.copy-link')}
-                                    </Button>
-                                </Stack>
-                            </>
-                        )
-                    })
-                }}
+                onClick={handleGetLink}
                 size="xl"
+                radius="md"
                 variant="default"
+                style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    transition: 'all 0.2s ease'
+                }}
             >
                 <IconLink />
             </ActionIcon>
+
             {supportUrl && renderSupportLink(supportUrl)}
         </Group>
     )

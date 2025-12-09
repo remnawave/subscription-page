@@ -1,26 +1,17 @@
-import { Center, Progress, Stack, Text } from '@mantine/core'
+import { Center, Stack } from '@mantine/core'
+import { Spinner } from '@gfazioli/mantine-spinner'
 
-export function LoadingScreen({
-    height = '100%',
-    text = undefined,
-    value = 100
-}: {
-    height?: string
-    text?: string
-    value?: number
-}) {
+export function LoadingScreen({ height = '100%' }: { height?: string }) {
     return (
         <Center h={height}>
             <Stack align="center" gap="xs" w="100%">
-                {text && <Text size="lg">{text}</Text>}
-                <Progress
-                    animated
-                    color="cyan"
-                    maw="32rem"
-                    radius="xs"
-                    striped
-                    value={value}
-                    w="80%"
+                <Spinner
+                    size={150}
+                    inner={50}
+                    segments={30}
+                    thickness={2}
+                    speed={1_900}
+                    strokeLinecap="butt"
                 />
             </Stack>
         </Center>

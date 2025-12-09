@@ -1,4 +1,4 @@
-FROM node:22.21-alpine AS backend-build
+FROM node:24.11-alpine AS backend-build
 WORKDIR /opt/app
 
 COPY backend/package*.json ./
@@ -15,7 +15,7 @@ RUN npm cache clean --force
 
 RUN npm prune --omit=dev
 
-FROM node:22.21-alpine
+FROM node:24.11-alpine
 WORKDIR /opt/app
 
 COPY --from=backend-build /opt/app/dist ./dist
@@ -30,6 +30,7 @@ COPY backend/ecosystem.config.js ./
 COPY backend/docker-entrypoint.sh ./
 
 ENV PM2_DISABLE_VERSION_CHECK=true
+ENV NODE_OPTIONS="--max-old-space-size=16384"
 
 RUN npm install pm2 -g
 

@@ -145,7 +145,17 @@ export class RootService {
     }
 
     private isGenericPath(path: string): boolean {
-        const genericPaths = ['favicon.ico', 'robots.txt'];
+        const genericPaths = [
+            'favicon.ico',
+            'robots.txt',
+            '.png',
+            '.jpg',
+            '.jpeg',
+            '.gif',
+            '.svg',
+            '.webp',
+            '.ico',
+        ];
 
         return genericPaths.some((genericPath) => path.includes(genericPath));
     }

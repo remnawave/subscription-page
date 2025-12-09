@@ -8,11 +8,22 @@ import { isOldFormat } from '@shared/utils/migration.utils'
 import { LoadingScreen } from '@shared/ui'
 
 import { MainPageComponent } from '../components/main.page.component'
+import { useMediaQuery } from '@mantine/hooks'
 
 export const MainPageConnector = () => {
     const { subscription } = useSubscriptionInfoStoreInfo()
     const [appsConfig, setAppsConfig] = useState<ISubscriptionPageAppConfig | null>(null)
     const [isLoading, setIsLoading] = useState(true)
+
+    const isMobile = useMediaQuery(`(max-width: 30rem)`, undefined, {
+        getInitialValueInEffect: false
+    })
+
+    const [isMediaQueryReady, setIsMediaQueryReady] = useState(false)
+
+    useEffect(() => {
+        setIsMediaQueryReady(true)
+    }, [isMobile])
 
     useEffect(() => {
         const fetchConfig = async () => {
@@ -57,7 +68,8 @@ export const MainPageConnector = () => {
         fetchConfig()
     }, [])
 
-    if (isLoading || !subscription || !appsConfig) return <LoadingScreen height="100vh" />
+    if (isLoading || !subscription || !appsConfig || !isMediaQueryReady)
+        return <LoadingScreen height="100vh" />
 
-    return <MainPageComponent subscriptionPageAppConfig={appsConfig} />
+    return <MainPageComponent subscriptionPageAppConfig={appsConfig} isMobile={isMobile} />
 }

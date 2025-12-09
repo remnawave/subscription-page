@@ -38,6 +38,13 @@
             "bandwidth": "پهنای باند"
         }
     },
+    "raw-keys": {
+        "widget": {
+            "title": "کلیدهای اتصال",
+            "keys-count": "کلید",
+            "scan-to-import": "برای وارد کردن این کلید اسکن کنید"
+        }
+    },
     "get-expiration-text": {
         "util": {
             "expires-in": "منقضی می‌شود در {{expiration}}",

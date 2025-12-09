@@ -20,6 +20,7 @@ export class RootService {
 
     private readonly isMarzbanLegacyLinkEnabled: boolean;
     private readonly marzbanSecretKey?: string;
+    private readonly subscriptionUiDisplayRawKeys: boolean;
 
     constructor(
         private readonly configService: ConfigService,
@@ -30,6 +31,9 @@ export class RootService {
             'MARZBAN_LEGACY_LINK_ENABLED',
         );
         this.marzbanSecretKey = this.configService.get<string>('MARZBAN_LEGACY_SECRET_KEY');
+        this.subscriptionUiDisplayRawKeys = this.configService.getOrThrow<boolean>(
+            'SUBSCRIPTION_UI_DISPLAY_RAW_KEYS',
+        );
     }
 
     public async serveSubscriptionPage(
@@ -174,7 +178,7 @@ export class RootService {
                 shortUuid,
             );
 
-            if (!subscriptionDataResponse.isOk) {
+            if (!subscriptionDataResponse.isOk || !subscriptionDataResponse.response) {
                 this.logger.error(`Get subscription info failed, shortUuid: ${shortUuid}`);
 
                 res.socket?.destroy();
@@ -182,6 +186,11 @@ export class RootService {
             }
 
             const subscriptionData = subscriptionDataResponse.response;
+
+            if (!this.subscriptionUiDisplayRawKeys) {
+                subscriptionData.response.links = [];
+                subscriptionData.response.ssConfLinks = {};
+            }
 
             res.cookie('session', cookieJwt, {
                 httpOnly: true,

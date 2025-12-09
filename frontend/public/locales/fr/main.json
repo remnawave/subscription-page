@@ -37,6 +37,16 @@
             "bandwidth": "Bande passante"
         }
     },
+    "raw-keys": {
+        "widget": {
+            "title": "Clés de connexion",
+            "keys-count": "clés",
+            "copy": "Copier la clé",
+            "copied": "Copié !",
+            "show-qr": "Afficher le code QR",
+            "scan-to-import": "Scannez pour importer cette clé"
+        }
+    },
     "get-expiration-text": {
         "util": {
             "expires-in": "Expire {{expiration}}",

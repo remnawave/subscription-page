@@ -5,9 +5,11 @@ import removeConsole from 'vite-plugin-remove-console'
 import webfontDownload from 'vite-plugin-webfont-dl'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { fileURLToPath, URL } from 'node:url'
+import { ViteEjsPlugin } from 'vite-plugin-ejs'
 import react from '@vitejs/plugin-react-swc'
 import { defineConfig } from 'vite'
 // import deadFile from 'vite-plugin-deadfile'
+import 'dotenv/config'
 
 export default defineConfig({
     plugins: [
@@ -15,6 +17,22 @@ export default defineConfig({
         tsconfigPaths(),
         removeConsole(),
         webfontDownload(undefined, {}),
+        ViteEjsPlugin((viteConfig) => {
+            if (process.env.NODE_ENV === 'production') {
+                return {
+                    root: viteConfig.root,
+                    panelData: '<%- panelData %>',
+                    metaDescription: '<%= metaDescription %>',
+                    metaTitle: '<%= metaTitle %>'
+                }
+            }
+            return {
+                root: viteConfig.root,
+                panelData: process.env.PANEL_DATA,
+                metaDescription: process.env.META_DESCRIPTION,
+                metaTitle: process.env.META_TITLE
+            }
+        }),
         obfuscatorPlugin({
             exclude: [/node_modules/, /app.tsx/],
             apply: 'build',
@@ -81,7 +99,6 @@ export default defineConfig({
             }
         }
     },
-    define: {},
     server: {
         host: '0.0.0.0',
         port: 3334,

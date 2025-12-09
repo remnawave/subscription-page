@@ -29,6 +29,7 @@
     "toc": "i18next-resources-for-ts toc -i ./public/locales/en -o @types/resources.ts"
   },
   "dependencies": {
+    "@gfazioli/mantine-spinner": "^2.3.7",
     "@mantine/core": "8.3.10",
     "@mantine/dates": "8.3.10",
     "@mantine/hooks": "8.3.10",
@@ -63,7 +64,6 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "vite-plugin-deadfile": "^1.4.0",
     "@eslint/js": "^9.39.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@types/byte-size": "^8.1.2",
@@ -105,6 +105,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.49.0",
     "vite": "7.2.7",
+    "vite-plugin-deadfile": "^1.4.0",
     "vite-plugin-javascript-obfuscator": "^3.1.0",
     "vite-plugin-preload": "^0.4.4",
     "vite-plugin-remove-console": "^2.2.0",

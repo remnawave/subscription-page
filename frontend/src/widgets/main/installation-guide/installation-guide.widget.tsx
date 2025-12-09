@@ -23,10 +23,12 @@ import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
 
 export const InstallationGuideWidget = ({
     appsConfig,
-    enabledLocales
+    enabledLocales,
+    isMobile
 }: {
     appsConfig: ISubscriptionPageAppConfig['platforms']
     enabledLocales: TEnabledLocales[]
+    isMobile: boolean
 }) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
@@ -202,32 +204,6 @@ export const InstallationGuideWidget = ({
         return null
     }
 
-    const getPlatformTitle = (platform: TPlatform) => {
-        if (platform === 'android') {
-            return t('installation-guide.android.widget.install-and-open-app', {
-                appName: '{appName}'
-            })
-        }
-        if (platform === 'ios') {
-            return t('installation-guide.ios.widget.install-and-open-app', {
-                appName: '{appName}'
-            })
-        }
-        if (
-            platform === 'windows' ||
-            platform === 'androidTV' ||
-            platform === 'appleTV' ||
-            platform === 'linux' ||
-            platform === 'macos'
-        ) {
-            return t('installation-guide.windows.widget.download-app', {
-                appName: '{appName}'
-            })
-        }
-
-        return 'Unknown platform'
-    }
-
     return (
         <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
             <Stack gap="md">
@@ -267,8 +243,9 @@ export const InstallationGuideWidget = ({
                 {hasPlatformApps[defaultTab as keyof typeof hasPlatformApps] && (
                     <BaseInstallationGuideWidget
                         appsConfig={appsConfig}
+                        isMobile={isMobile}
                         currentLang={currentLang}
-                        firstStepTitle={getPlatformTitle(defaultTab as TPlatform)}
+                        firstStepTitle={t('installation-guide.widget.install-app')}
                         getAppsForPlatform={getAppsForPlatform}
                         getSelectedAppForPlatform={getSelectedAppForPlatform}
                         openDeepLink={openDeepLink}

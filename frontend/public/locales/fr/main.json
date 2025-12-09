@@ -12,32 +12,8 @@
             "add-subscription-button": "Ajouter un abonnement",
             "connect-and-use": "Se connecter et utiliser",
             "installation": "Installation",
-            "select-device": "Choisir un appareil"
-        },
-        "ios": {
-            "widget": {
-                "install-and-open-app": "Installer et ouvrir {{appName}}"
-            }
-        },
-        "android": {
-            "widget": {
-                "install-and-open-app": "Installer et ouvrir {{appName}}"
-            }
-        },
-        "windows": {
-            "widget": {
-                "download-app": "Télécharger {{appName}}"
-            }
-        },
-        "linux": {
-            "widget": {
-                "download-app": "Télécharger {{appName}}"
-            }
-        },
-        "macos": {
-            "widget": {
-                "download-app": "Télécharger {{appName}}"
-            }
+            "select-device": "Choisir un appareil",
+            "install-app": "Installer l'application"
         }
     },
     "subscription-link": {

@@ -13,32 +13,8 @@
             "connect-and-use": "Подключите и используйте",
             "installation": "Установка",
             "select-device": "Выберите устройство",
-            "pc": "ПК"
-        },
-        "ios": {
-            "widget": {
-                "install-and-open-app": "Установите и откройте {{appName}}"
-            }
-        },
-        "android": {
-            "widget": {
-                "install-and-open-app": "Установите и откройте {{appName}}"
-            }
-        },
-        "linux": {
-            "widget": {
-                "download-app": "Скачайте {{appName}}"
-            }
-        },
-        "macos": {
-            "widget": {
-                "download-app": "Скачайте {{appName}}"
-            }
-        },
-        "windows": {
-            "widget": {
-                "download-app": "Скачайте {{appName}}"
-            }
+            "pc": "ПК",
+            "install-app": "Установите приложение"
         }
     },
     "subscription-link": {

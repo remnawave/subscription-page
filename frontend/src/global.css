@@ -31,12 +31,6 @@ body {
     position: relative;
 }
 
-@media (max-width: 48em) {
-    .subscription-page-wrapper {
-        background-size: 40px 40px;
-    }
-}
-
 .animated-background {
     position: fixed;
     top: 0;
@@ -55,7 +49,7 @@ body {
     width: 500px;
     height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(151, 117, 250, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(151, 117, 250, 0.15) 0%, transparent 50%);
     filter: blur(60px);
 }
 
@@ -66,7 +60,7 @@ body {
     width: 600px;
     height: 600px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 50%);
     filter: blur(60px);
 }
 

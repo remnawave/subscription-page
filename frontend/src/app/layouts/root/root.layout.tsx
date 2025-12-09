@@ -8,6 +8,8 @@ import { LoadingScreen } from '@shared/ui/loading-screen/loading-screen'
 
 import classes from './root.module.css'
 import i18n from '../../i18n/i18n'
+import { Box } from '@mantine/core'
+import { AnimatedBackground } from '@shared/ui'
 
 export function RootLayout() {
     const actions = useSubscriptionInfoStoreActions()
@@ -53,7 +55,10 @@ export function RootLayout() {
         <div className={classes.root}>
             <div className={classes.content}>
                 <main className={classes.main}>
-                    <Outlet />
+                    <Box className="subscription-page-wrapper">
+                        <AnimatedBackground />
+                        <Outlet />
+                    </Box>
                 </main>
             </div>
         </div>

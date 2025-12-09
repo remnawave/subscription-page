@@ -5,16 +5,18 @@ import {
     TEnabledLocales
 } from '@shared/constants/apps-config/interfaces/app-list.interface'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
-import { AnimatedBackground, RemnawaveLogo } from '@shared/ui'
+import { Page, RemnawaveLogo } from '@shared/ui'
 
 import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
 import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
 
 export const MainPageComponent = ({
-    subscriptionPageAppConfig
+    subscriptionPageAppConfig,
+    isMobile
 }: {
     subscriptionPageAppConfig: ISubscriptionPageAppConfig
+    isMobile: boolean
 }) => {
     let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh', 'fr']
 
@@ -37,9 +39,7 @@ export const MainPageComponent = ({
     }
 
     return (
-        <Box className="subscription-page-wrapper">
-            <AnimatedBackground />
-
+        <Page>
             <Box className="header-wrapper" py="md">
                 <Container maw={1200} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
                     <Group justify="space-between" wrap="nowrap">
@@ -82,10 +82,11 @@ export const MainPageComponent = ({
                 style={{ position: 'relative', zIndex: 1 }}
             >
                 <Stack gap="xl">
-                    <SubscriptionInfoWidget />
+                    <SubscriptionInfoWidget isMobile={isMobile} />
                     <InstallationGuideWidget
                         appsConfig={subscriptionPageAppConfig.platforms}
                         enabledLocales={additionalLocales}
+                        isMobile={isMobile}
                     />
 
                     <Center>
@@ -93,6 +94,6 @@ export const MainPageComponent = ({
                     </Center>
                 </Stack>
             </Container>
-        </Box>
+        </Page>
     )
 }

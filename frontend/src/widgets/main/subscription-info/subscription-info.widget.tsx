@@ -20,10 +20,9 @@ import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
 
 dayjs.extend(relativeTime)
-export const SubscriptionInfoWidget = () => {
+export const SubscriptionInfoWidget = ({ isMobile }: { isMobile: boolean }) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
-    const isMobile = useMediaQuery('(max-width: 30em)')
 
     if (!subscription) return null
 

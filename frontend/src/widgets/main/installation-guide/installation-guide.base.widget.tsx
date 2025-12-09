@@ -4,11 +4,9 @@ import {
     IconDownload,
     IconExternalLink,
     IconInfoCircle,
-    IconPlus,
     IconStar
 } from '@tabler/icons-react'
 import { Box, Button, Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core'
-import { useMediaQuery } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
@@ -22,6 +20,7 @@ import {
 import { IPlatformGuideProps } from './interfaces/platform-guide.props.interface'
 
 export interface IBaseGuideProps extends IPlatformGuideProps {
+    isMobile: boolean
     firstStepTitle: string
     platform: TPlatform
     renderFirstStepButton: (app: IAppConfig) => React.ReactNode
@@ -29,6 +28,7 @@ export interface IBaseGuideProps extends IPlatformGuideProps {
 }
 
 interface StepCardProps {
+    isMobile: boolean
     icon: React.ReactNode
     title: string
     description: string
@@ -36,9 +36,14 @@ interface StepCardProps {
     color?: string
 }
 
-const StepCard = ({ icon, title, description, children, color = 'cyan' }: StepCardProps) => {
-    const isMobile = useMediaQuery('(max-width: 30em)')
-
+const StepCard = ({
+    isMobile,
+    icon,
+    title,
+    description,
+    children,
+    color = 'cyan'
+}: StepCardProps) => {
     return (
         <Card p={{ base: 'sm', xs: 'md', sm: 'lg' }} radius="lg" className="step-card">
             <Group gap={isMobile ? 'sm' : 'md'} wrap="nowrap" align="flex-start">
@@ -77,6 +82,7 @@ const StepCard = ({ icon, title, description, children, color = 'cyan' }: StepCa
 export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
     const { t } = useTranslation()
     const {
+        isMobile,
         openDeepLink,
         getAppsForPlatform,
         platform,
@@ -170,6 +176,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
 
             <Stack gap="sm">
                 <StepCard
+                    isMobile={isMobile}
                     icon={<IconDownload size={20} />}
                     title={formattedTitle}
                     description={
@@ -181,6 +188,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
 
                 {selectedApp && selectedApp.additionalBeforeAddSubscriptionStep && (
                     <StepCard
+                        isMobile={isMobile}
                         icon={<IconInfoCircle size={20} />}
                         title={getStepTitle(
                             selectedApp.additionalBeforeAddSubscriptionStep,
@@ -214,6 +222,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                 )}
 
                 <StepCard
+                    isMobile={isMobile}
                     icon={<IconCloudDownload size={20} />}
                     title={t('installation-guide.widget.add-subscription')}
                     description={
@@ -242,6 +251,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
 
                 {selectedApp && selectedApp.additionalAfterAddSubscriptionStep && (
                     <StepCard
+                        isMobile={isMobile}
                         icon={<IconStar size={20} />}
                         title={getStepTitle(
                             selectedApp.additionalAfterAddSubscriptionStep,
@@ -275,6 +285,7 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                 )}
 
                 <StepCard
+                    isMobile={isMobile}
                     icon={<IconCheck size={20} />}
                     title={t('installation-guide.widget.connect-and-use')}
                     description={

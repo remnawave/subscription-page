@@ -8,13 +8,13 @@
     },
     "installation-guide": {
         "widget": {
-            "add-subscription": "Добавить подписку",
+            "add-subscription": "Добавление подписки",
             "add-subscription-button": "Добавить подписку",
-            "connect-and-use": "Подключите и используйте",
+            "connect-and-use": "Подключение и использование",
             "installation": "Установка",
             "select-device": "Выберите устройство",
             "pc": "ПК",
-            "install-app": "Установите приложение"
+            "install-app": "Установка приложения"
         }
     },
     "subscription-link": {

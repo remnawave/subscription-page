@@ -16,6 +16,8 @@ import { renderSVG } from 'uqr'
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
+import classes from './subscription-link.module.css'
+
 export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) => {
     const { t } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
@@ -82,19 +84,10 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
         modals.open({
             centered: true,
             title: t('subscription-link.widget.get-link'),
-            styles: {
-                content: {
-                    background: 'rgba(22, 27, 35, 0.95)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                },
-                header: {
-                    background: 'transparent'
-                },
-                title: {
-                    fontWeight: 600,
-                    color: 'white'
-                }
+            classNames: {
+                content: classes.modalContent,
+                header: classes.modalHeader,
+                title: classes.modalTitle
             },
             children: (
                 <Stack align="center">
@@ -129,11 +122,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
                 size="xl"
                 radius="md"
                 variant="default"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.2s ease'
-                }}
+                className={classes.actionIcon}
             >
                 <IconLink />
             </ActionIcon>

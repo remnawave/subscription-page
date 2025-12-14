@@ -21,6 +21,7 @@ import {
     TSubscriptionPageLocales
 } from '@remnawave/subscription-page-types'
 import { getLocalizedText } from '../installation-guide/utils/get-localized-text.util'
+import classes from './raw-keys.module.css'
 
 interface ParsedLink {
     name: string
@@ -77,19 +78,10 @@ export const RawKeysWidget = (props: IProps) => {
         modals.open({
             centered: true,
             title: link.name,
-            styles: {
-                content: {
-                    background: 'rgba(22, 27, 35, 0.95)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                },
-                header: {
-                    background: 'transparent'
-                },
-                title: {
-                    fontWeight: 600,
-                    color: 'white'
-                }
+            classNames: {
+                content: classes.modalContent,
+                header: classes.modalHeader,
+                title: classes.modalTitle
             },
             children: (
                 <Stack align="center">
@@ -120,16 +112,7 @@ export const RawKeysWidget = (props: IProps) => {
                 <ScrollArea.Autosize mah={300}>
                     <Stack gap="xs">
                         {parsedLinks.map((link, index) => (
-                            <Box
-                                key={index}
-                                p="xs"
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.02)',
-                                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                                    borderRadius: 'var(--mantine-radius-md)',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
+                            <Box key={index} p="xs" className={classes.keyBox}>
                                 <Group justify="space-between" wrap="nowrap" gap="xs">
                                     <Group gap="xs" wrap="nowrap" style={{ minWidth: 0, flex: 1 }}>
                                         <IconKey

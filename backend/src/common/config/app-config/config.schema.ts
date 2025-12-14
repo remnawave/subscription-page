@@ -8,13 +8,15 @@ export const configSchema = z
             .default('3010')
             .transform((port) => parseInt(port, 10)),
         REMNAWAVE_PANEL_URL: z.string(),
+        REMNAWAVE_API_TOKEN: z.string(),
+
+        SUBPAGE_CONFIG_UUID: z.string().default('00000000-0000-0000-0000-000000000000'),
 
         MARZBAN_LEGACY_LINK_ENABLED: z
             .string()
             .default('false')
             .transform((val) => val === 'true'),
         MARZBAN_LEGACY_SECRET_KEY: z.optional(z.string()),
-        REMNAWAVE_API_TOKEN: z.optional(z.string()),
 
         MARZBAN_LEGACY_SUBSCRIPTION_VALID_FROM: z.optional(z.string()),
 

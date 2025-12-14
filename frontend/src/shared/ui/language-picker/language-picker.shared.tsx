@@ -1,24 +1,27 @@
 import { ActionIcon, Menu, Text, useDirection } from '@mantine/core'
 import { IconLanguage } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
-
-import { TEnabledLocales } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import { useEffect } from 'react'
+import { TSubscriptionPageRawConfig } from '@remnawave/subscription-page-types'
 
 const data = [
-    { label: 'English', emoji: '🇺🇸', value: 'en' },
     { label: 'Русский', emoji: '🇷🇺', value: 'ru' },
     { label: 'فارسی', emoji: '🇮🇷', value: 'fa' },
     { label: '简体中文', emoji: '🇨🇳', value: 'zh' },
     { label: 'Français', emoji: '🇫🇷', value: 'fr' }
 ]
 
-export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLocales[] }) {
-    const [selectedLanguage, setSelectedLanguage] = useState('en')
+export function LanguagePicker({
+    enabledLocales
+}: {
+    enabledLocales: TSubscriptionPageRawConfig['additionalLocales']
+}) {
     const { toggleDirection, dir } = useDirection()
 
     const filteredData = data.filter((item) =>
-        enabledLocales.includes(item.value as TEnabledLocales)
+        enabledLocales.includes(
+            item.value as TSubscriptionPageRawConfig['additionalLocales'][number]
+        )
     )
 
     const { i18n } = useTranslation()
@@ -35,10 +38,6 @@ export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLoc
         }
     }, [i18n])
 
-    useEffect(() => {
-        setSelectedLanguage(i18n.language)
-    }, [i18n])
-
     const changeLanguage = (value: string) => {
         i18n.changeLanguage(value)
 
@@ -49,9 +48,9 @@ export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLoc
         if (dir === 'rtl' && value !== 'fa') {
             toggleDirection()
         }
-
-        setSelectedLanguage(value)
     }
+
+    filteredData.push({ label: 'English', emoji: '🇺🇸', value: 'en' })
 
     const items = filteredData.map((item) => (
         <Menu.Item

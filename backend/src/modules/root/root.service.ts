@@ -333,4 +333,8 @@ export class RootService {
 
         return true;
     }
+
+    public async getSubscriptionPageConfig(): Promise<object> {
+        return this.axiosService.getCachedSubscriptionPageConfig();
+    }
 }

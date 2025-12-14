@@ -1,43 +1,60 @@
 import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
 
-import {
-    ISubscriptionPageAppConfig,
-    TEnabledLocales
-} from '@shared/constants/apps-config/interfaces/app-list.interface'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
 import { Page, RemnawaveLogo } from '@shared/ui'
 
 import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
-import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
+import {
+    SubscriptionInfoCollapsedWidget,
+    SubscriptionInfoExpandedWidget
+} from '../../../../widgets/main/subscription-info'
 import { RawKeysWidget } from '../../../../widgets/main/raw-keys/raw-keys.widget'
+import {
+    TSubscriptionPageLocales,
+    TSubscriptionPageRawConfig
+} from '@remnawave/subscription-page-types'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-export const MainPageComponent = ({
-    subscriptionPageAppConfig,
-    isMobile
-}: {
-    subscriptionPageAppConfig: ISubscriptionPageAppConfig
+interface IMainPageComponentProps {
+    appConfig: TSubscriptionPageRawConfig
     isMobile: boolean
-}) => {
-    let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh', 'fr']
+}
 
-    if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
-        additionalLocales = [
-            'en',
-            ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
-                ['fa', 'fr', 'ru', 'zh'].includes(locale)
-            )
-        ]
-    }
+export const MainPageComponent = (props: IMainPageComponentProps) => {
+    const { appConfig, isMobile } = props
 
-    const brandName = subscriptionPageAppConfig.config.branding?.name || 'Remnawave'
-    let hasCustomLogo = !!subscriptionPageAppConfig.config.branding?.logoUrl
+    const { i18n } = useTranslation()
+
+    const [currentLang, setCurrentLang] = useState<TSubscriptionPageLocales>('en')
+
+    const brandName = appConfig.brandingSettings.title
+    let hasCustomLogo = !!appConfig.brandingSettings.logoUrl
 
     if (hasCustomLogo) {
-        if (subscriptionPageAppConfig.config.branding?.logoUrl?.includes('docs.rw')) {
+        if (appConfig.brandingSettings.logoUrl.includes('docs.rw')) {
             hasCustomLogo = false
         }
     }
+
+    useEffect(() => {
+        const lang = i18n.language
+
+        if (lang.startsWith('en')) {
+            setCurrentLang('en')
+        } else if (lang.startsWith('fa') && appConfig.additionalLocales.includes('fa')) {
+            setCurrentLang('fa')
+        } else if (lang.startsWith('ru') && appConfig.additionalLocales.includes('ru')) {
+            setCurrentLang('ru')
+        } else if (lang.startsWith('zh') && appConfig.additionalLocales.includes('zh')) {
+            setCurrentLang('zh')
+        } else if (lang.startsWith('fr') && appConfig.additionalLocales.includes('fr')) {
+            setCurrentLang('fr')
+        } else {
+            setCurrentLang('en')
+        }
+    }, [i18n.language])
 
     return (
         <Page>
@@ -49,7 +66,7 @@ export const MainPageComponent = ({
                                 <Image
                                     alt="logo"
                                     fit="contain"
-                                    src={subscriptionPageAppConfig.config.branding!.logoUrl}
+                                    src={appConfig.brandingSettings.logoUrl}
                                     style={{
                                         maxWidth: '32px',
                                         maxHeight: '32px',
@@ -69,7 +86,7 @@ export const MainPageComponent = ({
 
                         <Group gap="xs">
                             <SubscriptionLinkWidget
-                                supportUrl={subscriptionPageAppConfig.config.branding?.supportUrl}
+                                supportUrl={appConfig.brandingSettings.supportUrl}
                             />
                         </Group>
                     </Group>
@@ -83,16 +100,27 @@ export const MainPageComponent = ({
                 style={{ position: 'relative', zIndex: 1 }}
             >
                 <Stack gap="xl">
-                    <SubscriptionInfoWidget isMobile={isMobile} />
+                    {appConfig.uiConfig.subscriptionInfo.block === 'expanded' && (
+                        <SubscriptionInfoExpandedWidget isMobile={isMobile} />
+                    )}
+
+                    {appConfig.uiConfig.subscriptionInfo.block === 'collapsed' && (
+                        <SubscriptionInfoCollapsedWidget isMobile={isMobile} />
+                    )}
+
                     <InstallationGuideWidget
-                        appsConfig={subscriptionPageAppConfig.platforms}
-                        enabledLocales={additionalLocales}
+                        config={appConfig}
                         isMobile={isMobile}
+                        currentLang={currentLang}
                     />
-                    <RawKeysWidget isMobile={isMobile} />
+                    <RawKeysWidget
+                        config={appConfig}
+                        isMobile={isMobile}
+                        currentLang={currentLang}
+                    />
 
                     <Center>
-                        <LanguagePicker enabledLocales={additionalLocales} />
+                        <LanguagePicker enabledLocales={appConfig.additionalLocales} />
                     </Center>
                 </Stack>
             </Container>

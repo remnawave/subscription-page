@@ -1,21 +1,4 @@
 {
-    "main": {
-        "page": {
-            "component": {
-                "podpiska": "Subscription"
-            }
-        }
-    },
-    "installation-guide": {
-        "widget": {
-            "add-subscription": "Add subscription",
-            "add-subscription-button": "Add subscription",
-            "connect-and-use": "Connect and use",
-            "installation": "Installation",
-            "select-device": "Select device",
-            "install-app": "Install app"
-        }
-    },
     "subscription-link": {
         "widget": {
             "link-copied": "Link copied",
@@ -39,7 +22,6 @@
     },
     "raw-keys": {
         "widget": {
-            "title": "Connection Keys",
             "keys-count": "keys",
             "scan-to-import": "Scan to import this key"
         }

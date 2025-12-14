@@ -4,6 +4,7 @@ import axios, {
     AxiosResponseHeaders,
     RawAxiosResponseHeaders,
 } from 'axios';
+import { exit } from 'node:process';
 import { table } from 'table';
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
@@ -12,10 +13,12 @@ import { ConfigService } from '@nestjs/config';
 import {
     GetStatusCommand,
     GetSubscriptionInfoByShortUuidCommand,
+    GetSubscriptionPageConfigCommand,
     GetUserByUsernameCommand,
     REMNAWAVE_REAL_IP_HEADER,
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
+import { SubscriptionPageRawConfigSchema } from '@remnawave/subscription-page-types';
 
 import { ICommandResponse } from '../types/command-response.type';
 
@@ -23,14 +26,18 @@ import { ICommandResponse } from '../types/command-response.type';
 export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
     private readonly logger = new Logger(AxiosService.name);
+    private readonly subpageConfigUuid: string;
+    private subscriptionPageConfig: object | null = null;
 
     constructor(private readonly configService: ConfigService) {
+        this.subpageConfigUuid = this.configService.getOrThrow<string>('SUBPAGE_CONFIG_UUID');
+
         this.axiosInstance = axios.create({
             baseURL: this.configService.getOrThrow('REMNAWAVE_PANEL_URL'),
             timeout: 10_000,
             headers: {
                 'user-agent': 'Remnawave Subscription Page',
-                Authorization: `Bearer ${this.configService.get('REMNAWAVE_API_TOKEN')}`,
+                Authorization: `Bearer ${this.configService.getOrThrow('REMNAWAVE_API_TOKEN')}`,
             },
         });
 
@@ -85,9 +92,28 @@ export class AxiosService implements OnModuleInit {
             );
             this.logger.error(authStatus.error);
 
-            // exit(1);
+            exit(1);
         } else {
             this.logger.log('Connection to Remnawave established successfully.');
+        }
+
+        const subscriptionPageConfig = await this.getSubscriptionPageConfig();
+        if (!subscriptionPageConfig.isOk || !subscriptionPageConfig.response) {
+            this.logger.error('Subpage config cannot be fetched');
+            exit(1);
+        } else {
+            const parsedConfig = await SubscriptionPageRawConfigSchema.safeParseAsync(
+                subscriptionPageConfig.response.response.config,
+            );
+
+            if (!parsedConfig.success) {
+                this.logger.error('Subpage config is not valid', parsedConfig.error);
+                exit(1);
+            } else {
+                this.subscriptionPageConfig = parsedConfig.data;
+            }
+
+            this.logger.log('Subpage config fetched successfully');
         }
     }
 
@@ -150,6 +176,31 @@ export class AxiosService implements OnModuleInit {
                     isOk: false,
                 };
             }
+        }
+    }
+
+    public async getSubscriptionPageConfig(): Promise<
+        ICommandResponse<GetSubscriptionPageConfigCommand.Response>
+    > {
+        try {
+            const response =
+                await this.axiosInstance.request<GetSubscriptionPageConfigCommand.Response>({
+                    method: GetSubscriptionPageConfigCommand.endpointDetails.REQUEST_METHOD,
+                    url: GetSubscriptionPageConfigCommand.url(this.subpageConfigUuid),
+                });
+
+            return {
+                isOk: true,
+                response: response.data,
+            };
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                this.logger.error('Error in GetSubscriptionPageConfig Request:', error.message);
+            } else {
+                this.logger.error('Error in GetSubscriptionPageConfig Request:', error);
+            }
+
+            return { isOk: false };
         }
     }
 
@@ -243,5 +294,13 @@ export class AxiosService implements OnModuleInit {
         );
 
         return filteredHeaders;
+    }
+
+    public getCachedSubscriptionPageConfig(): object {
+        if (!this.subscriptionPageConfig) {
+            throw new Error('Subpage config is not cached');
+        }
+
+        return this.subscriptionPageConfig;
     }
 }

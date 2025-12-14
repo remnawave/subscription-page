@@ -102,7 +102,7 @@ async function bootstrap(): Promise<void> {
 
     const customSubPrefix = config.get<string>('CUSTOM_SUB_PREFIX') || '';
 
-    app.setGlobalPrefix(customSubPrefix);
+    app.setGlobalPrefix(customSubPrefix, { exclude: ['assets/app-config-v2.json'] });
 
     if (customSubPrefix) {
         logger.info('[CONFIG] CUSTOM_SUB_PREFIX: ' + customSubPrefix);

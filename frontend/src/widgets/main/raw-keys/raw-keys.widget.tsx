@@ -16,6 +16,11 @@ import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import {
+    TSubscriptionPageRawConfig,
+    TSubscriptionPageLocales
+} from '@remnawave/subscription-page-types'
+import { getLocalizedText } from '../installation-guide/utils/get-localized-text.util'
 
 interface ParsedLink {
     name: string
@@ -43,8 +48,19 @@ const parseLinks = (links: string[]): ParsedLink[] => {
     })
 }
 
-export const RawKeysWidget = ({ isMobile }: { isMobile: boolean }) => {
+interface IProps {
+    config: TSubscriptionPageRawConfig
+    isMobile: boolean
+    currentLang: TSubscriptionPageLocales
+}
+
+export const RawKeysWidget = (props: IProps) => {
+    const { config, isMobile, currentLang } = props
+
+    const { uiConfig } = config
+
     const { t } = useTranslation()
+
     const { subscription } = useSubscriptionInfoStoreInfo()
 
     if (!subscription) return null
@@ -94,7 +110,7 @@ export const RawKeysWidget = ({ isMobile }: { isMobile: boolean }) => {
             <Stack gap="md">
                 <Group justify="space-between" gap="sm">
                     <Title order={4} c="white" fw={600}>
-                        {t('raw-keys.widget.title')}
+                        {getLocalizedText(uiConfig.connectionKeys.headerText, currentLang)}
                     </Title>
                     <Text size="xs" c="dimmed">
                         {parsedLinks.length} {t('raw-keys.widget.keys-count')}

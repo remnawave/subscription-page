@@ -1,58 +1,38 @@
-import {
-    IconBrandAndroid,
-    IconBrandApple,
-    IconBrandWindows,
-    IconDeviceDesktop,
-    IconExternalLink
-} from '@tabler/icons-react'
-import { Box, Button, Card, Group, Select, Stack, Text, Title } from '@mantine/core'
+import { Card, Group, Select, Stack, Title } from '@mantine/core'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOs } from '@mantine/hooks'
 
-import {
-    IAppConfig,
-    ISubscriptionPageAppConfig,
-    TEnabledLocales,
-    TPlatform
-} from '@shared/constants/apps-config/interfaces/app-list.interface'
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import {
+    TSubscriptionPageAppConfig,
+    TSubscriptionPageLocales,
+    TSubscriptionPagePlatformKey,
+    TSubscriptionPageRawConfig
+} from '@remnawave/subscription-page-types'
+import { TemplateEngine } from '@shared/utils/template-engine'
 
 import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
+import { getLocalizedText } from './utils/get-localized-text.util'
 
-export const InstallationGuideWidget = ({
-    appsConfig,
-    enabledLocales,
-    isMobile
-}: {
-    appsConfig: ISubscriptionPageAppConfig['platforms']
-    enabledLocales: TEnabledLocales[]
+interface IProps {
+    config: TSubscriptionPageRawConfig
+    currentLang: TSubscriptionPageLocales
     isMobile: boolean
-}) => {
-    const { t, i18n } = useTranslation()
+}
+
+export const InstallationGuideWidget = (props: IProps) => {
+    const { config, isMobile, currentLang } = props
+
+    const { platforms, uiConfig } = config
+
+    const { t } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
 
     const os = useOs()
 
-    const [currentLang, setCurrentLang] = useState<TEnabledLocales>('en')
-    const [defaultTab, setDefaultTab] = useState('windows')
-
-    useEffect(() => {
-        const lang = i18n.language
-
-        if (lang.startsWith('en')) {
-            setCurrentLang('en')
-        } else if (lang.startsWith('fa') && enabledLocales.includes('fa')) {
-            setCurrentLang('fa')
-        } else if (lang.startsWith('ru') && enabledLocales.includes('ru')) {
-            setCurrentLang('ru')
-        } else if (lang.startsWith('zh') && enabledLocales.includes('zh')) {
-            setCurrentLang('zh')
-        } else {
-            setCurrentLang('en')
-        }
-    }, [i18n.language])
+    const [defaultTab, setDefaultTab] = useState<TSubscriptionPagePlatformKey>('windows')
 
     useLayoutEffect(() => {
         switch (os) {
@@ -84,124 +64,52 @@ export const InstallationGuideWidget = ({
         subscription.user.shortUuid
     )
 
-    const hasPlatformApps = {
-        ios: appsConfig.ios && appsConfig.ios.length > 0,
-        android: appsConfig.android && appsConfig.android.length > 0,
-        linux: appsConfig.linux && appsConfig.linux.length > 0,
-        macos: appsConfig.macos && appsConfig.macos.length > 0,
-        windows: appsConfig.windows && appsConfig.windows.length > 0,
-        androidTV: appsConfig.androidTV && appsConfig.androidTV.length > 0,
-        appleTV: appsConfig.appleTV && appsConfig.appleTV.length > 0
+    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
+        ios: Boolean(platforms.ios && platforms.ios.apps.length > 0),
+        android: Boolean(platforms.android && platforms.android.apps.length > 0),
+        linux: Boolean(platforms.linux && platforms.linux.apps.length > 0),
+        macos: Boolean(platforms.macos && platforms.macos.apps.length > 0),
+        windows: Boolean(platforms.windows && platforms.windows.apps.length > 0),
+        androidTV: Boolean(platforms.androidTV && platforms.androidTV.apps.length > 0),
+        appleTV: Boolean(platforms.appleTV && platforms.appleTV.apps.length > 0)
     }
 
-    if (
-        !hasPlatformApps.ios &&
-        !hasPlatformApps.android &&
-        !hasPlatformApps.linux &&
-        !hasPlatformApps.macos &&
-        !hasPlatformApps.windows &&
-        !hasPlatformApps.androidTV &&
-        !hasPlatformApps.appleTV
-    ) {
+    const hasAnyPlatform = Object.values(hasPlatformApps).some(Boolean)
+    if (!hasAnyPlatform) {
         return null
     }
 
-    const openDeepLink = (urlScheme: string, isNeedBase64Encoding: boolean | undefined) => {
-        if (isNeedBase64Encoding) {
-            const encoded = btoa(`${subscriptionUrl}`)
-            const encodedUrl = `${urlScheme}${encoded}`
-            window.open(encodedUrl, '_blank')
-        } else {
-            window.open(`${urlScheme}${subscriptionUrl}`, '_blank')
-        }
+    const handleSubscriptionLinkClick = (urlTemplate: string) => {
+        const formattedUrl = TemplateEngine.formatWithMetaInfo(urlTemplate, {
+            username: subscription.user.username,
+            subscriptionUrl: subscriptionUrl
+        })
+        window.open(formattedUrl, '_blank')
     }
 
-    const availablePlatforms = [
-        hasPlatformApps.android && {
-            value: 'android',
-            label: 'Android',
-            icon: <IconBrandAndroid size={20} />
-        },
-        hasPlatformApps.ios && {
-            value: 'ios',
-            label: 'iOS',
-            icon: <IconBrandApple size={20} />
-        },
-        hasPlatformApps.macos && {
-            value: 'macos',
-            label: 'macOS',
-            icon: <IconBrandApple size={20} />
-        },
-        hasPlatformApps.windows && {
-            value: 'windows',
-            label: 'Windows',
-            icon: <IconBrandWindows size={20} />
-        },
-        hasPlatformApps.linux && {
-            value: 'linux',
-            label: 'Linux',
-            icon: <IconDeviceDesktop size={20} />
-        },
-        hasPlatformApps.androidTV && {
-            value: 'androidTV',
-            label: 'Android TV',
-            icon: <IconBrandAndroid size={20} />
-        },
-        hasPlatformApps.appleTV && {
-            value: 'appleTV',
-            label: 'Apple TV',
-            icon: <IconBrandApple size={20} />
-        }
-    ].filter(Boolean) as {
-        icon: React.ReactNode
-        label: string
-        value: string
-    }[]
+    const availablePlatforms = (
+        Object.entries(hasPlatformApps) as [TSubscriptionPagePlatformKey, boolean][]
+    )
+        .filter(([_, hasApps]) => hasApps)
+        .map(([platform]) => {
+            const platformConfig = platforms[platform]!
+            return {
+                value: platform,
+                label: getLocalizedText(platformConfig.displayName, currentLang),
+                icon: platformConfig.svgIcon
+            }
+        })
 
-    if (
-        !hasPlatformApps[defaultTab as keyof typeof hasPlatformApps] &&
-        availablePlatforms.length > 0
-    ) {
+    if (!hasPlatformApps[defaultTab] && availablePlatforms.length > 0) {
         setDefaultTab(availablePlatforms[0].value)
     }
 
-    const getAppsForPlatform = (platform: TPlatform) => {
-        return appsConfig[platform] || []
-    }
-
-    const getSelectedAppForPlatform = (platform: TPlatform) => {
-        const apps = getAppsForPlatform(platform)
-        if (apps.length === 0) return null
-        return apps[0]
-    }
-
-    const renderFirstStepButton = (app: IAppConfig) => {
-        if (app.installationStep.buttons.length > 0) {
-            return (
-                <Group gap="xs" wrap="wrap">
-                    {app.installationStep.buttons.map((button, index) => {
-                        const buttonText = button.buttonText[currentLang] || button.buttonText.en
-
-                        return (
-                            <Button
-                                component="a"
-                                href={button.buttonLink}
-                                key={index}
-                                leftSection={<IconExternalLink size={14} />}
-                                target="_blank"
-                                variant="light"
-                                radius="md"
-                                size="sm"
-                            >
-                                {buttonText}
-                            </Button>
-                        )
-                    })}
-                </Group>
-            )
-        }
-
-        return null
+    const getAppsForPlatform = (
+        platform: TSubscriptionPagePlatformKey
+    ): TSubscriptionPageAppConfig[] => {
+        const platformConfig = platforms[platform]!
+        if (!platformConfig) return []
+        return platformConfig.apps
     }
 
     return (
@@ -209,7 +117,7 @@ export const InstallationGuideWidget = ({
             <Stack gap="md">
                 <Group justify="space-between" gap="sm">
                     <Title order={4} c="white" fw={600}>
-                        {t('installation-guide.widget.installation')}
+                        {getLocalizedText(uiConfig.installationGuides.headerText, currentLang)}
                     </Title>
 
                     {availablePlatforms.length > 1 && (
@@ -220,13 +128,26 @@ export const InstallationGuideWidget = ({
                                 label: opt.label
                             }))}
                             leftSection={
-                                availablePlatforms.find((opt) => opt.value === defaultTab)?.icon
+                                <span
+                                    dangerouslySetInnerHTML={{
+                                        __html: availablePlatforms.find(
+                                            (opt) => opt.value === defaultTab
+                                        )!.icon
+                                    }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        width: 20,
+                                        height: 20
+                                    }}
+                                />
                             }
-                            onChange={(value) => setDefaultTab(value || '')}
-                            placeholder={t('installation-guide.widget.select-device')}
+                            onChange={(value) =>
+                                setDefaultTab((value as TSubscriptionPagePlatformKey) || 'windows')
+                            }
                             radius="md"
                             size="sm"
-                            style={{ width: 140 }}
+                            style={{ width: 150 }}
                             value={defaultTab}
                             withScrollArea={false}
                             styles={{
@@ -240,17 +161,13 @@ export const InstallationGuideWidget = ({
                     )}
                 </Group>
 
-                {hasPlatformApps[defaultTab as keyof typeof hasPlatformApps] && (
+                {hasPlatformApps[defaultTab] && (
                     <BaseInstallationGuideWidget
-                        appsConfig={appsConfig}
                         isMobile={isMobile}
                         currentLang={currentLang}
-                        firstStepTitle={t('installation-guide.widget.install-app')}
                         getAppsForPlatform={getAppsForPlatform}
-                        getSelectedAppForPlatform={getSelectedAppForPlatform}
-                        openDeepLink={openDeepLink}
-                        platform={defaultTab as TPlatform}
-                        renderFirstStepButton={renderFirstStepButton}
+                        onSubscriptionLinkClick={handleSubscriptionLinkClick}
+                        platform={defaultTab}
                     />
                 )}
             </Stack>

@@ -16,7 +16,13 @@ export class RootController {
     private readonly logger = new Logger(RootController.name);
 
     constructor(private readonly rootService: RootService) {}
-    @Get([':shortUuid', ':shortUuid/:clientType'])
+
+    @Get('assets/app-config-v2.json')
+    async getSubscriptionPageConfig() {
+        return await this.rootService.getSubscriptionPageConfig();
+    }
+
+    @Get([':shortUuid', ':shortUuid/:clientType', ':shortUuid/config'])
     async root(
         @ClientIp() clientIp: string,
         @Req() request: Request,

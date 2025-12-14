@@ -3,11 +3,6 @@
 html,
 body {
     min-height: 100vh;
-}
-
-#root {
-    height: 100vh;
-    min-height: 100vh;
     background-color: #161b23;
     background-image:
         linear-gradient(to right, rgba(128, 128, 128, 0.05) 1px, transparent 1px),
@@ -15,6 +10,10 @@ body {
     background-size: 60px 60px;
     background-attachment: fixed;
     position: relative;
+}
+
+#root {
+    height: 100vh;
 }
 
 .animated-background {

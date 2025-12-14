@@ -7,7 +7,6 @@ import {
     IconX
 } from '@tabler/icons-react'
 import { Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core'
-import { useMediaQuery } from '@mantine/hooks'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
@@ -20,7 +19,8 @@ import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
 
 dayjs.extend(relativeTime)
-export const SubscriptionInfoWidget = ({ isMobile }: { isMobile: boolean }) => {
+
+export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean }) => {
     const { t, i18n } = useTranslation()
     const { subscription } = useSubscriptionInfoStoreInfo()
 

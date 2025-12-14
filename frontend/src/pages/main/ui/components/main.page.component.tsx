@@ -3,13 +3,20 @@ import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@manti
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
 import { LoadingScreen, Page, RemnawaveLogo } from '@shared/ui'
 
-import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
 import {
+    SubscriptionInfoCardsWidget,
     SubscriptionInfoCollapsedWidget,
     SubscriptionInfoExpandedWidget
 } from '../../../../widgets/main/subscription-info'
 import { RawKeysWidget } from '../../../../widgets/main/raw-keys/raw-keys.widget'
+import {
+    InstallationGuideConnector,
+    CardsBlockRenderer,
+    TimelineBlockRenderer,
+    AccordionBlockRenderer,
+    MinimalBlockRenderer
+} from '../../../../widgets/main/installation-guide'
 import {
     TSubscriptionPageLocales,
     TSubscriptionPagePlatformKey,
@@ -22,6 +29,20 @@ interface IMainPageComponentProps {
     appConfig: TSubscriptionPageRawConfig
     isMobile: boolean
 }
+
+const BLOCK_RENDERERS = {
+    cards: CardsBlockRenderer,
+    timeline: TimelineBlockRenderer,
+    accordion: AccordionBlockRenderer,
+    minimal: MinimalBlockRenderer
+} as const
+
+const SUBSCRIPTION_INFO_BLOCK_RENDERERS = {
+    cards: SubscriptionInfoCardsWidget,
+    collapsed: SubscriptionInfoCollapsedWidget,
+    expanded: SubscriptionInfoExpandedWidget,
+    hidden: null
+} as const
 
 export const MainPageComponent = (props: IMainPageComponentProps) => {
     const { appConfig, isMobile } = props
@@ -77,6 +98,9 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
         return <LoadingScreen height="100vh" />
     }
 
+    const SubscriptionInfoBlockRenderer =
+        SUBSCRIPTION_INFO_BLOCK_RENDERERS[appConfig.uiConfig.subscriptionInfo.block]
+
     return (
         <Page>
             <Box className="header-wrapper" py="md">
@@ -121,20 +145,18 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
                 style={{ position: 'relative', zIndex: 1 }}
             >
                 <Stack gap="xl">
-                    {appConfig.uiConfig.subscriptionInfo.block === 'expanded' && (
-                        <SubscriptionInfoExpandedWidget isMobile={isMobile} />
+                    {SubscriptionInfoBlockRenderer && (
+                        <SubscriptionInfoBlockRenderer isMobile={isMobile} />
                     )}
 
-                    {appConfig.uiConfig.subscriptionInfo.block === 'collapsed' && (
-                        <SubscriptionInfoCollapsedWidget isMobile={isMobile} />
-                    )}
-
-                    <InstallationGuideWidget
+                    <InstallationGuideConnector
                         config={appConfig}
                         isMobile={isMobile}
                         hasPlatformApps={hasPlatformApps}
                         currentLang={currentLang}
+                        BlockRenderer={BLOCK_RENDERERS[appConfig.uiConfig.installationGuides.block]}
                     />
+
                     <RawKeysWidget
                         config={appConfig}
                         isMobile={isMobile}

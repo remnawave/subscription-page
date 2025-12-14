@@ -7,7 +7,10 @@ import { LoadingScreen } from '@shared/ui'
 
 import { MainPageComponent } from '../components/main.page.component'
 import { useMediaQuery } from '@mantine/hooks'
-import { TSubscriptionPageRawConfig } from '@remnawave/subscription-page-types'
+import {
+    SubscriptionPageRawConfigSchema,
+    TSubscriptionPageRawConfig
+} from '@remnawave/subscription-page-types'
 
 export const MainPageConnector = () => {
     const { subscription } = useSubscriptionInfoStoreInfo()
@@ -27,14 +30,24 @@ export const MainPageConnector = () => {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const tempConfig = await ofetch<TSubscriptionPageRawConfig>(
+                const tempConfig = await ofetch<unknown>(
                     `/assets/app-config-v2.json?v=${Date.now()}`,
                     {
                         parseResponse: (response) => JSON.parse(response)
                     }
                 )
 
-                setAppsConfig(tempConfig)
+                const parsedConfig =
+                    await SubscriptionPageRawConfigSchema.safeParseAsync(tempConfig)
+
+                if (!parsedConfig.success) {
+                    consola.error('Failed to parse app config:', parsedConfig.error)
+                    return
+                }
+
+                const config = parsedConfig.data
+
+                setAppsConfig(config)
             } catch (error) {
                 consola.error('Failed to fetch app config:', error)
             } finally {

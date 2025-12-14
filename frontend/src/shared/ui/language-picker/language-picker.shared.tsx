@@ -63,7 +63,7 @@ export function LanguagePicker({
     ))
 
     return (
-        <Menu position="bottom-end" width={150} withinPortal>
+        <Menu position="bottom" width={150} withinPortal withArrow={false}>
             <Menu.Target>
                 <ActionIcon
                     color="gray"
@@ -72,8 +72,7 @@ export function LanguagePicker({
                     variant="default"
                     style={{
                         background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        transition: 'all 0.2s ease'
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}
                 >
                     <IconLanguage size={22} />

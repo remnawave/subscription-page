@@ -66,8 +66,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
                 variant="default"
                 style={{
                     background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.2s ease'
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
                 }}
             >
                 <Icon />

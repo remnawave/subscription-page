@@ -8,11 +8,9 @@ import {
     IconX
 } from '@tabler/icons-react'
 import {
-    Badge,
     Card,
     Collapse,
     Group,
-    Progress,
     SimpleGrid,
     Stack,
     Text,
@@ -53,27 +51,6 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
     }
 
     const status = getStatusConfig()
-
-    const parseTraffic = (value: string): number => {
-        const match = value.match(/([\d.]+)\s*(GB|MB|TB|KB)?/i)
-        if (!match) return 0
-        const num = parseFloat(match[1])
-        const unit = (match[2] || 'GB').toUpperCase()
-        const multipliers: Record<string, number> = { KB: 0.001, MB: 1, GB: 1000, TB: 1000000 }
-        return num * (multipliers[unit] || 1)
-    }
-
-    const usedMB = parseTraffic(user.trafficUsed)
-    const limitMB = parseTraffic(user.trafficLimit)
-    const bandwidthPercent = limitMB > 0 ? Math.min((usedMB / limitMB) * 100, 100) : 0
-    const isUnlimited = user.trafficLimit === '0' || limitMB === 0
-
-    const getBandwidthColor = () => {
-        if (isUnlimited) return 'cyan'
-        if (bandwidthPercent > 90) return 'red'
-        if (bandwidthPercent > 70) return 'orange'
-        return 'cyan'
-    }
 
     return (
         <Card p={0} radius="lg" className="glass-card" style={{ overflow: 'hidden' }}>
@@ -118,34 +95,6 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
                     </Group>
 
                     <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
-                        {isUnlimited ? (
-                            <Badge
-                                color="cyan"
-                                variant="light"
-                                size={isMobile ? 'sm' : 'md'}
-                                radius="md"
-                                style={{
-                                    background: 'rgba(34, 211, 238, 0.1)',
-                                    border: '1px solid rgba(34, 211, 238, 0.3)'
-                                }}
-                            >
-                                ∞
-                            </Badge>
-                        ) : (
-                            <Stack gap={2} style={{ width: isMobile ? 50 : 60 }}>
-                                <Progress
-                                    value={bandwidthPercent}
-                                    color={getBandwidthColor()}
-                                    size="sm"
-                                    radius="xl"
-                                    style={{ background: 'rgba(255, 255, 255, 0.1)' }}
-                                />
-                                <Text c="dimmed" size="xs" ta="center">
-                                    {Math.round(bandwidthPercent)}%
-                                </Text>
-                            </Stack>
-                        )}
-
                         <IconChevronDown
                             size={18}
                             color="var(--mantine-color-dimmed)"
@@ -196,7 +145,7 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
                             color="yellow"
                             icon={<IconArrowsUpDown size={16} />}
                             title={t('subscription-info.widget.bandwidth')}
-                            value={`${user.trafficUsed} / ${isUnlimited ? '∞' : user.trafficLimit}`}
+                            value={`${user.trafficUsed} / ${user.trafficLimit === '0' ? '∞' : user.trafficLimit}`}
                         />
                     </SimpleGrid>
                 </Stack>

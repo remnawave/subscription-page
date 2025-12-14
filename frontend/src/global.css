@@ -61,7 +61,7 @@ body {
     background: rgba(255, 255, 255, 0.02) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(10px);
-    --webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
 
@@ -75,7 +75,7 @@ body {
     background: rgba(255, 255, 255, 0.02) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(10px);
-    --webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
 
@@ -90,7 +90,7 @@ body {
     top: 0;
     z-index: 100;
     backdrop-filter: blur(12px);
-    --webkit-backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     background: rgba(22, 27, 35, 0.8);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }

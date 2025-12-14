@@ -37,7 +37,7 @@
     "@nestjs/platform-express": "11.1.9",
     "@nestjs/serve-static": "5.0.4",
     "@remnawave/backend-contract": "2.3.55",
-    "@remnawave/subscription-page-types": "0.0.4",
+    "@remnawave/subscription-page-types": "0.0.5",
     "axios": "^1.13.2",
     "class-transformer": "^0.5.1",
     "compression": "^1.8.1",

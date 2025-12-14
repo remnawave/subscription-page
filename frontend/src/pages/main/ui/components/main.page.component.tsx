@@ -1,7 +1,7 @@
 import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
 
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
-import { Page, RemnawaveLogo } from '@shared/ui'
+import { LoadingScreen, Page, RemnawaveLogo } from '@shared/ui'
 
 import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
 import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
@@ -12,6 +12,7 @@ import {
 import { RawKeysWidget } from '../../../../widgets/main/raw-keys/raw-keys.widget'
 import {
     TSubscriptionPageLocales,
+    TSubscriptionPagePlatformKey,
     TSubscriptionPageRawConfig
 } from '@remnawave/subscription-page-types'
 import { useEffect, useState } from 'react'
@@ -55,6 +56,26 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
             setCurrentLang('en')
         }
     }, [i18n.language])
+
+    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
+        ios: Boolean(appConfig.platforms.ios && appConfig.platforms.ios.apps.length > 0),
+        android: Boolean(
+            appConfig.platforms.android && appConfig.platforms.android.apps.length > 0
+        ),
+        linux: Boolean(appConfig.platforms.linux && appConfig.platforms.linux.apps.length > 0),
+        macos: Boolean(appConfig.platforms.macos && appConfig.platforms.macos.apps.length > 0),
+        windows: Boolean(
+            appConfig.platforms.windows && appConfig.platforms.windows.apps.length > 0
+        ),
+        androidTV: Boolean(
+            appConfig.platforms.androidTV && appConfig.platforms.androidTV.apps.length > 0
+        ),
+        appleTV: Boolean(appConfig.platforms.appleTV && appConfig.platforms.appleTV.apps.length > 0)
+    }
+
+    if (!Object.values(hasPlatformApps).some(Boolean)) {
+        return <LoadingScreen height="100vh" />
+    }
 
     return (
         <Page>
@@ -111,6 +132,7 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
                     <InstallationGuideWidget
                         config={appConfig}
                         isMobile={isMobile}
+                        hasPlatformApps={hasPlatformApps}
                         currentLang={currentLang}
                     />
                     <RawKeysWidget

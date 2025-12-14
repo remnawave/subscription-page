@@ -1,22 +1,4 @@
 {
-    "main": {
-        "page": {
-            "component": {
-                "podpiska": "订阅"
-            }
-        }
-    },
-    "installation-guide": {
-        "widget": {
-            "add-subscription": "添加订阅",
-            "add-subscription-button": "添加订阅",
-            "connect-and-use": "连接并使用",
-            "installation": "安装",
-            "select-device": "选择设备",
-            "pc": "PC",
-            "install-app": "安装应用程序"
-        }
-    },
     "subscription-link": {
         "widget": {
             "link-copied": "链接已复制",
@@ -40,7 +22,6 @@
     },
     "raw-keys": {
         "widget": {
-            "title": "连接密钥",
             "keys-count": "个密钥",
             "scan-to-import": "扫描以导入此密钥"
         }

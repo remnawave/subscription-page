@@ -1,22 +1,4 @@
 {
-    "main": {
-        "page": {
-            "component": {
-                "podpiska": "اشتراک"
-            }
-        }
-    },
-    "installation-guide": {
-        "widget": {
-            "add-subscription": "افزودن اشتراک",
-            "add-subscription-button": "افزودن اشتراک",
-            "connect-and-use": "اتصال و استفاده",
-            "installation": "نصب",
-            "select-device": "انتخاب دستگاه",
-            "pc": "رایانه",
-            "install-app": "نصب برنامه"
-        }
-    },
     "subscription-link": {
         "widget": {
             "link-copied": "لینک کپی شد",
@@ -40,7 +22,6 @@
     },
     "raw-keys": {
         "widget": {
-            "title": "کلیدهای اتصال",
             "keys-count": "کلید",
             "scan-to-import": "برای وارد کردن این کلید اسکن کنید"
         }

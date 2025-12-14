@@ -20,10 +20,11 @@ interface IProps {
     config: TSubscriptionPageRawConfig
     currentLang: TSubscriptionPageLocales
     isMobile: boolean
+    hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
 }
 
 export const InstallationGuideWidget = (props: IProps) => {
-    const { config, isMobile, currentLang } = props
+    const { config, isMobile, currentLang, hasPlatformApps } = props
 
     const { platforms, uiConfig } = config
 
@@ -35,27 +36,29 @@ export const InstallationGuideWidget = (props: IProps) => {
     const [defaultTab, setDefaultTab] = useState<TSubscriptionPagePlatformKey>('windows')
 
     useLayoutEffect(() => {
-        switch (os) {
-            case 'android':
-                setDefaultTab('android')
-                break
-            case 'ios':
-                setDefaultTab('ios')
-                break
-            case 'linux':
-                setDefaultTab('linux')
-                break
-            case 'macos':
-                setDefaultTab('macos')
-                break
-            case 'windows':
-                setDefaultTab('windows')
-                break
-            default:
-                setDefaultTab('windows')
-                break
+        const osToplatform: Record<string, TSubscriptionPagePlatformKey> = {
+            android: 'android',
+            ios: 'ios',
+            linux: 'linux',
+            macos: 'macos',
+            windows: 'windows'
         }
-    }, [os])
+
+        const preferredPlatform = osToplatform[os] ?? 'windows'
+
+        if (hasPlatformApps[preferredPlatform]) {
+            setDefaultTab(preferredPlatform)
+            return
+        }
+
+        const firstAvailable = (
+            Object.keys(hasPlatformApps) as TSubscriptionPagePlatformKey[]
+        ).find((key) => hasPlatformApps[key])
+
+        if (firstAvailable) {
+            setDefaultTab(firstAvailable)
+        }
+    }, [os, hasPlatformApps])
 
     if (!subscription) return null
 
@@ -63,21 +66,6 @@ export const InstallationGuideWidget = (props: IProps) => {
         window.location.href,
         subscription.user.shortUuid
     )
-
-    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
-        ios: Boolean(platforms.ios && platforms.ios.apps.length > 0),
-        android: Boolean(platforms.android && platforms.android.apps.length > 0),
-        linux: Boolean(platforms.linux && platforms.linux.apps.length > 0),
-        macos: Boolean(platforms.macos && platforms.macos.apps.length > 0),
-        windows: Boolean(platforms.windows && platforms.windows.apps.length > 0),
-        androidTV: Boolean(platforms.androidTV && platforms.androidTV.apps.length > 0),
-        appleTV: Boolean(platforms.appleTV && platforms.appleTV.apps.length > 0)
-    }
-
-    const hasAnyPlatform = Object.values(hasPlatformApps).some(Boolean)
-    if (!hasAnyPlatform) {
-        return null
-    }
 
     const handleSubscriptionLinkClick = (urlTemplate: string) => {
         const formattedUrl = TemplateEngine.formatWithMetaInfo(urlTemplate, {
@@ -99,10 +87,6 @@ export const InstallationGuideWidget = (props: IProps) => {
                 icon: platformConfig.svgIcon
             }
         })
-
-    if (!hasPlatformApps[defaultTab] && availablePlatforms.length > 0) {
-        setDefaultTab(availablePlatforms[0].value)
-    }
 
     const getAppsForPlatform = (
         platform: TSubscriptionPagePlatformKey

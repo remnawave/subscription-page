@@ -1,21 +1,4 @@
 {
-    "main": {
-        "page": {
-            "component": {
-                "podpiska": "Abonnement"
-            }
-        }
-    },
-    "installation-guide": {
-        "widget": {
-            "add-subscription": "Ajouter un abonnement",
-            "add-subscription-button": "Ajouter un abonnement",
-            "connect-and-use": "Se connecter et utiliser",
-            "installation": "Installation",
-            "select-device": "Choisir un appareil",
-            "install-app": "Installer l'application"
-        }
-    },
     "subscription-link": {
         "widget": {
             "link-copied": "Lien copié",
@@ -39,11 +22,7 @@
     },
     "raw-keys": {
         "widget": {
-            "title": "Clés de connexion",
             "keys-count": "clés",
-            "copy": "Copier la clé",
-            "copied": "Copié !",
-            "show-qr": "Afficher le code QR",
             "scan-to-import": "Scannez pour importer cette clé"
         }
     },

@@ -9,17 +9,26 @@ import {
     TSubscriptionPagePlatformKey
 } from '@remnawave/subscription-page-types'
 import { BlockCardWidget } from './block-card.widget'
+import { getIconFromLibrary } from './utils/get-icon-from-library'
 
 interface IBaseGuideProps {
     isMobile: boolean
     platform: TSubscriptionPagePlatformKey
     currentLang: TSubscriptionPageLocales
+    svgLibrary: Record<string, string>
     getAppsForPlatform: (platform: TSubscriptionPagePlatformKey) => TSubscriptionPageAppConfig[]
     onSubscriptionLinkClick: (link: string) => void
 }
 
 export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
-    const { isMobile, onSubscriptionLinkClick, getAppsForPlatform, platform, currentLang } = props
+    const {
+        isMobile,
+        onSubscriptionLinkClick,
+        getAppsForPlatform,
+        platform,
+        currentLang,
+        svgLibrary
+    } = props
 
     const platformApps = getAppsForPlatform(platform)
     const [activeTabId, setActiveTabId] = useState<string>('')
@@ -65,7 +74,9 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                         onClick={() => handleButtonClick(button)}
                         leftSection={
                             <span
-                                dangerouslySetInnerHTML={{ __html: button.svgIcon }}
+                                dangerouslySetInnerHTML={{
+                                    __html: getIconFromLibrary(button.svgIconKey, svgLibrary)
+                                }}
                                 style={{ display: 'flex', alignItems: 'center' }}
                             />
                         }
@@ -128,7 +139,9 @@ export const BaseInstallationGuideWidget = (props: IBaseGuideProps) => {
                             isMobile={isMobile}
                             icon={
                                 <span
-                                    dangerouslySetInnerHTML={{ __html: block.svgIcon }}
+                                    dangerouslySetInnerHTML={{
+                                        __html: getIconFromLibrary(block.svgIconKey, svgLibrary)
+                                    }}
                                     style={{ display: 'flex', alignItems: 'center' }}
                                 />
                             }

@@ -15,6 +15,7 @@ import { TemplateEngine } from '@shared/utils/template-engine'
 
 import { BaseInstallationGuideWidget } from './installation-guide.base.widget'
 import { getLocalizedText } from './utils/get-localized-text.util'
+import { getIconFromLibrary } from './utils/get-icon-from-library'
 
 interface IProps {
     config: TSubscriptionPageRawConfig
@@ -84,7 +85,7 @@ export const InstallationGuideWidget = (props: IProps) => {
             return {
                 value: platform,
                 label: getLocalizedText(platformConfig.displayName, currentLang),
-                icon: platformConfig.svgIcon
+                icon: getIconFromLibrary(platformConfig.svgIconKey, config.svgLibrary)
             }
         })
 
@@ -149,6 +150,7 @@ export const InstallationGuideWidget = (props: IProps) => {
                     <BaseInstallationGuideWidget
                         isMobile={isMobile}
                         currentLang={currentLang}
+                        svgLibrary={config.svgLibrary}
                         getAppsForPlatform={getAppsForPlatform}
                         onSubscriptionLinkClick={handleSubscriptionLinkClick}
                         platform={defaultTab}

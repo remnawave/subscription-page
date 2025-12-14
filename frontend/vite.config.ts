@@ -93,8 +93,7 @@ export default defineConfig({
                         '@mantine/modals',
                         '@remnawave/backend-contract'
                     ],
-                    i18n: ['i18next', 'i18next-http-backend', 'i18next-browser-languagedetector'],
-                    motion: ['framer-motion']
+                    i18n: ['i18next', 'i18next-http-backend', 'i18next-browser-languagedetector']
                 }
             }
         }

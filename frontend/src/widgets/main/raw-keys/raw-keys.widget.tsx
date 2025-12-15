@@ -22,6 +22,7 @@ import {
 } from '@remnawave/subscription-page-types'
 import { getLocalizedText } from '../installation-guide/utils/get-localized-text.util'
 import classes from './raw-keys.module.css'
+import { vibrate } from '@shared/utils/vibrate'
 
 interface ParsedLink {
     name: string
@@ -143,7 +144,10 @@ export const RawKeysWidget = (props: IProps) => {
                                                     color={copied ? 'teal' : 'gray'}
                                                     variant="subtle"
                                                     size={isMobile ? 'sm' : 'md'}
-                                                    onClick={copy}
+                                                    onClick={() => {
+                                                        vibrate('drop')
+                                                        copy()
+                                                    }}
                                                 >
                                                     {copied ? (
                                                         <IconCheck size={isMobile ? 14 : 16} />
@@ -158,7 +162,10 @@ export const RawKeysWidget = (props: IProps) => {
                                             color="cyan"
                                             variant="subtle"
                                             size={isMobile ? 'sm' : 'md'}
-                                            onClick={() => handleShowQr(link)}
+                                            onClick={() => {
+                                                vibrate('tap')
+                                                handleShowQr(link)
+                                            }}
                                         >
                                             <IconQrcode size={isMobile ? 14 : 16} />
                                         </ActionIcon>

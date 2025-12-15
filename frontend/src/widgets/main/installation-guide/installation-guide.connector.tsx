@@ -19,6 +19,7 @@ import { getLocalizedText } from './utils/get-localized-text.util'
 import { getIconFromLibrary } from './utils/get-icon-from-library'
 
 import classes from './installation-guide.module.css'
+import { vibrate } from '@shared/utils/vibrate'
 
 export type TBlockVariant = 'cards' | 'timeline' | 'accordion' | 'minimal'
 
@@ -208,11 +209,12 @@ export const InstallationGuideConnector = (props: IProps) => {
                                     }}
                                 />
                             }
-                            onChange={(value) =>
+                            onChange={(value) => {
+                                vibrate('selection')
                                 setSelectedPlatform(
                                     (value as TSubscriptionPagePlatformKey) || 'windows'
                                 )
-                            }
+                            }}
                             radius="md"
                             size="sm"
                             style={{ width: 150 }}
@@ -243,7 +245,10 @@ export const InstallationGuideConnector = (props: IProps) => {
                                                 <IconStar color="gold" size={16} />
                                             ) : undefined
                                         }
-                                        onClick={() => setSelectedAppName(app.name)}
+                                        onClick={() => {
+                                            vibrate('toggle')
+                                            setSelectedAppName(app.name)
+                                        }}
                                         radius="md"
                                         size="sm"
                                         className={

@@ -17,6 +17,7 @@ import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-u
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 
 import classes from './subscription-link.module.css'
+import { vibrate } from '@shared/utils/vibrate'
 
 export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) => {
     const { t } = useTranslation()
@@ -75,6 +76,8 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
     }
 
     const handleGetLink = () => {
+        vibrate('tap')
+
         const subscriptionQrCode = renderSVG(subscriptionUrl, {
             whiteColor: '#161B22',
             blackColor: '#22d3ee'

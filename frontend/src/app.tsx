@@ -15,6 +15,7 @@ import { ModalsProvider } from '@mantine/modals'
 import { useMediaQuery } from '@mantine/hooks'
 import { Suspense } from 'react'
 import dayjs from 'dayjs'
+import { enableMainThreadBlocking } from 'ios-vibrator-pro-max'
 
 import { LoadingScreen } from '@shared/ui/loading-screen'
 import { theme } from '@shared/constants'
@@ -24,6 +25,8 @@ import { Router } from './app/router/router'
 dayjs.extend(customParseFormat)
 
 polyfillCountryFlagEmojis()
+
+enableMainThreadBlocking(false)
 
 export function App() {
     const mq = useMediaQuery('(min-width: 40em)')

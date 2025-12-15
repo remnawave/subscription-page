@@ -7,6 +7,7 @@ import { getColorGradient } from '../../../utils/get-color-gradient.util'
 
 import classes from './accordion-block.module.css'
 import { ThemeIconShared } from '../../theme-icon.shared'
+import { vibrate } from '@shared/utils/vibrate'
 
 export const AccordionBlockRenderer = ({
     blocks,
@@ -20,7 +21,10 @@ export const AccordionBlockRenderer = ({
     return (
         <Accordion
             value={openedAccordion}
-            onChange={setOpenedAccordion}
+            onChange={(value) => {
+                vibrate('tap')
+                setOpenedAccordion(value)
+            }}
             variant="separated"
             radius="lg"
             chevron={<IconChevronDown size={18} />}

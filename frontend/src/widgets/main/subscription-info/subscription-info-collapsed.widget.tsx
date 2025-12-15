@@ -28,6 +28,7 @@ import {
 } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
+import { vibrate } from '@shared/utils/vibrate'
 
 dayjs.extend(relativeTime)
 
@@ -55,7 +56,10 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
     return (
         <Card p={0} radius="lg" className="glass-card" style={{ overflow: 'hidden' }}>
             <UnstyledButton
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={() => {
+                    vibrate('tap')
+                    setIsExpanded(!isExpanded)
+                }}
                 style={{ width: '100%' }}
                 p={{ base: 'xs', sm: 'sm' }}
             >

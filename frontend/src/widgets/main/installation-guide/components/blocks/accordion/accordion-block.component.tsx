@@ -3,7 +3,7 @@ import { Accordion, Group, Stack, Text } from '@mantine/core'
 import { useState } from 'react'
 
 import { IBlockRendererProps } from '../../../installation-guide.connector'
-import { getColorGradient } from '../../../utils/get-color-gradient.util'
+import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient.util'
 
 import classes from './accordion-block.module.css'
 import { ThemeIconShared } from '../../theme-icon.shared'

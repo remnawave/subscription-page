@@ -22,7 +22,6 @@
     },
     "raw-keys": {
         "widget": {
-            "keys-count": "ключей",
             "scan-to-import": "Отсканируйте QR-код для импорта ключа"
         }
     },

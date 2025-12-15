@@ -1,6 +1,6 @@
 import { ThemeIcon } from '@mantine/core'
 
-import { ColorGradientStyle } from '../utils/get-color-gradient.util'
+import { ColorGradientStyle } from '../../../../shared/ui/get-color-gradient.util'
 
 interface IProps {
     isMobile: boolean

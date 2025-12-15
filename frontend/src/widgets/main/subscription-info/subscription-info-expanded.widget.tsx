@@ -17,6 +17,7 @@ import {
 } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
+import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
 
 dayjs.extend(relativeTime)
 
@@ -50,7 +51,6 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
                 status: t('subscription-info.widget.active')
             }
         }
-
         return {
             color: 'red',
             icon: <IconX size={isMobile ? 18 : 22} />,
@@ -59,6 +59,7 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
     }
 
     const statusInfo = getStatusAndIcon()
+    const gradientColor = getColorGradientSolid(statusInfo.color)
 
     return (
         <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
@@ -70,18 +71,20 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
                         style={{ minWidth: 0, flex: 1 }}
                     >
                         <ThemeIcon
-                            color={statusInfo.color}
                             size={isMobile ? 36 : 44}
                             radius="xl"
+                            color={statusInfo.color}
                             variant="light"
                             style={{
-                                background: `linear-gradient(135deg, var(--mantine-color-${statusInfo.color}-filled) 0%, var(--mantine-color-${statusInfo.color}-light) 100%)`,
-                                border: `1px solid var(--mantine-color-${statusInfo.color}-4)`,
+                                background: gradientColor.background,
+                                border: gradientColor.border,
+                                boxShadow: gradientColor.boxShadow,
                                 flexShrink: 0
                             }}
                         >
                             {statusInfo.icon}
                         </ThemeIcon>
+
                         <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
                             <Title
                                 order={5}

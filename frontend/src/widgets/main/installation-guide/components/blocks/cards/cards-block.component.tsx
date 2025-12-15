@@ -1,7 +1,7 @@
 import { Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core'
 
 import { IBlockRendererProps } from '../../../installation-guide.connector'
-import { getColorGradient } from '../../../utils/get-color-gradient.util'
+import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient.util'
 import { ThemeIconShared } from '../../theme-icon.shared'
 
 export const CardsBlockRenderer = ({

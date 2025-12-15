@@ -22,7 +22,6 @@
     },
     "raw-keys": {
         "widget": {
-            "keys-count": "clés",
             "scan-to-import": "Scannez pour importer cette clé"
         }
     },

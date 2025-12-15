@@ -1,5 +1,3 @@
-@layer mantine, mantine-datatable;
-
 html,
 body {
     min-height: 100vh;
@@ -41,7 +39,7 @@ body {
 }
 
 .glass-card:hover {
-    background: rgba(255, 255, 255, 0.04) !important;
+    /* background: rgba(255, 255, 255, 0.04) !important; */
     border-color: rgba(34, 211, 238, 0.3) !important;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
 }
@@ -71,6 +69,10 @@ body {
     -webkit-backdrop-filter: blur(12px);
     background: rgba(22, 27, 35, 0.8);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    @media (min-width: 768px) {
+        border-radius: 0 0 var(--mantine-radius-lg) var(--mantine-radius-lg);
+    }
 }
 
 .logo-text-highlight {

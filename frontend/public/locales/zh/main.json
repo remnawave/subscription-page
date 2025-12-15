@@ -22,7 +22,6 @@
     },
     "raw-keys": {
         "widget": {
-            "keys-count": "个密钥",
             "scan-to-import": "扫描以导入此密钥"
         }
     },

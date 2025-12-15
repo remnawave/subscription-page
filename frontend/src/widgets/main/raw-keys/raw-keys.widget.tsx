@@ -1,6 +1,7 @@
 import { IconCheck, IconCopy, IconKey, IconQrcode } from '@tabler/icons-react'
 import {
     ActionIcon,
+    Badge,
     Box,
     Card,
     CopyButton,
@@ -105,17 +106,19 @@ export const RawKeysWidget = (props: IProps) => {
                     <Title order={4} c="white" fw={600}>
                         {getLocalizedText(uiConfig.connectionKeys.headerText, currentLang)}
                     </Title>
-                    <Text size="xs" c="dimmed">
-                        {parsedLinks.length} {t('raw-keys.widget.keys-count')}
-                    </Text>
+                    {parsedLinks.length > 1 && (
+                        <Badge color="cyan" variant="light" size="lg">
+                            {parsedLinks.length}
+                        </Badge>
+                    )}
                 </Group>
 
-                <ScrollArea.Autosize mah={300}>
+                <ScrollArea.Autosize mah={300} scrollbars="y">
                     <Stack gap="xs">
                         {parsedLinks.map((link, index) => (
                             <Box key={index} p="xs" className={classes.keyBox}>
-                                <Group justify="space-between" wrap="nowrap" gap="xs">
-                                    <Group gap="xs" wrap="nowrap" style={{ minWidth: 0, flex: 1 }}>
+                                <Box className={classes.keyRow}>
+                                    <Box className={classes.keyInfo}>
                                         <IconKey
                                             size={isMobile ? 16 : 18}
                                             style={{
@@ -123,19 +126,17 @@ export const RawKeysWidget = (props: IProps) => {
                                                 flexShrink: 0
                                             }}
                                         />
-                                        <Text
-                                            size={isMobile ? 'xs' : 'sm'}
-                                            c="white"
-                                            fw={500}
-                                            style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap'
-                                            }}
-                                        >
-                                            {link.name}
-                                        </Text>
-                                    </Group>
+                                        <Box className={classes.keyName}>
+                                            <Text
+                                                size={isMobile ? 'xs' : 'sm'}
+                                                c="white"
+                                                fw={500}
+                                                span
+                                            >
+                                                {link.name}
+                                            </Text>
+                                        </Box>
+                                    </Box>
 
                                     <Group gap={4} wrap="nowrap">
                                         <CopyButton value={link.fullLink}>
@@ -170,7 +171,7 @@ export const RawKeysWidget = (props: IProps) => {
                                             <IconQrcode size={isMobile ? 14 : 16} />
                                         </ActionIcon>
                                     </Group>
-                                </Group>
+                                </Box>
                             </Box>
                         ))}
                     </Stack>

@@ -29,6 +29,7 @@ import {
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
 import { vibrate } from '@shared/utils/vibrate'
+import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
 
 dayjs.extend(relativeTime)
 
@@ -52,6 +53,7 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
     }
 
     const status = getStatusConfig()
+    const gradientColor = getColorGradientSolid(status.color)
 
     return (
         <Card p={0} radius="lg" className="glass-card" style={{ overflow: 'hidden' }}>
@@ -66,13 +68,14 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
                 <Group gap="sm" wrap="nowrap" justify="space-between">
                     <Group gap="xs" wrap="nowrap" style={{ minWidth: 0, flex: 1 }}>
                         <ThemeIcon
-                            color={status.color}
                             size={isMobile ? 28 : 32}
                             radius="xl"
+                            color={status.color}
                             variant="light"
                             style={{
-                                background: `linear-gradient(135deg, var(--mantine-color-${status.color}-filled) 0%, var(--mantine-color-${status.color}-light) 100%)`,
-                                border: `1px solid var(--mantine-color-${status.color}-4)`,
+                                background: gradientColor.background,
+                                border: gradientColor.border,
+                                boxShadow: gradientColor.boxShadow,
                                 flexShrink: 0
                             }}
                         >

@@ -35,6 +35,10 @@ const VibrationPresets = {
 type PresetName = keyof typeof VibrationPresets
 
 export function vibrate(pattern: PresetName | number | number[]): boolean {
+    if (!canVibrate()) {
+        return false
+    }
+
     if (!navigator.vibrate) {
         return false
     }

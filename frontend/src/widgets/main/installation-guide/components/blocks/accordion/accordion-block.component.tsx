@@ -8,11 +8,12 @@ import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient
 import classes from './accordion-block.module.css'
 import { ThemeIconShared } from '../../theme-icon.shared'
 import { vibrate } from '@shared/utils/vibrate'
+import { getLocalizedText } from '@shared/utils/language/get-translation'
 
 export const AccordionBlockRenderer = ({
     blocks,
     isMobile,
-    getLocalizedText,
+    currentLang,
     renderBlockButtons,
     getIconFromLibrary
 }: IBlockRendererProps) => {
@@ -62,7 +63,7 @@ export const AccordionBlockRenderer = ({
                                             whiteSpace: 'nowrap'
                                         }}
                                         dangerouslySetInnerHTML={{
-                                            __html: getLocalizedText(block.title)
+                                            __html: getLocalizedText(block.title, currentLang)
                                         }}
                                     />
                                 </Stack>
@@ -74,7 +75,7 @@ export const AccordionBlockRenderer = ({
                                 size={isMobile ? 'xs' : 'sm'}
                                 style={{ lineHeight: 1.7 }}
                                 dangerouslySetInnerHTML={{
-                                    __html: getLocalizedText(block.description)
+                                    __html: getLocalizedText(block.description, currentLang)
                                 }}
                             />
                             <Group gap="xs" wrap="wrap" mt="sm">

@@ -18,7 +18,6 @@ import {
     UnstyledButton
 } from '@mantine/core'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import dayjs from 'dayjs'
 
@@ -26,19 +25,22 @@ import {
     formatDate,
     getExpirationTextUtil
 } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import { useSubscription } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
 import { vibrate } from '@shared/utils/vibrate'
 import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
+import { useTranslation } from '@shared/hooks'
 
 dayjs.extend(relativeTime)
 
-export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolean }) => {
-    const { t, i18n } = useTranslation()
-    const { subscription } = useSubscriptionInfoStoreInfo()
-    const [isExpanded, setIsExpanded] = useState(false)
+interface IProps {
+    isMobile: boolean
+}
 
-    if (!subscription) return null
+export const SubscriptionInfoCollapsedWidget = ({ isMobile }: IProps) => {
+    const { t, currentLang, baseTranslations } = useTranslation()
+    const subscription = useSubscription()
+    const [isExpanded, setIsExpanded] = useState(false)
 
     const { user } = subscription
 
@@ -96,7 +98,11 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
                                 {user.username}
                             </Text>
                             <Text c="dimmed" size="xs" style={{ whiteSpace: 'nowrap' }}>
-                                {getExpirationTextUtil(user.expiresAt, t, i18n)}
+                                {getExpirationTextUtil(
+                                    user.expiresAt,
+                                    currentLang,
+                                    baseTranslations
+                                )}
                             </Text>
                         </Stack>
                     </Group>
@@ -120,7 +126,7 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
                         <InfoBlockShared
                             color="blue"
                             icon={<IconUserScan size={16} />}
-                            title={t('subscription-info.widget.name')}
+                            title={t(baseTranslations.name)}
                             value={user.username}
                         />
 
@@ -133,25 +139,25 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: { isMobile: boolea
                                     <IconX size={16} />
                                 )
                             }
-                            title={t('subscription-info.widget.status')}
+                            title={t(baseTranslations.status)}
                             value={
                                 user.userStatus === 'ACTIVE'
-                                    ? t('subscription-info.widget.active')
-                                    : t('subscription-info.widget.inactive')
+                                    ? t(baseTranslations.active)
+                                    : t(baseTranslations.inactive)
                             }
                         />
 
                         <InfoBlockShared
                             color="red"
                             icon={<IconCalendar size={16} />}
-                            title={t('subscription-info.widget.expires')}
-                            value={formatDate(user.expiresAt, t, i18n)}
+                            title={t(baseTranslations.expires)}
+                            value={formatDate(user.expiresAt, currentLang, baseTranslations)}
                         />
 
                         <InfoBlockShared
                             color="yellow"
                             icon={<IconArrowsUpDown size={16} />}
-                            title={t('subscription-info.widget.bandwidth')}
+                            title={t(baseTranslations.bandwidth)}
                             value={`${user.trafficUsed} / ${user.trafficLimit === '0' ? '∞' : user.trafficLimit}`}
                         />
                     </SimpleGrid>

@@ -82,7 +82,7 @@ export default defineConfig({
             output: {
                 manualChunks: {
                     react: ['react', 'react-dom', 'react-router-dom', 'zustand'],
-                    icons: ['react-icons/pi'],
+                    icons: ['react-icons/pi', '@tabler/icons-react'],
                     date: ['dayjs'],
                     mantine: [
                         '@mantine/core',
@@ -90,10 +90,13 @@ export default defineConfig({
                         '@mantine/dates',
                         '@mantine/nprogress',
                         '@mantine/notifications',
-                        '@mantine/modals',
-                        '@remnawave/backend-contract'
+                        '@mantine/modals'
                     ],
-                    i18n: ['i18next', 'i18next-http-backend', 'i18next-browser-languagedetector']
+                    i18n: [
+                        'i18next-browser-languagedetector',
+                        '@remnawave/backend-contract',
+                        '@remnawave/subscription-page-types'
+                    ]
                 }
             }
         }

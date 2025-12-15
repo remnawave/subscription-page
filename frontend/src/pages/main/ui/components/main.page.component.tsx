@@ -1,32 +1,25 @@
 import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
+import { useMemo } from 'react'
 
+import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
+
+import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
-import { LoadingScreen, Page, RemnawaveLogo } from '@shared/ui'
-
-import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
+import { Page, RemnawaveLogo } from '@shared/ui'
 import {
+    SubscriptionLinkWidget,
     SubscriptionInfoCardsWidget,
     SubscriptionInfoCollapsedWidget,
-    SubscriptionInfoExpandedWidget
-} from '../../../../widgets/main/subscription-info'
-import { RawKeysWidget } from '../../../../widgets/main/raw-keys/raw-keys.widget'
-import {
+    SubscriptionInfoExpandedWidget,
+    RawKeysWidget,
     InstallationGuideConnector,
     CardsBlockRenderer,
     TimelineBlockRenderer,
     AccordionBlockRenderer,
     MinimalBlockRenderer
-} from '../../../../widgets/main/installation-guide'
-import {
-    TSubscriptionPageLocales,
-    TSubscriptionPagePlatformKey,
-    TSubscriptionPageRawConfig
-} from '@remnawave/subscription-page-types'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+} from '@widgets/main'
 
 interface IMainPageComponentProps {
-    appConfig: TSubscriptionPageRawConfig
     isMobile: boolean
 }
 
@@ -44,62 +37,35 @@ const SUBSCRIPTION_INFO_BLOCK_RENDERERS = {
     hidden: null
 } as const
 
-export const MainPageComponent = (props: IMainPageComponentProps) => {
-    const { appConfig, isMobile } = props
+export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
+    const config = useAppConfig()
+    const currentLang = useCurrentLang()
+    const { setLanguage } = useAppConfigStoreActions()
 
-    const { i18n } = useTranslation()
-
-    const [currentLang, setCurrentLang] = useState<TSubscriptionPageLocales>('en')
-
-    const brandName = appConfig.brandingSettings.title
-    let hasCustomLogo = !!appConfig.brandingSettings.logoUrl
+    const brandName = config.brandingSettings.title
+    let hasCustomLogo = !!config.brandingSettings.logoUrl
 
     if (hasCustomLogo) {
-        if (appConfig.brandingSettings.logoUrl.includes('docs.rw')) {
+        if (config.brandingSettings.logoUrl.includes('docs.rw')) {
             hasCustomLogo = false
         }
     }
 
-    useEffect(() => {
-        const lang = i18n.language
-
-        if (lang.startsWith('en')) {
-            setCurrentLang('en')
-        } else if (lang.startsWith('fa') && appConfig.additionalLocales.includes('fa')) {
-            setCurrentLang('fa')
-        } else if (lang.startsWith('ru') && appConfig.additionalLocales.includes('ru')) {
-            setCurrentLang('ru')
-        } else if (lang.startsWith('zh') && appConfig.additionalLocales.includes('zh')) {
-            setCurrentLang('zh')
-        } else if (lang.startsWith('fr') && appConfig.additionalLocales.includes('fr')) {
-            setCurrentLang('fr')
-        } else {
-            setCurrentLang('en')
-        }
-    }, [i18n.language])
-
-    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
-        ios: Boolean(appConfig.platforms.ios && appConfig.platforms.ios.apps.length > 0),
-        android: Boolean(
-            appConfig.platforms.android && appConfig.platforms.android.apps.length > 0
-        ),
-        linux: Boolean(appConfig.platforms.linux && appConfig.platforms.linux.apps.length > 0),
-        macos: Boolean(appConfig.platforms.macos && appConfig.platforms.macos.apps.length > 0),
-        windows: Boolean(
-            appConfig.platforms.windows && appConfig.platforms.windows.apps.length > 0
-        ),
-        androidTV: Boolean(
-            appConfig.platforms.androidTV && appConfig.platforms.androidTV.apps.length > 0
-        ),
-        appleTV: Boolean(appConfig.platforms.appleTV && appConfig.platforms.appleTV.apps.length > 0)
-    }
-
-    if (!Object.values(hasPlatformApps).some(Boolean)) {
-        return <LoadingScreen height="100vh" />
-    }
+    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = useMemo(
+        () => ({
+            ios: Boolean(config.platforms.ios?.apps.length),
+            android: Boolean(config.platforms.android?.apps.length),
+            linux: Boolean(config.platforms.linux?.apps.length),
+            macos: Boolean(config.platforms.macos?.apps.length),
+            windows: Boolean(config.platforms.windows?.apps.length),
+            androidTV: Boolean(config.platforms.androidTV?.apps.length),
+            appleTV: Boolean(config.platforms.appleTV?.apps.length)
+        }),
+        [config]
+    )
 
     const SubscriptionInfoBlockRenderer =
-        SUBSCRIPTION_INFO_BLOCK_RENDERERS[appConfig.uiConfig.subscriptionInfo.block]
+        SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfo.block]
 
     return (
         <Page>
@@ -111,7 +77,7 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
                                 <Image
                                     alt="logo"
                                     fit="contain"
-                                    src={appConfig.brandingSettings.logoUrl}
+                                    src={config.brandingSettings.logoUrl}
                                     style={{
                                         maxWidth: '32px',
                                         maxHeight: '32px',
@@ -131,7 +97,7 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
 
                         <Group gap="xs">
                             <SubscriptionLinkWidget
-                                supportUrl={appConfig.brandingSettings.supportUrl}
+                                supportUrl={config.brandingSettings.supportUrl}
                             />
                         </Group>
                     </Group>
@@ -150,21 +116,19 @@ export const MainPageComponent = (props: IMainPageComponentProps) => {
                     )}
 
                     <InstallationGuideConnector
-                        config={appConfig}
                         isMobile={isMobile}
                         hasPlatformApps={hasPlatformApps}
-                        currentLang={currentLang}
-                        BlockRenderer={BLOCK_RENDERERS[appConfig.uiConfig.installationGuides.block]}
+                        BlockRenderer={BLOCK_RENDERERS[config.uiConfig.installationGuides.block]}
                     />
 
-                    <RawKeysWidget
-                        config={appConfig}
-                        isMobile={isMobile}
-                        currentLang={currentLang}
-                    />
+                    <RawKeysWidget isMobile={isMobile} />
 
                     <Center>
-                        <LanguagePicker enabledLocales={appConfig.additionalLocales} />
+                        <LanguagePicker
+                            locales={config.locales}
+                            currentLang={currentLang}
+                            onLanguageChange={setLanguage}
+                        />
                     </Center>
                 </Stack>
             </Container>

@@ -1,66 +1,49 @@
 import { ActionIcon, Menu, Text, useDirection } from '@mantine/core'
 import { IconLanguage } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
-import { TSubscriptionPageRawConfig } from '@remnawave/subscription-page-types'
+import { getLanguageInfo, TSubscriptionPageLanguageCode } from '@remnawave/subscription-page-types'
+import { vibrate } from '@shared/utils/vibrate'
 
-const data = [
-    { label: 'Русский', emoji: '🇷🇺', value: 'ru' },
-    { label: 'فارسی', emoji: '🇮🇷', value: 'fa' },
-    { label: '简体中文', emoji: '🇨🇳', value: 'zh' },
-    { label: 'Français', emoji: '🇫🇷', value: 'fr' }
-]
+interface IProps {
+    locales: TSubscriptionPageLanguageCode[]
+    currentLang: TSubscriptionPageLanguageCode
+    onLanguageChange: (lang: TSubscriptionPageLanguageCode) => void
+}
 
-export function LanguagePicker({
-    enabledLocales
-}: {
-    enabledLocales: TSubscriptionPageRawConfig['additionalLocales']
-}) {
+export function LanguagePicker(props: IProps) {
+    const { locales, currentLang, onLanguageChange } = props
+
     const { toggleDirection, dir } = useDirection()
 
-    const filteredData = data.filter((item) =>
-        enabledLocales.includes(
-            item.value as TSubscriptionPageRawConfig['additionalLocales'][number]
-        )
-    )
-
-    const { i18n } = useTranslation()
-
     useEffect(() => {
-        const savedLanguage = i18n.language
-
-        if (savedLanguage) {
-            if (savedLanguage === 'fa') {
-                if (dir === 'ltr') {
-                    toggleDirection()
-                }
-            }
-        }
-    }, [i18n])
-
-    const changeLanguage = (value: string) => {
-        i18n.changeLanguage(value)
-
-        if (value === 'fa' && dir === 'ltr') {
+        if (currentLang === 'fa' && dir === 'ltr') {
             toggleDirection()
         }
-
-        if (dir === 'rtl' && value !== 'fa') {
+        if (currentLang !== 'fa' && dir === 'rtl') {
             toggleDirection()
         }
+    }, [currentLang])
+
+    const changeLanguage = (value: TSubscriptionPageLanguageCode) => {
+        onLanguageChange(value)
     }
 
-    filteredData.push({ label: 'English', emoji: '🇺🇸', value: 'en' })
-
-    const items = filteredData.map((item) => (
-        <Menu.Item
-            key={item.value}
-            leftSection={<Text>{item.emoji}</Text>}
-            onClick={() => changeLanguage(item.value)}
-        >
-            {item.label}
-        </Menu.Item>
-    ))
+    const items = locales.map((item) => {
+        const localeInfo = getLanguageInfo(item)
+        if (!localeInfo) return null
+        return (
+            <Menu.Item
+                key={item}
+                leftSection={<Text>{localeInfo.emoji}</Text>}
+                onClick={() => {
+                    vibrate('doubleTap')
+                    changeLanguage(item)
+                }}
+            >
+                {localeInfo.nativeName}
+            </Menu.Item>
+        )
+    })
 
     return (
         <Menu position="bottom" width={150} withinPortal withArrow={false}>

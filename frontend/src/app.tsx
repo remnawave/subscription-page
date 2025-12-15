@@ -6,20 +6,16 @@ import '@gfazioli/mantine-spinner/styles.css'
 
 import './global.css'
 
-import { Center, DirectionProvider, MantineProvider } from '@mantine/core'
+import { DirectionProvider, MantineProvider } from '@mantine/core'
 import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { NavigationProgress } from '@mantine/nprogress'
 import { Notifications } from '@mantine/notifications'
 import { ModalsProvider } from '@mantine/modals'
 import { useMediaQuery } from '@mantine/hooks'
-import { Suspense } from 'react'
 import dayjs from 'dayjs'
 import { enableMainThreadBlocking } from 'ios-vibrator-pro-max'
-
-import { LoadingScreen } from '@shared/ui/loading-screen'
 import { theme } from '@shared/constants'
-
 import { Router } from './app/router/router'
 
 dayjs.extend(customParseFormat)
@@ -37,15 +33,8 @@ export function App() {
                 <ModalsProvider>
                     <Notifications position={mq ? 'top-right' : 'bottom-right'} />
                     <NavigationProgress />
-                    <Suspense
-                        fallback={
-                            <Center h="100%">
-                                <LoadingScreen height="60vh" />
-                            </Center>
-                        }
-                    >
-                        <Router />
-                    </Suspense>
+
+                    <Router />
                 </ModalsProvider>
             </MantineProvider>
         </DirectionProvider>

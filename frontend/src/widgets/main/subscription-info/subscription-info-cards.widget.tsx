@@ -1,11 +1,11 @@
 import { IconArrowsUpDown, IconCalendar, IconCheck, IconUserScan, IconX } from '@tabler/icons-react'
 import { Box, Group, SimpleGrid, Stack, Text, ThemeIcon } from '@mantine/core'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 
 import { formatDate } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import { useSubscription } from '@entities/subscription-info-store'
+import { useTranslation } from '@shared/hooks'
 
 import classes from './subscription-info-cards.module.css'
 
@@ -65,18 +65,18 @@ const CardItem = ({ icon, label, value, color }: CardItemProps) => {
     )
 }
 
-export const SubscriptionInfoCardsWidget = ({ isMobile }: { isMobile: boolean }) => {
-    const { t, i18n } = useTranslation()
-    const { subscription } = useSubscriptionInfoStoreInfo()
+interface IProps {
+    isMobile: boolean
+}
 
-    if (!subscription) return null
+export const SubscriptionInfoCardsWidget = ({ isMobile }: IProps) => {
+    const { t, currentLang, baseTranslations } = useTranslation()
+    const subscription = useSubscription()
 
     const { user } = subscription
 
     const isActive = user.userStatus === 'ACTIVE'
-    const statusText = isActive
-        ? t('subscription-info.widget.active')
-        : t('subscription-info.widget.inactive')
+    const statusText = isActive ? t(baseTranslations.active) : t(baseTranslations.inactive)
 
     const bandwidthValue =
         user.trafficLimit === '0'
@@ -87,28 +87,28 @@ export const SubscriptionInfoCardsWidget = ({ isMobile }: { isMobile: boolean })
         <SimpleGrid cols={{ base: 1, xs: 1, sm: 2 }} spacing="xs" verticalSpacing="xs">
             <CardItem
                 icon={<IconUserScan size={18} />}
-                label={t('subscription-info.widget.name')}
+                label={t(baseTranslations.name)}
                 value={user.username}
                 color="blue"
             />
 
             <CardItem
                 icon={isActive ? <IconCheck size={18} /> : <IconX size={18} />}
-                label={t('subscription-info.widget.status')}
+                label={t(baseTranslations.status)}
                 value={statusText}
                 color={isActive ? 'green' : 'red'}
             />
 
             <CardItem
                 icon={<IconCalendar size={18} />}
-                label={t('subscription-info.widget.expires')}
-                value={formatDate(user.expiresAt, t, i18n)}
+                label={t(baseTranslations.expires)}
+                value={formatDate(user.expiresAt, currentLang, baseTranslations)}
                 color="orange"
             />
 
             <CardItem
                 icon={<IconArrowsUpDown size={18} />}
-                label={t('subscription-info.widget.bandwidth')}
+                label={t(baseTranslations.bandwidth)}
                 value={bandwidthValue}
                 color="cyan"
             />

@@ -8,24 +8,26 @@ import {
 } from '@tabler/icons-react'
 import { Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 
 import {
     formatDate,
     getExpirationTextUtil
 } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import { useSubscription } from '@entities/subscription-info-store'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
 import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
+import { useTranslation } from '@shared/hooks'
 
 dayjs.extend(relativeTime)
 
-export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean }) => {
-    const { t, i18n } = useTranslation()
-    const { subscription } = useSubscriptionInfoStoreInfo()
+interface IProps {
+    isMobile: boolean
+}
 
-    if (!subscription) return null
+export const SubscriptionInfoExpandedWidget = ({ isMobile }: IProps) => {
+    const { t, currentLang, baseTranslations } = useTranslation()
+    const subscription = useSubscription()
 
     const { user } = subscription
 
@@ -38,7 +40,7 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
             return {
                 color: 'teal',
                 icon: <IconCheck size={isMobile ? 18 : 22} />,
-                status: t('subscription-info.widget.active')
+                status: t(baseTranslations.active)
             }
         }
         if (
@@ -48,13 +50,13 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
             return {
                 color: 'orange',
                 icon: <IconAlertCircle size={isMobile ? 18 : 22} />,
-                status: t('subscription-info.widget.active')
+                status: t(baseTranslations.active)
             }
         }
         return {
             color: 'red',
             icon: <IconX size={isMobile ? 18 : 22} />,
-            status: t('subscription-info.widget.inactive')
+            status: t(baseTranslations.inactive)
         }
     }
 
@@ -103,7 +105,11 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
                                 size={isMobile ? 'xs' : 'sm'}
                                 fw={600}
                             >
-                                {getExpirationTextUtil(user.expiresAt, t, i18n)}
+                                {getExpirationTextUtil(
+                                    user.expiresAt,
+                                    currentLang,
+                                    baseTranslations
+                                )}
                             </Text>
                         </Stack>
                     </Group>
@@ -113,7 +119,7 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
                     <InfoBlockShared
                         color="blue"
                         icon={<IconUserScan size={16} />}
-                        title={t('subscription-info.widget.name')}
+                        title={t(baseTranslations.name)}
                         value={user.username}
                     />
 
@@ -126,25 +132,25 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: { isMobile: boolean
                                 <IconX size={16} />
                             )
                         }
-                        title={t('subscription-info.widget.status')}
+                        title={t(baseTranslations.status)}
                         value={
                             user.userStatus === 'ACTIVE'
-                                ? t('subscription-info.widget.active')
-                                : t('subscription-info.widget.inactive')
+                                ? t(baseTranslations.active)
+                                : t(baseTranslations.inactive)
                         }
                     />
 
                     <InfoBlockShared
                         color="red"
                         icon={<IconCalendar size={16} />}
-                        title={t('subscription-info.widget.expires')}
-                        value={formatDate(user.expiresAt, t, i18n)}
+                        title={t(baseTranslations.expires)}
+                        value={formatDate(user.expiresAt, currentLang, baseTranslations)}
                     />
 
                     <InfoBlockShared
                         color="yellow"
                         icon={<IconArrowsUpDown size={16} />}
-                        title={t('subscription-info.widget.bandwidth')}
+                        title={t(baseTranslations.bandwidth)}
                         value={`${user.trafficUsed} / ${user.trafficLimit === '0' ? '∞' : user.trafficLimit}`}
                     />
                 </SimpleGrid>

@@ -5,11 +5,12 @@ import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient
 
 import classes from './minimal-block.module.css'
 import { ThemeIconShared } from '../../theme-icon.shared'
+import { getLocalizedText } from '@shared/utils/language/get-translation'
 
 export const MinimalBlockRenderer = ({
     blocks,
     isMobile,
-    getLocalizedText,
+    currentLang,
     renderBlockButtons,
     getIconFromLibrary
 }: IBlockRendererProps) => {
@@ -33,7 +34,7 @@ export const MinimalBlockRenderer = ({
                                 fw={500}
                                 size={isMobile ? 'sm' : 'md'}
                                 dangerouslySetInnerHTML={{
-                                    __html: getLocalizedText(block.title)
+                                    __html: getLocalizedText(block.title, currentLang)
                                 }}
                             />
                         </Group>
@@ -42,7 +43,7 @@ export const MinimalBlockRenderer = ({
                             size={isMobile ? 'xs' : 'sm'}
                             style={{ lineHeight: 1.6 }}
                             dangerouslySetInnerHTML={{
-                                __html: getLocalizedText(block.description)
+                                __html: getLocalizedText(block.description, currentLang)
                             }}
                         />
                         {block.buttons.length > 0 && (

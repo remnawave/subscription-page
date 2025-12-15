@@ -8,23 +8,25 @@ import {
 } from '@tabler/icons-react'
 import { ActionIcon, Button, Group, Image, Stack, Text } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
 import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
-
-import classes from './subscription-link.module.css'
+import { useSubscription } from '@entities/subscription-info-store'
+import { useTranslation } from '@shared/hooks'
 import { vibrate } from '@shared/utils/vibrate'
 
-export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) => {
-    const { t } = useTranslation()
-    const { subscription } = useSubscriptionInfoStoreInfo()
-    const clipboard = useClipboard({ timeout: 10000 })
+import classes from './subscription-link.module.css'
 
-    if (!subscription) return null
+interface IProps {
+    supportUrl: string
+}
+
+export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
+    const { t, baseTranslations } = useTranslation()
+    const subscription = useSubscription()
+    const clipboard = useClipboard({ timeout: 10000 })
 
     const subscriptionUrl = constructSubscriptionUrl(
         window.location.href,
@@ -33,8 +35,8 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
 
     const handleCopy = () => {
         notifications.show({
-            title: t('subscription-link.widget.link-copied'),
-            message: t('subscription-link.widget.link-copied-to-clipboard'),
+            title: t(baseTranslations.linkCopied),
+            message: t(baseTranslations.linkCopiedToClipboard),
             color: 'cyan'
         })
         clipboard.copy(subscriptionUrl)
@@ -85,7 +87,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
 
         modals.open({
             centered: true,
-            title: t('subscription-link.widget.get-link'),
+            title: t(baseTranslations.getLink),
             classNames: {
                 content: classes.modalContent,
                 header: classes.modalHeader,
@@ -98,10 +100,10 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
                         style={{ borderRadius: 'var(--mantine-radius-md)' }}
                     />
                     <Text fw={600} size="lg" ta="center" c="white">
-                        {t('subscription-link.widget.scan-qr-code')}
+                        {t(baseTranslations.scanQrCode)}
                     </Text>
                     <Text c="dimmed" size="sm" ta="center">
-                        {t('subscription-link.widget.line-1')}
+                        {t(baseTranslations.scanQrCodeDescription)}
                     </Text>
 
                     <Button
@@ -111,12 +113,13 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
                         radius="md"
                         leftSection={<IconCopy />}
                     >
-                        {t('subscription-link.widget.copy-link')}
+                        {t(baseTranslations.copyLink)}
                     </Button>
                 </Stack>
             )
         })
     }
+
     return (
         <Group gap="xs">
             <ActionIcon
@@ -129,7 +132,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
                 <IconLink />
             </ActionIcon>
 
-            {supportUrl && renderSupportLink(supportUrl)}
+            {supportUrl !== '' && renderSupportLink(supportUrl)}
         </Group>
     )
 }

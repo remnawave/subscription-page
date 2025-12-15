@@ -5,11 +5,12 @@ import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
 
 import classes from './timeline-block.module.css'
 import { ThemeIconShared } from '../../theme-icon.shared'
+import { getLocalizedText } from '@shared/utils/language/get-translation'
 
 export const TimelineBlockRenderer = ({
     blocks,
     isMobile,
-    getLocalizedText,
+    currentLang,
     renderBlockButtons,
     getIconFromLibrary
 }: IBlockRendererProps) => {
@@ -46,7 +47,7 @@ export const TimelineBlockRenderer = ({
                                 fw={600}
                                 size={isMobile ? 'sm' : 'md'}
                                 dangerouslySetInnerHTML={{
-                                    __html: getLocalizedText(block.title)
+                                    __html: getLocalizedText(block.title, currentLang)
                                 }}
                             />
                         }
@@ -57,7 +58,7 @@ export const TimelineBlockRenderer = ({
                                 size={isMobile ? 'xs' : 'sm'}
                                 style={{ lineHeight: 1.6 }}
                                 dangerouslySetInnerHTML={{
-                                    __html: getLocalizedText(block.description)
+                                    __html: getLocalizedText(block.description, currentLang)
                                 }}
                             />
                             {renderBlockButtons(block.buttons, 'light')}

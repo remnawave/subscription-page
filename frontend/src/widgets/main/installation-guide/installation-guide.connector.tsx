@@ -4,18 +4,18 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { useOs } from '@mantine/hooks'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import { useSubscription } from '@entities/subscription-info-store'
+import { useAppConfig } from '@entities/app-config-store'
 import {
     TSubscriptionPageAppConfig,
     TSubscriptionPageBlockConfig,
     TSubscriptionPageButtonConfig,
-    TSubscriptionPageLocales,
-    TSubscriptionPagePlatformKey,
-    TSubscriptionPageRawConfig
+    TSubscriptionPageLanguageCode,
+    TSubscriptionPagePlatformKey
 } from '@remnawave/subscription-page-types'
 import { TemplateEngine } from '@shared/utils/template-engine'
+import { useTranslation } from '@shared/hooks'
 
-import { getLocalizedText } from './utils/get-localized-text.util'
 import { getIconFromLibrary } from './utils/get-icon-from-library'
 
 import classes from './installation-guide.module.css'
@@ -26,11 +26,8 @@ export type TBlockVariant = 'cards' | 'timeline' | 'accordion' | 'minimal'
 export interface IBlockRendererProps {
     blocks: TSubscriptionPageBlockConfig[]
     isMobile: boolean
-    currentLang: TSubscriptionPageLocales
+    currentLang: TSubscriptionPageLanguageCode
     svgLibrary: Record<string, string>
-    getLocalizedText: (
-        textObj: { en: string; ru?: string; zh?: string; fa?: string; fr?: string } | undefined
-    ) => string
     renderBlockButtons: (
         buttons: TSubscriptionPageButtonConfig[],
         variant: ButtonVariant
@@ -39,19 +36,19 @@ export interface IBlockRendererProps {
 }
 
 interface IProps {
-    config: TSubscriptionPageRawConfig
-    currentLang: TSubscriptionPageLocales
     isMobile: boolean
     hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
     BlockRenderer: React.ComponentType<IBlockRendererProps>
 }
 
 export const InstallationGuideConnector = (props: IProps) => {
-    const { config, isMobile, currentLang, hasPlatformApps, BlockRenderer } = props
+    const { isMobile, hasPlatformApps, BlockRenderer } = props
+
+    const { t, currentLang } = useTranslation()
+    const config = useAppConfig()
+    const subscription = useSubscription()
 
     const { platforms, uiConfig } = config
-
-    const { subscription } = useSubscriptionInfoStoreInfo()
 
     const os = useOs()
 
@@ -109,41 +106,28 @@ export const InstallationGuideConnector = (props: IProps) => {
                     const platformConfig = platforms[platform]!
                     return {
                         value: platform,
-                        label: getLocalizedText(platformConfig.displayName, currentLang),
+                        label: t(platformConfig.displayName),
                         icon: getIconFromLibrary(platformConfig.svgIconKey, config.svgLibrary)
                     }
                 }),
-        [hasPlatformApps, platforms, currentLang, config.svgLibrary]
+        [hasPlatformApps, platforms, currentLang, config.svgLibrary, t]
     )
-
-    if (!subscription) return null
 
     const subscriptionUrl = constructSubscriptionUrl(
         window.location.href,
         subscription.user.shortUuid
     )
 
-    const handleSubscriptionLinkClick = (urlTemplate: string) => {
-        const formattedUrl = TemplateEngine.formatWithMetaInfo(urlTemplate, {
-            username: subscription.user.username,
-            subscriptionUrl: subscriptionUrl
-        })
-        window.open(formattedUrl, '_blank')
-    }
-
     const handleButtonClick = (button: TSubscriptionPageButtonConfig) => {
         if (button.type === 'subscriptionLink') {
-            handleSubscriptionLinkClick(button.link)
-        } else {
+            const formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
+                username: subscription.user.username,
+                subscriptionUrl: subscriptionUrl
+            })
+            window.open(formattedUrl, '_blank')
+        } else if (button.type === 'external') {
             window.open(button.link, '_blank')
         }
-    }
-
-    const getLocalizedTextForBlock = (
-        textObj: { en: string; ru?: string; zh?: string; fa?: string; fr?: string } | undefined
-    ): string => {
-        if (!textObj) return ''
-        return textObj[currentLang as keyof typeof textObj] || textObj.en || ''
     }
 
     const renderBlockButtons = (
@@ -169,7 +153,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                         variant={variant}
                         radius="md"
                     >
-                        {getLocalizedTextForBlock(button.text)}
+                        {t(button.text)}
                     </Button>
                 ))}
             </Group>
@@ -183,7 +167,7 @@ export const InstallationGuideConnector = (props: IProps) => {
             <Stack gap="md">
                 <Group justify="space-between" gap="sm">
                     <Title order={4} c="white" fw={600}>
-                        {getLocalizedText(uiConfig.installationGuides.headerText, currentLang)}
+                        {t(uiConfig.installationGuides.headerText)}
                     </Title>
 
                     {availablePlatforms.length > 1 && (
@@ -268,7 +252,6 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 isMobile={isMobile}
                                 currentLang={currentLang}
                                 svgLibrary={config.svgLibrary}
-                                getLocalizedText={getLocalizedTextForBlock}
                                 renderBlockButtons={renderBlockButtons}
                                 getIconFromLibrary={getIcon}
                             />

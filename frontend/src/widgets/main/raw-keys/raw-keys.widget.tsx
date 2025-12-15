@@ -12,18 +12,15 @@ import {
     Text,
     Title
 } from '@mantine/core'
-import { useTranslation } from 'react-i18next'
 import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
 
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
-import {
-    TSubscriptionPageRawConfig,
-    TSubscriptionPageLocales
-} from '@remnawave/subscription-page-types'
-import { getLocalizedText } from '../installation-guide/utils/get-localized-text.util'
-import classes from './raw-keys.module.css'
+import { useSubscription } from '@entities/subscription-info-store'
+import { useAppConfig } from '@entities/app-config-store'
+import { useTranslation } from '@shared/hooks'
 import { vibrate } from '@shared/utils/vibrate'
+
+import classes from './raw-keys.module.css'
 
 interface ParsedLink {
     name: string
@@ -52,21 +49,16 @@ const parseLinks = (links: string[]): ParsedLink[] => {
 }
 
 interface IProps {
-    config: TSubscriptionPageRawConfig
     isMobile: boolean
-    currentLang: TSubscriptionPageLocales
 }
 
-export const RawKeysWidget = (props: IProps) => {
-    const { config, isMobile, currentLang } = props
+export const RawKeysWidget = ({ isMobile }: IProps) => {
+    const { t, baseTranslations } = useTranslation()
+    const config = useAppConfig()
+    const subscription = useSubscription()
 
     const { uiConfig } = config
 
-    const { t } = useTranslation()
-
-    const { subscription } = useSubscriptionInfoStoreInfo()
-
-    if (!subscription) return null
     if (subscription.links.length === 0) return null
 
     const parsedLinks = parseLinks(subscription.links)
@@ -92,7 +84,7 @@ export const RawKeysWidget = (props: IProps) => {
                         style={{ borderRadius: 'var(--mantine-radius-md)' }}
                     />
                     <Text c="dimmed" size="sm" ta="center">
-                        {t('raw-keys.widget.scan-to-import')}
+                        {t(baseTranslations.scanToImport)}
                     </Text>
                 </Stack>
             )
@@ -104,7 +96,7 @@ export const RawKeysWidget = (props: IProps) => {
             <Stack gap="md">
                 <Group justify="space-between" gap="sm">
                     <Title order={4} c="white" fw={600}>
-                        {getLocalizedText(uiConfig.connectionKeys.headerText, currentLang)}
+                        {t(uiConfig.connectionKeys.headerText)}
                     </Title>
                     {parsedLinks.length > 1 && (
                         <Badge color="cyan" variant="light" size="lg">

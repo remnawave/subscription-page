@@ -3,11 +3,12 @@ import { Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core'
 import { IBlockRendererProps } from '../../../installation-guide.connector'
 import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient.util'
 import { ThemeIconShared } from '../../theme-icon.shared'
+import { getLocalizedText } from '@shared/utils/language/get-translation'
 
 export const CardsBlockRenderer = ({
     blocks,
     isMobile,
-    getLocalizedText,
+    currentLang,
     renderBlockButtons,
     getIconFromLibrary
 }: IBlockRendererProps) => {
@@ -40,7 +41,7 @@ export const CardsBlockRenderer = ({
                                 >
                                     <span
                                         dangerouslySetInnerHTML={{
-                                            __html: getLocalizedText(block.title)
+                                            __html: getLocalizedText(block.title, currentLang)
                                         }}
                                     />
                                 </Title>
@@ -51,7 +52,7 @@ export const CardsBlockRenderer = ({
                                 >
                                     <span
                                         dangerouslySetInnerHTML={{
-                                            __html: getLocalizedText(block.description)
+                                            __html: getLocalizedText(block.description, currentLang)
                                         }}
                                     />
                                 </Text>

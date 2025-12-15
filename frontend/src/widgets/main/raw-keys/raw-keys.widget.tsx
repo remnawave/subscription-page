@@ -16,7 +16,6 @@ import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
 
 import { useSubscription } from '@entities/subscription-info-store'
-import { useAppConfig } from '@entities/app-config-store'
 import { useTranslation } from '@shared/hooks'
 import { vibrate } from '@shared/utils/vibrate'
 
@@ -54,10 +53,7 @@ interface IProps {
 
 export const RawKeysWidget = ({ isMobile }: IProps) => {
     const { t, baseTranslations } = useTranslation()
-    const config = useAppConfig()
     const subscription = useSubscription()
-
-    const { uiConfig } = config
 
     if (subscription.links.length === 0) return null
 
@@ -96,7 +92,7 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
             <Stack gap="md">
                 <Group justify="space-between" gap="sm">
                     <Title order={4} c="white" fw={600}>
-                        {t(uiConfig.connectionKeys.headerText)}
+                        {t(baseTranslations.connectionKeysHeader)}
                     </Title>
                     {parsedLinks.length > 1 && (
                         <Badge color="cyan" variant="light" size="lg">

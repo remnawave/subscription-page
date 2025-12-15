@@ -65,7 +65,7 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
     )
 
     const SubscriptionInfoBlockRenderer =
-        SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfo.block]
+        SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfoBlockType]
 
     return (
         <Page>
@@ -118,7 +118,7 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
                     <InstallationGuideConnector
                         isMobile={isMobile}
                         hasPlatformApps={hasPlatformApps}
-                        BlockRenderer={BLOCK_RENDERERS[config.uiConfig.installationGuides.block]}
+                        BlockRenderer={BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]}
                     />
 
                     <RawKeysWidget isMobile={isMobile} />

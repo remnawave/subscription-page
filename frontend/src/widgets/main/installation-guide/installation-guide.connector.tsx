@@ -44,11 +44,9 @@ interface IProps {
 export const InstallationGuideConnector = (props: IProps) => {
     const { isMobile, hasPlatformApps, BlockRenderer } = props
 
-    const { t, currentLang } = useTranslation()
-    const config = useAppConfig()
+    const { t, currentLang, baseTranslations } = useTranslation()
+    const { platforms, svgLibrary } = useAppConfig()
     const subscription = useSubscription()
-
-    const { platforms, uiConfig } = config
 
     const os = useOs()
 
@@ -107,10 +105,10 @@ export const InstallationGuideConnector = (props: IProps) => {
                     return {
                         value: platform,
                         label: t(platformConfig.displayName),
-                        icon: getIconFromLibrary(platformConfig.svgIconKey, config.svgLibrary)
+                        icon: getIconFromLibrary(platformConfig.svgIconKey, svgLibrary)
                     }
                 }),
-        [hasPlatformApps, platforms, currentLang, config.svgLibrary, t]
+        [hasPlatformApps, platforms, currentLang, svgLibrary, t]
     )
 
     const subscriptionUrl = constructSubscriptionUrl(
@@ -145,7 +143,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                         leftSection={
                             <span
                                 dangerouslySetInnerHTML={{
-                                    __html: getIconFromLibrary(button.svgIconKey, config.svgLibrary)
+                                    __html: getIconFromLibrary(button.svgIconKey, svgLibrary)
                                 }}
                                 style={{ display: 'flex', alignItems: 'center' }}
                             />
@@ -160,14 +158,14 @@ export const InstallationGuideConnector = (props: IProps) => {
         )
     }
 
-    const getIcon = (iconKey: string) => getIconFromLibrary(iconKey, config.svgLibrary)
+    const getIcon = (iconKey: string) => getIconFromLibrary(iconKey, svgLibrary)
 
     return (
         <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
             <Stack gap="md">
                 <Group justify="space-between" gap="sm">
                     <Title order={4} c="white" fw={600}>
-                        {t(uiConfig.installationGuides.headerText)}
+                        {t(baseTranslations.installationGuideHeader)}
                     </Title>
 
                     {availablePlatforms.length > 1 && (
@@ -251,7 +249,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 blocks={selectedApp.blocks}
                                 isMobile={isMobile}
                                 currentLang={currentLang}
-                                svgLibrary={config.svgLibrary}
+                                svgLibrary={svgLibrary}
                                 renderBlockButtons={renderBlockButtons}
                                 getIconFromLibrary={getIcon}
                             />

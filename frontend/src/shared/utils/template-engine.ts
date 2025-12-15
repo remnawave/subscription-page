@@ -1,7 +1,7 @@
-import { SubscriptionPageTemplateKeys } from '@remnawave/subscription-page-types'
+import { TSubscriptionPageTemplateKey } from '@remnawave/subscription-page-types'
 
 type TemplateValues = {
-    [key in SubscriptionPageTemplateKeys]: number | string | undefined
+    [key in TSubscriptionPageTemplateKey]: number | string | undefined
 }
 
 export class TemplateEngine {
@@ -9,7 +9,7 @@ export class TemplateEngine {
         let hasReplacement = false
         const result = template.replace(
             /\{\{(\w+)\}\}/g,
-            (match, key: SubscriptionPageTemplateKeys) => {
+            (match, key: TSubscriptionPageTemplateKey) => {
                 if (values[key] !== undefined) {
                     hasReplacement = true
                     return values[key]?.toString() || ''

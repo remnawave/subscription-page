@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import { createLogger } from 'winston';
 import compression from 'compression';
 import * as winston from 'winston';
-import { nanoid } from 'nanoid';
 import path from 'node:path';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -33,8 +32,6 @@ import { APP_CONFIG_ROUTE_WO_LEADING_PATH } from '@remnawave/subscription-page-t
 //     debug: 5,
 //     silly: 6,
 // };
-
-process.env.INTERNAL_JWT_SECRET = nanoid(64);
 
 const instanceId = process.env.INSTANCE_ID || '0';
 

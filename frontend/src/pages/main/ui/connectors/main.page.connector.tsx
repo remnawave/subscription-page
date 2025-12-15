@@ -8,6 +8,7 @@ import { LoadingScreen } from '@shared/ui'
 import { MainPageComponent } from '../components/main.page.component'
 import { useMediaQuery } from '@mantine/hooks'
 import {
+    APP_CONFIG_ROUTE_LEADING_PATH,
     SubscriptionPageRawConfigSchema,
     TSubscriptionPageRawConfig
 } from '@remnawave/subscription-page-types'
@@ -31,7 +32,7 @@ export const MainPageConnector = () => {
         const fetchConfig = async () => {
             try {
                 const tempConfig = await ofetch<unknown>(
-                    `/assets/app-config-v2.json?v=${Date.now()}`,
+                    `${APP_CONFIG_ROUTE_LEADING_PATH}?v=${Date.now()}`,
                     {
                         parseResponse: (response) => JSON.parse(response)
                     }

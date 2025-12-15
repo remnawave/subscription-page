@@ -1,3 +1,5 @@
+import type { IncomingHttpHeaders } from 'node:http';
+
 import axios, {
     AxiosError,
     AxiosInstance,
@@ -12,13 +14,14 @@ import { ConfigService } from '@nestjs/config';
 
 import {
     GetStatusCommand,
+    GetSubpageConfigByShortUuidCommand,
     GetSubscriptionInfoByShortUuidCommand,
     GetSubscriptionPageConfigCommand,
+    GetSubscriptionPageConfigsCommand,
     GetUserByUsernameCommand,
     REMNAWAVE_REAL_IP_HEADER,
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
-import { SubscriptionPageRawConfigSchema } from '@remnawave/subscription-page-types';
 
 import { ICommandResponse } from '../types/command-response.type';
 
@@ -26,12 +29,8 @@ import { ICommandResponse } from '../types/command-response.type';
 export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
     private readonly logger = new Logger(AxiosService.name);
-    private readonly subpageConfigUuid: string;
-    private subscriptionPageConfig: object | null = null;
 
     constructor(private readonly configService: ConfigService) {
-        this.subpageConfigUuid = this.configService.getOrThrow<string>('SUBPAGE_CONFIG_UUID');
-
         this.axiosInstance = axios.create({
             baseURL: this.configService.getOrThrow('REMNAWAVE_PANEL_URL'),
             timeout: 10_000,
@@ -95,25 +94,6 @@ export class AxiosService implements OnModuleInit {
             exit(1);
         } else {
             this.logger.log('Connection to Remnawave established successfully.');
-        }
-
-        const subscriptionPageConfig = await this.getSubscriptionPageConfig();
-        if (!subscriptionPageConfig.isOk || !subscriptionPageConfig.response) {
-            this.logger.error('Subpage config cannot be fetched');
-            exit(1);
-        } else {
-            const parsedConfig = await SubscriptionPageRawConfigSchema.safeParseAsync(
-                subscriptionPageConfig.response.response.config,
-            );
-
-            if (!parsedConfig.success) {
-                this.logger.error('Subpage config is not valid', parsedConfig.error);
-                exit(1);
-            } else {
-                this.subscriptionPageConfig = parsedConfig.data;
-            }
-
-            this.logger.log('Subpage config fetched successfully');
         }
     }
 
@@ -179,26 +159,43 @@ export class AxiosService implements OnModuleInit {
         }
     }
 
-    public async getSubscriptionPageConfig(): Promise<
-        ICommandResponse<GetSubscriptionPageConfigCommand.Response>
-    > {
+    public async getSubscriptionPageConfigByUuid(
+        uuid: string,
+    ): Promise<ICommandResponse<GetSubscriptionPageConfigCommand.Response['response']>> {
         try {
             const response =
                 await this.axiosInstance.request<GetSubscriptionPageConfigCommand.Response>({
                     method: GetSubscriptionPageConfigCommand.endpointDetails.REQUEST_METHOD,
-                    url: GetSubscriptionPageConfigCommand.url(this.subpageConfigUuid),
+                    url: GetSubscriptionPageConfigCommand.url(uuid),
                 });
 
             return {
                 isOk: true,
-                response: response.data,
+                response: response.data.response,
             };
         } catch (error) {
-            if (error instanceof AxiosError) {
-                this.logger.error('Error in GetSubscriptionPageConfig Request:', error.message);
-            } else {
-                this.logger.error('Error in GetSubscriptionPageConfig Request:', error);
-            }
+            this.logger.error('Error in GetSubscriptionPageConfigByUuid Request:', error);
+
+            return { isOk: false };
+        }
+    }
+
+    public async getSubscriptionPageConfigList(): Promise<
+        ICommandResponse<GetSubscriptionPageConfigsCommand.Response['response']>
+    > {
+        try {
+            const response =
+                await this.axiosInstance.request<GetSubscriptionPageConfigsCommand.Response>({
+                    method: GetSubscriptionPageConfigsCommand.endpointDetails.REQUEST_METHOD,
+                    url: GetSubscriptionPageConfigsCommand.url,
+                });
+
+            return {
+                isOk: true,
+                response: response.data.response,
+            };
+        } catch (error) {
+            this.logger.error('Error in GetSubscriptionPageConfigList Request:', error);
 
             return { isOk: false };
         }
@@ -229,6 +226,30 @@ export class AxiosService implements OnModuleInit {
                 this.logger.error('Error in GetSubscriptionInfo Request:', error);
             }
 
+            return { isOk: false };
+        }
+    }
+
+    public async getSubpageConfig(
+        shortUuid: string,
+        requestHeaders: IncomingHttpHeaders,
+    ): Promise<ICommandResponse<GetSubpageConfigByShortUuidCommand.Response['response']>> {
+        try {
+            const response =
+                await this.axiosInstance.request<GetSubpageConfigByShortUuidCommand.Response>({
+                    method: GetSubpageConfigByShortUuidCommand.endpointDetails.REQUEST_METHOD,
+                    url: GetSubpageConfigByShortUuidCommand.url(shortUuid),
+                    data: {
+                        requestHeaders,
+                    },
+                });
+
+            return {
+                isOk: true,
+                response: response.data.response,
+            };
+        } catch (error) {
+            this.logger.error('Error in GetSubpageConfig Request:', error);
             return { isOk: false };
         }
     }
@@ -294,13 +315,5 @@ export class AxiosService implements OnModuleInit {
         );
 
         return filteredHeaders;
-    }
-
-    public getCachedSubscriptionPageConfig(): object {
-        if (!this.subscriptionPageConfig) {
-            throw new Error('Subpage config is not cached');
-        }
-
-        return this.subscriptionPageConfig;
     }
 }

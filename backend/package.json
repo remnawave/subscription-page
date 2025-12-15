@@ -1,6 +1,6 @@
 {
   "name": "@remnawave/subscription-page",
-  "version": "6.4.2",
+  "version": "7.0.0",
   "description": "Remnawave Subscription Page",
   "private": false,
   "type": "commonjs",
@@ -36,8 +36,8 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/platform-express": "11.1.9",
     "@nestjs/serve-static": "5.0.4",
-    "@remnawave/backend-contract": "2.3.55",
-    "@remnawave/subscription-page-types": "0.0.6",
+    "@remnawave/backend-contract": "2.3.57",
+    "@remnawave/subscription-page-types": "0.1.0",
     "axios": "^1.13.2",
     "class-transformer": "^0.5.1",
     "compression": "^1.8.1",

@@ -25,10 +25,10 @@ export function RootLayout() {
     const isConfigLoaded = useIsConfigLoaded()
 
     useLayoutEffect(() => {
-        const rootDiv = document.getElementById('root')
+        const subPageDiv = document.getElementById('sbpg')
 
-        if (rootDiv) {
-            const subscriptionUrl = rootDiv.dataset.panel
+        if (subPageDiv) {
+            const subscriptionUrl = subPageDiv.dataset.panel
 
             if (subscriptionUrl) {
                 try {
@@ -42,7 +42,7 @@ export function RootLayout() {
                 } catch (error) {
                     consola.log(error)
                 } finally {
-                    delete rootDiv.dataset.panel
+                    subPageDiv.remove()
                 }
             }
         }

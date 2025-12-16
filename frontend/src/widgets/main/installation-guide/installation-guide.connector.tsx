@@ -3,7 +3,7 @@ import {
     TSubscriptionPageButtonConfig,
     TSubscriptionPagePlatformKey
 } from '@remnawave/subscription-page-types'
-import { Box, Button, ButtonVariant, Card, Group, Select, Stack, Title } from '@mantine/core'
+import { Box, Button, ButtonVariant, Card, Group, NativeSelect, Stack, Title } from '@mantine/core'
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { IconStar } from '@tabler/icons-react'
 import { useOs } from '@mantine/hooks'
@@ -155,8 +155,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                     </Title>
 
                     {availablePlatforms.length > 1 && (
-                        <Select
-                            allowDeselect={false}
+                        <NativeSelect
                             data={availablePlatforms.map((opt) => ({
                                 value: opt.value,
                                 label: opt.label
@@ -164,10 +163,9 @@ export const InstallationGuideConnector = (props: IProps) => {
                             leftSection={
                                 <span
                                     dangerouslySetInnerHTML={{
-                                        __html:
-                                            availablePlatforms.find(
-                                                (opt) => opt.value === selectedPlatform
-                                            )?.icon ?? ''
+                                        __html: availablePlatforms.find(
+                                            (opt) => opt.value === selectedPlatform
+                                        )!.icon
                                     }}
                                     style={{
                                         display: 'flex',
@@ -177,15 +175,14 @@ export const InstallationGuideConnector = (props: IProps) => {
                                     }}
                                 />
                             }
-                            onChange={(value) => {
-                                vibrate('selection')
-                                setSelectedPlatform(
-                                    (value as TSubscriptionPagePlatformKey) || 'windows'
-                                )
+                            onChange={(event) => {
+                                vibrate([80])
+                                const value = event.target
+                                    .value as unknown as TSubscriptionPagePlatformKey
+                                setSelectedPlatform(value || 'windows')
                             }}
                             radius="md"
                             size="sm"
-                            style={{ width: 150 }}
                             styles={{
                                 input: {
                                     background: 'rgba(255, 255, 255, 0.02)',
@@ -194,7 +191,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 }
                             }}
                             value={selectedPlatform}
-                            withScrollArea={false}
+                            w={150}
                         />
                     )}
                 </Group>

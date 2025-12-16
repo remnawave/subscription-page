@@ -14,8 +14,8 @@ import { renderSVG } from 'uqr'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscription } from '@entities/subscription-info-store'
-import { useTranslation } from '@shared/hooks'
 import { vibrate } from '@shared/utils/vibrate'
+import { useTranslation } from '@shared/hooks'
 
 import classes from './subscription-link.module.css'
 
@@ -62,15 +62,15 @@ export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
                 c={color}
                 component="a"
                 href={supportUrl}
+                radius="md"
                 rel="noopener noreferrer"
                 size="xl"
-                radius="md"
-                target="_blank"
-                variant="default"
                 style={{
                     background: 'rgba(255, 255, 255, 0.02)',
                     border: '1px solid rgba(255, 255, 255, 0.1)'
                 }}
+                target="_blank"
+                variant="default"
             >
                 <Icon />
             </ActionIcon>
@@ -99,7 +99,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
                         src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
                         style={{ borderRadius: 'var(--mantine-radius-md)' }}
                     />
-                    <Text fw={600} size="lg" ta="center" c="white">
+                    <Text c="white" fw={600} size="lg" ta="center">
                         {t(baseTranslations.scanQrCode)}
                     </Text>
                     <Text c="dimmed" size="sm" ta="center">
@@ -108,10 +108,10 @@ export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
 
                     <Button
                         fullWidth
-                        onClick={handleCopy}
-                        variant="light"
-                        radius="md"
                         leftSection={<IconCopy />}
+                        onClick={handleCopy}
+                        radius="md"
+                        variant="light"
                     >
                         {t(baseTranslations.copyLink)}
                     </Button>
@@ -123,11 +123,11 @@ export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
     return (
         <Group gap="xs">
             <ActionIcon
-                onClick={handleGetLink}
-                size="xl"
-                radius="md"
-                variant="default"
                 className={classes.actionIcon}
+                onClick={handleGetLink}
+                radius="md"
+                size="xl"
+                variant="default"
             >
                 <IconLink />
             </ActionIcon>

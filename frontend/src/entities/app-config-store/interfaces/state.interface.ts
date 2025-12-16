@@ -4,7 +4,7 @@ import {
 } from '@remnawave/subscription-page-types'
 
 export interface IState {
-    config: TSubscriptionPageRawConfig | null
+    config: null | TSubscriptionPageRawConfig
     currentLang: TSubscriptionPageLanguageCode
     isConfigLoaded: boolean
 }

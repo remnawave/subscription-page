@@ -1,29 +1,29 @@
 import { ThemeIcon } from '@mantine/core'
 
-import { ColorGradientStyle } from '../../../../shared/ui/get-color-gradient.util'
+import { ColorGradientStyle } from '@shared/utils/config-parser'
 
 interface IProps {
+    getIconFromLibrary: (iconKey: string) => string
+    gradientStyle: ColorGradientStyle
     isMobile: boolean
     svgIconColor: string
-    gradientStyle: ColorGradientStyle
     svgIconKey: string
-    getIconFromLibrary: (iconKey: string) => string
 }
 export const ThemeIconShared = (props: IProps) => {
     const { isMobile, svgIconColor, gradientStyle, svgIconKey, getIconFromLibrary } = props
 
     return (
         <ThemeIcon
-            size={isMobile ? 36 : 44}
-            radius="xl"
             color={svgIconColor}
-            variant="light"
+            radius="xl"
+            size={isMobile ? 36 : 44}
             style={{
                 background: gradientStyle.background,
                 border: gradientStyle.border,
                 boxShadow: gradientStyle.boxShadow,
                 flexShrink: 0
             }}
+            variant="light"
         >
             <span
                 dangerouslySetInnerHTML={{

@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
 import { TSubscriptionPageLocalizedText } from '@remnawave/subscription-page-types'
+import { useCallback } from 'react'
 
 import { useAppConfig, useCurrentLang } from '@entities/app-config-store'
-import { getLocalizedText } from '@shared/utils/language/get-translation'
+import { getLocalizedText } from '@shared/utils/config-parser'
 
 export const useTranslation = () => {
     const config = useAppConfig()

@@ -17,21 +17,17 @@ import {
     ThemeIcon,
     UnstyledButton
 } from '@mantine/core'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { useState } from 'react'
-import dayjs from 'dayjs'
 
 import {
     formatDate,
+    getColorGradientSolid,
     getExpirationTextUtil
-} from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
-import { useSubscription } from '@entities/subscription-info-store'
+} from '@shared/utils/config-parser'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
+import { useSubscription } from '@entities/subscription-info-store'
 import { vibrate } from '@shared/utils/vibrate'
-import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
 import { useTranslation } from '@shared/hooks'
-
-dayjs.extend(relativeTime)
 
 interface IProps {
     isMobile: boolean
@@ -58,28 +54,28 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: IProps) => {
     const gradientColor = getColorGradientSolid(status.color)
 
     return (
-        <Card p={0} radius="lg" className="glass-card" style={{ overflow: 'hidden' }}>
+        <Card className="glass-card" p={0} radius="lg" style={{ overflow: 'hidden' }}>
             <UnstyledButton
                 onClick={() => {
                     vibrate('tap')
                     setIsExpanded(!isExpanded)
                 }}
-                style={{ width: '100%' }}
                 p={{ base: 'xs', sm: 'sm' }}
+                style={{ width: '100%' }}
             >
-                <Group gap="sm" wrap="nowrap" justify="space-between">
-                    <Group gap="xs" wrap="nowrap" style={{ minWidth: 0, flex: 1 }}>
+                <Group gap="sm" justify="space-between" wrap="nowrap">
+                    <Group gap="xs" style={{ minWidth: 0, flex: 1 }} wrap="nowrap">
                         <ThemeIcon
-                            size={isMobile ? 28 : 32}
-                            radius="xl"
                             color={status.color}
-                            variant="light"
+                            radius="xl"
+                            size={isMobile ? 28 : 32}
                             style={{
                                 background: gradientColor.background,
                                 border: gradientColor.border,
                                 boxShadow: gradientColor.boxShadow,
                                 flexShrink: 0
                             }}
+                            variant="light"
                         >
                             {status.icon}
                         </ThemeIcon>
@@ -107,10 +103,10 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: IProps) => {
                         </Stack>
                     </Group>
 
-                    <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
+                    <Group gap="xs" style={{ flexShrink: 0 }} wrap="nowrap">
                         <IconChevronDown
-                            size={18}
                             color="var(--mantine-color-dimmed)"
+                            size={18}
                             style={{
                                 transition: 'transform 200ms ease',
                                 transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
@@ -121,7 +117,7 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: IProps) => {
             </UnstyledButton>
 
             <Collapse in={isExpanded}>
-                <Stack gap="xs" px={{ base: 'xs', sm: 'sm' }} pb={{ base: 'xs', sm: 'sm' }}>
+                <Stack gap="xs" pb={{ base: 'xs', sm: 'sm' }} px={{ base: 'xs', sm: 'sm' }}>
                     <SimpleGrid cols={2} spacing="xs" verticalSpacing="xs">
                         <InfoBlockShared
                             color="blue"

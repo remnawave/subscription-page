@@ -1,11 +1,7 @@
 export {
-    InstallationGuideConnector,
-    type IBlockRendererProps,
-    type TBlockVariant
-} from './installation-guide.connector'
-export {
-    CardsBlockRenderer,
-    TimelineBlockRenderer,
     AccordionBlockRenderer,
-    MinimalBlockRenderer
+    CardsBlockRenderer,
+    MinimalBlockRenderer,
+    TimelineBlockRenderer
 } from './components/blocks'
+export { InstallationGuideConnector, type TBlockVariant } from './installation-guide.connector'

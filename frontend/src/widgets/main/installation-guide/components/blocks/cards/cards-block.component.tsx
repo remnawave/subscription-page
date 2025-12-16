@@ -1,9 +1,9 @@
-import { Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core'
+import { Card, Group, Stack, Text, Title } from '@mantine/core'
 
-import { IBlockRendererProps } from '../../../installation-guide.connector'
-import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient.util'
-import { ThemeIconShared } from '../../theme-icon.shared'
-import { getLocalizedText } from '@shared/utils/language/get-translation'
+import { getColorGradient, getLocalizedText } from '@shared/utils/config-parser'
+import { ThemeIconShared } from '@shared/ui'
+
+import { IBlockRendererProps } from '../renderer-block.interface'
 
 export const CardsBlockRenderer = ({
     blocks,
@@ -19,24 +19,24 @@ export const CardsBlockRenderer = ({
 
                 return (
                     <Card
+                        className="step-card"
                         key={index}
                         p={{ base: 'sm', xs: 'md', sm: 'lg' }}
                         radius="lg"
-                        className="step-card"
                     >
-                        <Group gap={isMobile ? 'sm' : 'md'} wrap="nowrap" align="flex-start">
+                        <Group align="flex-start" gap={isMobile ? 'sm' : 'md'} wrap="nowrap">
                             <ThemeIconShared
+                                getIconFromLibrary={getIconFromLibrary}
+                                gradientStyle={gradientStyle}
                                 isMobile={isMobile}
                                 svgIconColor={block.svgIconColor}
-                                gradientStyle={gradientStyle}
                                 svgIconKey={block.svgIconKey}
-                                getIconFromLibrary={getIconFromLibrary}
                             />
                             <Stack gap={isMobile ? 'xs' : 'sm'} style={{ flex: 1, minWidth: 0 }}>
                                 <Title
-                                    order={6}
                                     c="white"
                                     fw={600}
+                                    order={6}
                                     style={{ wordBreak: 'break-word' }}
                                 >
                                     <span

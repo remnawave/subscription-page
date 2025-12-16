@@ -9,14 +9,14 @@ export const InfoBlockShared = ({ color, icon, title, value }: IInfoBlockProps) 
         <Box className={clsx(classes.infoBlock, classes[color] || classes.cyan)}>
             <Stack gap={4}>
                 <Group gap={4} wrap="nowrap">
-                    <ThemeIcon color={color} size="xs" variant="light" radius="sm">
+                    <ThemeIcon color={color} radius="sm" size="xs" variant="light">
                         {icon}
                     </ThemeIcon>
-                    <Text fw={500} size="xs" c="dimmed" truncate>
+                    <Text c="dimmed" fw={500} size="xs" truncate>
                         {title}
                     </Text>
                 </Group>
-                <Text fw={600} size="sm" c="white" truncate>
+                <Text c="white" fw={600} size="sm" truncate>
                     {value}
                 </Text>
             </Stack>

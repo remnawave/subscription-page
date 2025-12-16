@@ -1,44 +1,30 @@
-import { IconStar } from '@tabler/icons-react'
+import {
+    TSubscriptionPageAppConfig,
+    TSubscriptionPageButtonConfig,
+    TSubscriptionPagePlatformKey
+} from '@remnawave/subscription-page-types'
 import { Box, Button, ButtonVariant, Card, Group, Select, Stack, Title } from '@mantine/core'
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { IconStar } from '@tabler/icons-react'
 import { useOs } from '@mantine/hooks'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscription } from '@entities/subscription-info-store'
-import { useAppConfig } from '@entities/app-config-store'
-import {
-    TSubscriptionPageAppConfig,
-    TSubscriptionPageBlockConfig,
-    TSubscriptionPageButtonConfig,
-    TSubscriptionPageLanguageCode,
-    TSubscriptionPagePlatformKey
-} from '@remnawave/subscription-page-types'
+import { getIconFromLibrary } from '@shared/utils/config-parser'
 import { TemplateEngine } from '@shared/utils/template-engine'
+import { useAppConfig } from '@entities/app-config-store'
+import { vibrate } from '@shared/utils/vibrate'
 import { useTranslation } from '@shared/hooks'
 
-import { getIconFromLibrary } from './utils/get-icon-from-library'
-
+import { IBlockRendererProps } from './components/blocks/renderer-block.interface'
 import classes from './installation-guide.module.css'
-import { vibrate } from '@shared/utils/vibrate'
 
-export type TBlockVariant = 'cards' | 'timeline' | 'accordion' | 'minimal'
-
-export interface IBlockRendererProps {
-    blocks: TSubscriptionPageBlockConfig[]
-    isMobile: boolean
-    currentLang: TSubscriptionPageLanguageCode
-    svgLibrary: Record<string, string>
-    renderBlockButtons: (
-        buttons: TSubscriptionPageButtonConfig[],
-        variant: ButtonVariant
-    ) => React.ReactNode
-    getIconFromLibrary: (iconKey: string) => string
-}
+export type TBlockVariant = 'accordion' | 'cards' | 'minimal' | 'timeline'
 
 interface IProps {
-    isMobile: boolean
-    hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
     BlockRenderer: React.ComponentType<IBlockRendererProps>
+    hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
+    isMobile: boolean
 }
 
 export const InstallationGuideConnector = (props: IProps) => {
@@ -120,7 +106,7 @@ export const InstallationGuideConnector = (props: IProps) => {
         if (button.type === 'subscriptionLink') {
             const formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
                 username: subscription.user.username,
-                subscriptionUrl: subscriptionUrl
+                subscriptionUrl
             })
             window.open(formattedUrl, '_blank')
         } else if (button.type === 'external') {
@@ -139,7 +125,6 @@ export const InstallationGuideConnector = (props: IProps) => {
                 {buttons.map((button, index) => (
                     <Button
                         key={index}
-                        onClick={() => handleButtonClick(button)}
                         leftSection={
                             <span
                                 dangerouslySetInnerHTML={{
@@ -148,8 +133,9 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 style={{ display: 'flex', alignItems: 'center' }}
                             />
                         }
-                        variant={variant}
+                        onClick={() => handleButtonClick(button)}
                         radius="md"
+                        variant={variant}
                     >
                         {t(button.text)}
                     </Button>
@@ -161,10 +147,10 @@ export const InstallationGuideConnector = (props: IProps) => {
     const getIcon = (iconKey: string) => getIconFromLibrary(iconKey, svgLibrary)
 
     return (
-        <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
+        <Card className="glass-card" p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
             <Stack gap="md">
-                <Group justify="space-between" gap="sm">
-                    <Title order={4} c="white" fw={600}>
+                <Group gap="sm" justify="space-between">
+                    <Title c="white" fw={600} order={4}>
                         {t(baseTranslations.installationGuideHeader)}
                     </Title>
 
@@ -200,8 +186,6 @@ export const InstallationGuideConnector = (props: IProps) => {
                             radius="md"
                             size="sm"
                             style={{ width: 150 }}
-                            value={selectedPlatform}
-                            withScrollArea={false}
                             styles={{
                                 input: {
                                     background: 'rgba(255, 255, 255, 0.02)',
@@ -209,6 +193,8 @@ export const InstallationGuideConnector = (props: IProps) => {
                                     color: 'white'
                                 }
                             }}
+                            value={selectedPlatform}
+                            withScrollArea={false}
                         />
                     )}
                 </Group>
@@ -220,6 +206,9 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 const isActive = app.name === selectedAppName
                                 return (
                                     <Button
+                                        className={
+                                            isActive ? classes.appButtonActive : classes.appButton
+                                        }
                                         color={isActive ? 'cyan' : 'gray'}
                                         key={app.name}
                                         leftSection={
@@ -233,9 +222,6 @@ export const InstallationGuideConnector = (props: IProps) => {
                                         }}
                                         radius="md"
                                         size="sm"
-                                        className={
-                                            isActive ? classes.appButtonActive : classes.appButton
-                                        }
                                         variant={isActive ? 'outline' : 'subtle'}
                                     >
                                         {app.name}
@@ -247,11 +233,11 @@ export const InstallationGuideConnector = (props: IProps) => {
                         {selectedApp && (
                             <BlockRenderer
                                 blocks={selectedApp.blocks}
-                                isMobile={isMobile}
                                 currentLang={currentLang}
-                                svgLibrary={svgLibrary}
-                                renderBlockButtons={renderBlockButtons}
                                 getIconFromLibrary={getIcon}
+                                isMobile={isMobile}
+                                renderBlockButtons={renderBlockButtons}
+                                svgLibrary={svgLibrary}
                             />
                         )}
                     </Box>

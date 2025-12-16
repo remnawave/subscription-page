@@ -15,7 +15,7 @@ export const Page = forwardRef<HTMLDivElement, PageProps>(({ children, ...other 
     }, [])
 
     return (
-        <Box ref={ref} className={classes.page} {...other}>
+        <Box className={classes.page} ref={ref} {...other}>
             {children}
         </Box>
     )

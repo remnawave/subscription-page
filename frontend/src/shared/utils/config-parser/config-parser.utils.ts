@@ -1,11 +1,21 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/ru'
-import 'dayjs/locale/fa'
 import {
     TSubscriptionPageLanguageCode,
+    TSubscriptionPageLocalizedText,
     TSubscriptionPageRawConfig
 } from '@remnawave/subscription-page-types'
-import { getLocalizedText } from '@shared/utils/language/get-translation'
+import dayjs from 'dayjs'
+
+export function getIconFromLibrary(iconKey: string, svgLibrary: Record<string, string>) {
+    return svgLibrary[iconKey]
+}
+
+export function getLocalizedText(
+    textObj: TSubscriptionPageLocalizedText,
+    lang: TSubscriptionPageLanguageCode
+): string {
+    if (!textObj) return ''
+    return textObj[lang]
+}
 
 export function getExpirationTextUtil(
     expireAt: Date | null | string,
@@ -13,7 +23,7 @@ export function getExpirationTextUtil(
     baseTranslations: TSubscriptionPageRawConfig['baseTranslations']
 ): string {
     if (!expireAt) {
-        return 'Unknown'
+        return getLocalizedText(baseTranslations.unknown, currentLang)
     }
 
     const expiration = dayjs(expireAt).locale(currentLang)
@@ -38,5 +48,14 @@ export const formatDate = (
     if (dayjs(dateStr).year() === 2099) {
         return getLocalizedText(baseTranslations.indefinitely, currentLang)
     }
-    return dayjs(dateStr).locale(currentLang).format('DD.MM.YYYY')
+    if (currentLang === 'fa') {
+        return Intl.DateTimeFormat('fa-IR', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: undefined,
+            minute: undefined
+        }).format(new Date(dateStr))
+    }
+    return dayjs(dateStr).locale(currentLang).format('DD MMMM, YYYY')
 }

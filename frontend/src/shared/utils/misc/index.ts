@@ -1,7 +1,0 @@
-export * from './boolean'
-export * from './date'
-export * from './factory'
-export * from './is'
-export * from './match'
-export * from './number'
-export * from './text'

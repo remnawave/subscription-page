@@ -1,11 +1,10 @@
 import { Box, Group, Stack, Text } from '@mantine/core'
 
-import { IBlockRendererProps } from '../../../installation-guide.connector'
-import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient.util'
+import { getColorGradient, getLocalizedText } from '@shared/utils/config-parser'
+import { ThemeIconShared } from '@shared/ui'
 
+import { IBlockRendererProps } from '../renderer-block.interface'
 import classes from './minimal-block.module.css'
-import { ThemeIconShared } from '../../theme-icon.shared'
-import { getLocalizedText } from '@shared/utils/language/get-translation'
 
 export const MinimalBlockRenderer = ({
     blocks,
@@ -20,31 +19,31 @@ export const MinimalBlockRenderer = ({
                 const gradientStyle = getColorGradient(block.svgIconColor)
 
                 return (
-                    <Box key={index} className={classes.stepBlock}>
+                    <Box className={classes.stepBlock} key={index}>
                         <Group gap="sm" mb="xs" wrap="nowrap">
                             <ThemeIconShared
+                                getIconFromLibrary={getIconFromLibrary}
+                                gradientStyle={gradientStyle}
                                 isMobile={isMobile}
                                 svgIconColor={block.svgIconColor}
-                                gradientStyle={gradientStyle}
                                 svgIconKey={block.svgIconKey}
-                                getIconFromLibrary={getIconFromLibrary}
                             />
                             <Text
                                 c="white"
-                                fw={500}
-                                size={isMobile ? 'sm' : 'md'}
                                 dangerouslySetInnerHTML={{
                                     __html: getLocalizedText(block.title, currentLang)
                                 }}
+                                fw={500}
+                                size={isMobile ? 'sm' : 'md'}
                             />
                         </Group>
                         <Text
                             c="dimmed"
-                            size={isMobile ? 'xs' : 'sm'}
-                            style={{ lineHeight: 1.6 }}
                             dangerouslySetInnerHTML={{
                                 __html: getLocalizedText(block.description, currentLang)
                             }}
+                            size={isMobile ? 'xs' : 'sm'}
+                            style={{ lineHeight: 1.6 }}
                         />
                         {block.buttons.length > 0 && (
                             <Box style={{ marginTop: 8 }}>

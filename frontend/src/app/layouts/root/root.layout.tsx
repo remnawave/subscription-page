@@ -1,10 +1,10 @@
-import { GetSubscriptionInfoByShortUuidCommand } from '@remnawave/backend-contract'
 import {
     APP_CONFIG_ROUTE_LEADING_PATH,
     SubscriptionPageRawConfigSchema
 } from '@remnawave/subscription-page-types'
-import { useLayoutEffect } from 'react'
+import { GetSubscriptionInfoByShortUuidCommand } from '@remnawave/backend-contract'
 import { Outlet } from 'react-router-dom'
+import { useLayoutEffect } from 'react'
 import consola from 'consola/browser'
 import { ofetch } from 'ofetch'
 
@@ -13,9 +13,9 @@ import {
     useSubscriptionInfoStoreInfo
 } from '@entities/subscription-info-store'
 import { useAppConfigStoreActions, useIsConfigLoaded } from '@entities/app-config-store'
+import { LoadingScreen } from '@shared/ui'
 
 import classes from './root.module.css'
-import { AnimatedBackground, LoadingScreen } from '@shared/ui'
 
 export function RootLayout() {
     const subscriptionActions = useSubscriptionInfoStoreActions()
@@ -76,7 +76,7 @@ export function RootLayout() {
     if (!isConfigLoaded || !subscription) {
         return (
             <div className={classes.root}>
-                <AnimatedBackground />
+                <div className="animated-background"></div>
                 <div className={classes.content}>
                     <main className={classes.main}>
                         <LoadingScreen height="100vh" />
@@ -88,7 +88,7 @@ export function RootLayout() {
 
     return (
         <div className={classes.root}>
-            <AnimatedBackground />
+            <div className="animated-background"></div>
             <div className={classes.content}>
                 <main className={classes.main}>
                     <Outlet />

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
 import { useMediaQuery } from '@mantine/hooks'
+import { useEffect, useState } from 'react'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
 import { useAppConfig, useIsConfigLoaded } from '@entities/app-config-store'

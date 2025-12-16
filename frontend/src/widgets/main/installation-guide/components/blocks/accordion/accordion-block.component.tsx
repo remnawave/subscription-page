@@ -1,14 +1,13 @@
-import { IconChevronDown } from '@tabler/icons-react'
 import { Accordion, Group, Stack, Text } from '@mantine/core'
+import { IconChevronDown } from '@tabler/icons-react'
 import { useState } from 'react'
 
-import { IBlockRendererProps } from '../../../installation-guide.connector'
-import { getColorGradient } from '../../../../../../shared/ui/get-color-gradient.util'
-
-import classes from './accordion-block.module.css'
-import { ThemeIconShared } from '../../theme-icon.shared'
+import { getColorGradient, getLocalizedText } from '@shared/utils/config-parser'
 import { vibrate } from '@shared/utils/vibrate'
-import { getLocalizedText } from '@shared/utils/language/get-translation'
+import { ThemeIconShared } from '@shared/ui'
+
+import { IBlockRendererProps } from '../renderer-block.interface'
+import classes from './accordion-block.module.css'
 
 export const AccordionBlockRenderer = ({
     blocks,
@@ -17,19 +16,11 @@ export const AccordionBlockRenderer = ({
     renderBlockButtons,
     getIconFromLibrary
 }: IBlockRendererProps) => {
-    const [openedAccordion, setOpenedAccordion] = useState<string | null>('0')
+    const [openedAccordion, setOpenedAccordion] = useState<null | string>('0')
 
     return (
         <Accordion
-            value={openedAccordion}
-            onChange={(value) => {
-                vibrate('tap')
-                setOpenedAccordion(value)
-            }}
-            variant="separated"
-            radius="lg"
             chevron={<IconChevronDown size={18} />}
-            transitionDuration={200}
             classNames={{
                 item: classes.accordionItem,
                 control: classes.accordionControl,
@@ -37,6 +28,14 @@ export const AccordionBlockRenderer = ({
                 content: classes.accordionContent,
                 label: classes.accordionLabel
             }}
+            onChange={(value) => {
+                vibrate('tap')
+                setOpenedAccordion(value)
+            }}
+            radius="lg"
+            transitionDuration={200}
+            value={openedAccordion}
+            variant="separated"
         >
             {blocks.map((block, index) => {
                 const gradientStyle = getColorGradient(block.svgIconColor)
@@ -46,24 +45,24 @@ export const AccordionBlockRenderer = ({
                         <Accordion.Control>
                             <Group gap="sm" wrap="nowrap">
                                 <ThemeIconShared
+                                    getIconFromLibrary={getIconFromLibrary}
+                                    gradientStyle={gradientStyle}
                                     isMobile={isMobile}
                                     svgIconColor={block.svgIconColor}
-                                    gradientStyle={gradientStyle}
                                     svgIconKey={block.svgIconKey}
-                                    getIconFromLibrary={getIconFromLibrary}
                                 />
                                 <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
                                     <Text
                                         c="white"
+                                        dangerouslySetInnerHTML={{
+                                            __html: getLocalizedText(block.title, currentLang)
+                                        }}
                                         fw={600}
                                         size={isMobile ? 'sm' : 'md'}
                                         style={{
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
                                             whiteSpace: 'nowrap'
-                                        }}
-                                        dangerouslySetInnerHTML={{
-                                            __html: getLocalizedText(block.title, currentLang)
                                         }}
                                     />
                                 </Stack>
@@ -72,13 +71,13 @@ export const AccordionBlockRenderer = ({
                         <Accordion.Panel>
                             <Text
                                 c="dimmed"
-                                size={isMobile ? 'xs' : 'sm'}
-                                style={{ lineHeight: 1.7 }}
                                 dangerouslySetInnerHTML={{
                                     __html: getLocalizedText(block.description, currentLang)
                                 }}
+                                size={isMobile ? 'xs' : 'sm'}
+                                style={{ lineHeight: 1.7 }}
                             />
-                            <Group gap="xs" wrap="wrap" mt="sm">
+                            <Group gap="xs" mt="sm" wrap="wrap">
                                 {renderBlockButtons(block.buttons, 'light')}
                             </Group>
                         </Accordion.Panel>

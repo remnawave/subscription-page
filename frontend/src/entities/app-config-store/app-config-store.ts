@@ -1,9 +1,9 @@
-import LanguageDetector from 'i18next-browser-languagedetector'
-import { create } from 'zustand'
 import {
     TSubscriptionPageLanguageCode,
     TSubscriptionPageRawConfig
 } from '@remnawave/subscription-page-types'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import { create } from 'zustand'
 
 import { IActions, IState } from './interfaces'
 
@@ -35,7 +35,7 @@ const initialState: IState = {
     isConfigLoaded: false
 }
 
-export const useAppConfigStore = create<IActions & IState>()((set, get) => ({
+export const useAppConfigStore = create<IActions & IState>()((set) => ({
     ...initialState,
     actions: {
         setConfig: (config: TSubscriptionPageRawConfig) => {

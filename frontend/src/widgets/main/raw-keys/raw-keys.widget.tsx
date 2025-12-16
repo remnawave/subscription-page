@@ -1,4 +1,3 @@
-import { IconCheck, IconCopy, IconKey, IconQrcode } from '@tabler/icons-react'
 import {
     ActionIcon,
     Badge,
@@ -12,18 +11,19 @@ import {
     Text,
     Title
 } from '@mantine/core'
+import { IconCheck, IconCopy, IconKey, IconQrcode } from '@tabler/icons-react'
 import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
 
 import { useSubscription } from '@entities/subscription-info-store'
-import { useTranslation } from '@shared/hooks'
 import { vibrate } from '@shared/utils/vibrate'
+import { useTranslation } from '@shared/hooks'
 
 import classes from './raw-keys.module.css'
 
 interface ParsedLink {
-    name: string
     fullLink: string
+    name: string
 }
 
 const parseLinks = (links: string[]): ParsedLink[] => {
@@ -88,14 +88,14 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
     }
 
     return (
-        <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
+        <Card className="glass-card" p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
             <Stack gap="md">
-                <Group justify="space-between" gap="sm">
-                    <Title order={4} c="white" fw={600}>
+                <Group gap="sm" justify="space-between">
+                    <Title c="white" fw={600} order={4}>
                         {t(baseTranslations.connectionKeysHeader)}
                     </Title>
                     {parsedLinks.length > 1 && (
-                        <Badge color="cyan" variant="light" size="lg">
+                        <Badge color="cyan" size="lg" variant="light">
                             {parsedLinks.length}
                         </Badge>
                     )}
@@ -104,7 +104,7 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
                 <ScrollArea.Autosize mah={300} scrollbars="y">
                     <Stack gap="xs">
                         {parsedLinks.map((link, index) => (
-                            <Box key={index} p="xs" className={classes.keyBox}>
+                            <Box className={classes.keyBox} key={index} p="xs">
                                 <Box className={classes.keyRow}>
                                     <Box className={classes.keyInfo}>
                                         <IconKey
@@ -116,9 +116,9 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
                                         />
                                         <Box className={classes.keyName}>
                                             <Text
-                                                size={isMobile ? 'xs' : 'sm'}
                                                 c="white"
                                                 fw={500}
+                                                size={isMobile ? 'xs' : 'sm'}
                                                 span
                                             >
                                                 {link.name}
@@ -131,12 +131,12 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
                                             {({ copied, copy }) => (
                                                 <ActionIcon
                                                     color={copied ? 'teal' : 'gray'}
-                                                    variant="subtle"
-                                                    size={isMobile ? 'sm' : 'md'}
                                                     onClick={() => {
                                                         vibrate('drop')
                                                         copy()
                                                     }}
+                                                    size={isMobile ? 'sm' : 'md'}
+                                                    variant="subtle"
                                                 >
                                                     {copied ? (
                                                         <IconCheck size={isMobile ? 14 : 16} />
@@ -149,12 +149,12 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
 
                                         <ActionIcon
                                             color="cyan"
-                                            variant="subtle"
-                                            size={isMobile ? 'sm' : 'md'}
                                             onClick={() => {
                                                 vibrate('tap')
                                                 handleShowQr(link)
                                             }}
+                                            size={isMobile ? 'sm' : 'md'}
+                                            variant="subtle"
                                         >
                                             <IconQrcode size={isMobile ? 14 : 16} />
                                         </ActionIcon>

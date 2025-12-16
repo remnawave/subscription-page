@@ -1,12 +1,13 @@
+import { getLanguageInfo, TSubscriptionPageLanguageCode } from '@remnawave/subscription-page-types'
 import { ActionIcon, Menu, Text, useDirection } from '@mantine/core'
 import { IconLanguage } from '@tabler/icons-react'
 import { useEffect } from 'react'
-import { getLanguageInfo, TSubscriptionPageLanguageCode } from '@remnawave/subscription-page-types'
+
 import { vibrate } from '@shared/utils/vibrate'
 
 interface IProps {
-    locales: TSubscriptionPageLanguageCode[]
     currentLang: TSubscriptionPageLanguageCode
+    locales: TSubscriptionPageLanguageCode[]
     onLanguageChange: (lang: TSubscriptionPageLanguageCode) => void
 }
 
@@ -46,17 +47,17 @@ export function LanguagePicker(props: IProps) {
     })
 
     return (
-        <Menu position="bottom" width={150} withinPortal withArrow={false}>
+        <Menu position="bottom" width={150} withArrow={false} withinPortal>
             <Menu.Target>
                 <ActionIcon
                     color="gray"
-                    size="xl"
                     radius="md"
-                    variant="default"
+                    size="xl"
                     style={{
                         background: 'rgba(255, 255, 255, 0.02)',
                         border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}
+                    variant="default"
                 >
                     <IconLanguage size={22} />
                 </ActionIcon>

@@ -5,6 +5,16 @@ type TemplateValues = {
 }
 
 export class TemplateEngine {
+    static formatWithMetaInfo(
+        template: string,
+        metaInfo: { subscriptionUrl: string; username: string }
+    ): string {
+        return this.replace(template, {
+            USERNAME: metaInfo.username,
+            SUBSCRIPTION_LINK: metaInfo.subscriptionUrl
+        })
+    }
+
     static replace(template: string, values: TemplateValues): string {
         let hasReplacement = false
         const result = template.replace(
@@ -19,15 +29,5 @@ export class TemplateEngine {
         )
 
         return hasReplacement ? result : template
-    }
-
-    static formatWithMetaInfo(
-        template: string,
-        metaInfo: { username: string; subscriptionUrl: string }
-    ): string {
-        return this.replace(template, {
-            USERNAME: metaInfo.username,
-            SUBSCRIPTION_LINK: metaInfo.subscriptionUrl
-        })
     }
 }

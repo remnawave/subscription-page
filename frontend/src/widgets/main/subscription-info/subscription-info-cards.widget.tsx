@@ -1,17 +1,13 @@
 import { IconArrowsUpDown, IconCalendar, IconCheck, IconUserScan, IconX } from '@tabler/icons-react'
 import { Box, Group, SimpleGrid, Stack, Text, ThemeIcon } from '@mantine/core'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import dayjs from 'dayjs'
 
-import { formatDate } from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
 import { useSubscription } from '@entities/subscription-info-store'
+import { formatDate } from '@shared/utils/config-parser'
 import { useTranslation } from '@shared/hooks'
 
 import classes from './subscription-info-cards.module.css'
 
-dayjs.extend(relativeTime)
-
-type ColorVariant = 'blue' | 'cyan' | 'green' | 'teal' | 'red' | 'yellow' | 'orange' | 'violet'
+type ColorVariant = 'blue' | 'cyan' | 'green' | 'orange' | 'red' | 'teal' | 'violet' | 'yellow'
 
 const iconColorClasses: Record<ColorVariant, string> = {
     blue: classes.iconBlue,
@@ -25,10 +21,10 @@ const iconColorClasses: Record<ColorVariant, string> = {
 }
 
 interface CardItemProps {
+    color: ColorVariant
     icon: React.ReactNode
     label: string
     value: string
-    color: ColorVariant
 }
 
 const CardItem = ({ icon, label, value, color }: CardItemProps) => {
@@ -36,27 +32,27 @@ const CardItem = ({ icon, label, value, color }: CardItemProps) => {
         <Box className={classes.cardItem}>
             <Group gap="xs" wrap="nowrap">
                 <ThemeIcon
-                    color={color}
-                    size={36}
-                    radius="md"
-                    variant="light"
                     className={iconColorClasses[color]}
+                    color={color}
+                    radius="md"
+                    size={36}
                     style={{ flexShrink: 0 }}
+                    variant="light"
                 >
                     {icon}
                 </ThemeIcon>
                 <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
                     <Text
-                        size="xs"
                         c="dimmed"
-                        tt="uppercase"
+                        className={classes.label}
                         fw={500}
                         lh={1}
-                        className={classes.label}
+                        size="xs"
+                        tt="uppercase"
                     >
                         {label}
                     </Text>
-                    <Text size="sm" c="white" fw={600} className={classes.value}>
+                    <Text c="white" className={classes.value} fw={600} size="sm">
                         {value}
                     </Text>
                 </Stack>
@@ -69,7 +65,7 @@ interface IProps {
     isMobile: boolean
 }
 
-export const SubscriptionInfoCardsWidget = ({ isMobile }: IProps) => {
+export const SubscriptionInfoCardsWidget = ({ isMobile: _ }: IProps) => {
     const { t, currentLang, baseTranslations } = useTranslation()
     const subscription = useSubscription()
 
@@ -86,31 +82,31 @@ export const SubscriptionInfoCardsWidget = ({ isMobile }: IProps) => {
     return (
         <SimpleGrid cols={{ base: 1, xs: 1, sm: 2 }} spacing="xs" verticalSpacing="xs">
             <CardItem
+                color="blue"
                 icon={<IconUserScan size={18} />}
                 label={t(baseTranslations.name)}
                 value={user.username}
-                color="blue"
             />
 
             <CardItem
+                color={isActive ? 'green' : 'red'}
                 icon={isActive ? <IconCheck size={18} /> : <IconX size={18} />}
                 label={t(baseTranslations.status)}
                 value={statusText}
-                color={isActive ? 'green' : 'red'}
             />
 
             <CardItem
+                color="orange"
                 icon={<IconCalendar size={18} />}
                 label={t(baseTranslations.expires)}
                 value={formatDate(user.expiresAt, currentLang, baseTranslations)}
-                color="orange"
             />
 
             <CardItem
+                color="cyan"
                 icon={<IconArrowsUpDown size={18} />}
                 label={t(baseTranslations.bandwidth)}
                 value={bandwidthValue}
-                color="cyan"
             />
         </SimpleGrid>
     )

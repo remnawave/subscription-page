@@ -7,19 +7,15 @@ import {
     IconX
 } from '@tabler/icons-react'
 import { Card, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import dayjs from 'dayjs'
 
 import {
     formatDate,
+    getColorGradientSolid,
     getExpirationTextUtil
-} from '@shared/utils/time-utils/get-expiration-text/get-expiration-text.util'
-import { useSubscription } from '@entities/subscription-info-store'
+} from '@shared/utils/config-parser'
 import { InfoBlockShared } from '@shared/ui/info-block/info-block.shared'
-import { getColorGradientSolid } from '@shared/ui/get-color-gradient.util'
+import { useSubscription } from '@entities/subscription-info-store'
 import { useTranslation } from '@shared/hooks'
-
-dayjs.extend(relativeTime)
 
 interface IProps {
     isMobile: boolean
@@ -64,34 +60,34 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: IProps) => {
     const gradientColor = getColorGradientSolid(statusInfo.color)
 
     return (
-        <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg" className="glass-card">
+        <Card className="glass-card" p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
             <Stack gap={isMobile ? 'sm' : 'md'}>
-                <Group justify="space-between" gap="sm">
+                <Group gap="sm" justify="space-between">
                     <Group
                         gap={isMobile ? 'xs' : 'sm'}
-                        wrap="nowrap"
                         style={{ minWidth: 0, flex: 1 }}
+                        wrap="nowrap"
                     >
                         <ThemeIcon
-                            size={isMobile ? 36 : 44}
-                            radius="xl"
                             color={statusInfo.color}
-                            variant="light"
+                            radius="xl"
+                            size={isMobile ? 36 : 44}
                             style={{
                                 background: gradientColor.background,
                                 border: gradientColor.border,
                                 boxShadow: gradientColor.boxShadow,
                                 flexShrink: 0
                             }}
+                            variant="light"
                         >
                             {statusInfo.icon}
                         </ThemeIcon>
 
                         <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
                             <Title
-                                order={5}
                                 c="white"
                                 fw={600}
+                                order={5}
                                 style={{
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
@@ -102,8 +98,8 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: IProps) => {
                             </Title>
                             <Text
                                 c={user.daysLeft === 0 ? 'red' : 'dimmed'}
-                                size={isMobile ? 'xs' : 'sm'}
                                 fw={600}
+                                size={isMobile ? 'xs' : 'sm'}
                             >
                                 {getExpirationTextUtil(
                                     user.expiresAt,

@@ -1,23 +1,22 @@
 import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
+import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
 import { useMemo } from 'react'
 
-import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
-
-import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
-import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
-import { Page, RemnawaveLogo } from '@shared/ui'
 import {
-    SubscriptionLinkWidget,
+    AccordionBlockRenderer,
+    CardsBlockRenderer,
+    InstallationGuideConnector,
+    MinimalBlockRenderer,
+    RawKeysWidget,
     SubscriptionInfoCardsWidget,
     SubscriptionInfoCollapsedWidget,
     SubscriptionInfoExpandedWidget,
-    RawKeysWidget,
-    InstallationGuideConnector,
-    CardsBlockRenderer,
-    TimelineBlockRenderer,
-    AccordionBlockRenderer,
-    MinimalBlockRenderer
+    SubscriptionLinkWidget,
+    TimelineBlockRenderer
 } from '@widgets/main'
+import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
+import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
+import { Page, RemnawaveLogo } from '@shared/ui'
 
 interface IMainPageComponentProps {
     isMobile: boolean
@@ -72,7 +71,7 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
             <Box className="header-wrapper" py="md">
                 <Container maw={1200} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
                     <Group justify="space-between" wrap="nowrap">
-                        <Group gap="sm" wrap="nowrap" style={{ userSelect: 'none' }}>
+                        <Group gap="sm" style={{ userSelect: 'none' }} wrap="nowrap">
                             {hasCustomLogo ? (
                                 <Image
                                     alt="logo"
@@ -88,8 +87,8 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
                             ) : (
                                 <RemnawaveLogo c="cyan" size={32} />
                             )}
-                            <Title order={4} fw={700} size="lg">
-                                <Text component="span" inherit c={hasCustomLogo ? 'white' : 'cyan'}>
+                            <Title fw={700} order={4} size="lg">
+                                <Text c={hasCustomLogo ? 'white' : 'cyan'} component="span" inherit>
                                     {brandName}
                                 </Text>
                             </Title>
@@ -116,17 +115,17 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
                     )}
 
                     <InstallationGuideConnector
-                        isMobile={isMobile}
-                        hasPlatformApps={hasPlatformApps}
                         BlockRenderer={BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]}
+                        hasPlatformApps={hasPlatformApps}
+                        isMobile={isMobile}
                     />
 
                     <RawKeysWidget isMobile={isMobile} />
 
                     <Center>
                         <LanguagePicker
-                            locales={config.locales}
                             currentLang={currentLang}
+                            locales={config.locales}
                             onLanguageChange={setLanguage}
                         />
                     </Center>

@@ -13,6 +13,7 @@ import { Notifications } from '@mantine/notifications'
 import { ModalsProvider } from '@mantine/modals'
 import { useMediaQuery } from '@mantine/hooks'
 
+import { initDayjs } from '@shared/utils/time-utils'
 import { theme } from '@shared/constants'
 
 import { Router } from './app/router/router'
@@ -20,6 +21,8 @@ import { Router } from './app/router/router'
 polyfillCountryFlagEmojis()
 
 enableMainThreadBlocking(false)
+
+initDayjs()
 
 export function App() {
     const mq = useMediaQuery('(min-width: 40em)')

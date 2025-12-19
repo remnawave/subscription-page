@@ -183,13 +183,6 @@ export const InstallationGuideConnector = (props: IProps) => {
                             }}
                             radius="md"
                             size="sm"
-                            styles={{
-                                input: {
-                                    background: 'rgba(255, 255, 255, 0.02)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    color: 'white'
-                                }
-                            }}
                             value={selectedPlatform}
                             w={150}
                         />

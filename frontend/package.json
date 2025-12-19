@@ -34,7 +34,7 @@
     "@mantine/modals": "8.3.10",
     "@mantine/notifications": "8.3.10",
     "@mantine/nprogress": "8.3.10",
-    "@remnawave/backend-contract": "2.3.61",
+    "@remnawave/backend-contract": "2.4.0",
     "@remnawave/subscription-page-types": "0.2.4",
     "@tabler/icons-react": "^3.35.0",
     "clsx": "^2.1.1",

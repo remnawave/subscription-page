@@ -3,11 +3,16 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="robots" content="noindex, nofollow" />
-
-        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180x180.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
-        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+        <meta name="color-scheme" content="dark only" />
+        <meta name="theme-color" content="#161B23" />
+        <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+        />
+        <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+        <link rel="icon" sizes="32x32" type="image/png" href="/assets/favicon-32x32.png" />
+        <link rel="icon" sizes="16x16" type="image/png" href="/assets/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180x180.png" />
 
         <link rel="preconnect" crossorigin="anonymous" href="https://fonts.googleapis.com" />
         <link rel="preconnect" crossorigin="anonymous" href="https://fonts.gstatic.com" />
@@ -16,30 +21,22 @@
             href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Unbounded:wght@200..900&display=swap"
             rel="stylesheet"
         />
-
         <link
             href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap"
             rel="stylesheet"
         />
-
         <link
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap"
             rel="stylesheet"
-        />
-
-        <meta name="color-scheme" content="dark only" />
-        <meta name="theme-color" content="#161B23" />
-
-        <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
 
         <meta name="description" content="<%- metaDescription %>" />
         <title><%- metaTitle %></title>
     </head>
     <body>
-        <div id="root" data-panel="<%- panelData %>"></div>
+        <div id="root"></div>
         <script type="module" src="./src/main.tsx"></script>
+
+        <div id="sbpg" data-panel="<%- panelData %>"></div>
     </body>
 </html>

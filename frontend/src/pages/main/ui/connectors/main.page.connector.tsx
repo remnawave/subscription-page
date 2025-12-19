@@ -1,19 +1,16 @@
+import { useMediaQuery } from '@mantine/hooks'
 import { useEffect, useState } from 'react'
-import consola from 'consola/browser'
-import { ofetch } from 'ofetch'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
-import { ISubscriptionPageAppConfig } from '@shared/constants/apps-config'
-import { isOldFormat } from '@shared/utils/migration.utils'
+import { useAppConfig, useIsConfigLoaded } from '@entities/app-config-store'
 import { LoadingScreen } from '@shared/ui'
 
 import { MainPageComponent } from '../components/main.page.component'
-import { useMediaQuery } from '@mantine/hooks'
 
 export const MainPageConnector = () => {
     const { subscription } = useSubscriptionInfoStoreInfo()
-    const [appsConfig, setAppsConfig] = useState<ISubscriptionPageAppConfig | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const config = useAppConfig()
+    const isConfigLoaded = useIsConfigLoaded()
 
     const isMobile = useMediaQuery(`(max-width: 30rem)`, undefined, {
         getInitialValueInEffect: false
@@ -25,51 +22,8 @@ export const MainPageConnector = () => {
         setIsMediaQueryReady(true)
     }, [isMobile])
 
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const tempConfig = await ofetch<ISubscriptionPageAppConfig>(
-                    `/assets/app-config.json?v=${Date.now()}`,
-                    {
-                        parseResponse: JSON.parse
-                    }
-                )
-
-                let newConfig: ISubscriptionPageAppConfig | null = null
-
-                if (isOldFormat(tempConfig)) {
-                    consola.warn('Old config format detected, migrating to new format...')
-                    newConfig = {
-                        config: {
-                            additionalLocales: ['ru', 'fa', 'zh', 'fr']
-                        },
-                        platforms: {
-                            ios: tempConfig.ios,
-                            android: tempConfig.android,
-                            windows: tempConfig.pc,
-                            macos: tempConfig.pc,
-                            linux: [],
-                            androidTV: [],
-                            appleTV: []
-                        }
-                    }
-                } else {
-                    newConfig = tempConfig
-                }
-
-                setAppsConfig(newConfig)
-            } catch (error) {
-                consola.error('Failed to fetch app config:', error)
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchConfig()
-    }, [])
-
-    if (isLoading || !subscription || !appsConfig || !isMediaQueryReady)
+    if (!isConfigLoaded || !subscription || !config || !isMediaQueryReady)
         return <LoadingScreen height="100vh" />
 
-    return <MainPageComponent subscriptionPageAppConfig={appsConfig} isMobile={isMobile} />
+    return <MainPageComponent isMobile={isMobile} />
 }

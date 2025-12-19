@@ -1,0 +1,238 @@
+import {
+    TSubscriptionPageAppConfig,
+    TSubscriptionPageButtonConfig,
+    TSubscriptionPagePlatformKey
+} from '@remnawave/subscription-page-types'
+import { Box, Button, ButtonVariant, Card, Group, NativeSelect, Stack, Title } from '@mantine/core'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { IconStar } from '@tabler/icons-react'
+import { useOs } from '@mantine/hooks'
+
+import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
+import { useSubscription } from '@entities/subscription-info-store'
+import { getIconFromLibrary } from '@shared/utils/config-parser'
+import { TemplateEngine } from '@shared/utils/template-engine'
+import { useAppConfig } from '@entities/app-config-store'
+import { vibrate } from '@shared/utils/vibrate'
+import { useTranslation } from '@shared/hooks'
+
+import { IBlockRendererProps } from './components/blocks/renderer-block.interface'
+import classes from './installation-guide.module.css'
+
+export type TBlockVariant = 'accordion' | 'cards' | 'minimal' | 'timeline'
+
+interface IProps {
+    BlockRenderer: React.ComponentType<IBlockRendererProps>
+    hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
+    isMobile: boolean
+}
+
+export const InstallationGuideConnector = (props: IProps) => {
+    const { isMobile, hasPlatformApps, BlockRenderer } = props
+
+    const { t, currentLang, baseTranslations } = useTranslation()
+    const { platforms, svgLibrary } = useAppConfig()
+    const subscription = useSubscription()
+
+    const os = useOs()
+
+    const [selectedPlatform, setSelectedPlatform] =
+        useState<TSubscriptionPagePlatformKey>('windows')
+    const [selectedAppName, setSelectedAppName] = useState<string>('')
+
+    useLayoutEffect(() => {
+        const osToplatform: Record<string, TSubscriptionPagePlatformKey> = {
+            android: 'android',
+            ios: 'ios',
+            linux: 'linux',
+            macos: 'macos',
+            windows: 'windows'
+        }
+
+        const preferredPlatform = osToplatform[os] ?? 'windows'
+
+        if (hasPlatformApps[preferredPlatform]) {
+            setSelectedPlatform(preferredPlatform)
+            return
+        }
+
+        const firstAvailable = (
+            Object.keys(hasPlatformApps) as TSubscriptionPagePlatformKey[]
+        ).find((key) => hasPlatformApps[key])
+
+        if (firstAvailable) {
+            setSelectedPlatform(firstAvailable)
+        }
+    }, [os, hasPlatformApps])
+
+    const platformApps = useMemo((): TSubscriptionPageAppConfig[] => {
+        const platformConfig = platforms[selectedPlatform]
+        if (!platformConfig) return []
+        return platformConfig.apps
+    }, [platforms, selectedPlatform])
+
+    useEffect(() => {
+        if (platformApps.length > 0) {
+            setSelectedAppName(platformApps[0].name)
+        }
+    }, [selectedPlatform, platformApps])
+
+    const selectedApp = useMemo(() => {
+        if (!selectedAppName) return platformApps[0] ?? null
+        return platformApps.find((app) => app.name === selectedAppName) ?? platformApps[0] ?? null
+    }, [selectedAppName, platformApps])
+
+    const availablePlatforms = useMemo(
+        () =>
+            (Object.entries(hasPlatformApps) as [TSubscriptionPagePlatformKey, boolean][])
+                .filter(([_, hasApps]) => hasApps)
+                .map(([platform]) => {
+                    const platformConfig = platforms[platform]!
+                    return {
+                        value: platform,
+                        label: t(platformConfig.displayName),
+                        icon: getIconFromLibrary(platformConfig.svgIconKey, svgLibrary)
+                    }
+                }),
+        [hasPlatformApps, platforms, currentLang, svgLibrary, t]
+    )
+
+    const subscriptionUrl = constructSubscriptionUrl(
+        window.location.href,
+        subscription.user.shortUuid
+    )
+
+    const handleButtonClick = (button: TSubscriptionPageButtonConfig) => {
+        if (button.type === 'subscriptionLink') {
+            const formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
+                username: subscription.user.username,
+                subscriptionUrl
+            })
+            window.open(formattedUrl, '_blank')
+        } else if (button.type === 'external') {
+            window.open(button.link, '_blank')
+        }
+    }
+
+    const renderBlockButtons = (
+        buttons: TSubscriptionPageButtonConfig[],
+        variant: ButtonVariant
+    ) => {
+        if (buttons.length === 0) return null
+
+        return (
+            <Group gap="xs" wrap="wrap">
+                {buttons.map((button, index) => (
+                    <Button
+                        key={index}
+                        leftSection={
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: getIconFromLibrary(button.svgIconKey, svgLibrary)
+                                }}
+                                style={{ display: 'flex', alignItems: 'center' }}
+                            />
+                        }
+                        onClick={() => handleButtonClick(button)}
+                        radius="md"
+                        variant={variant}
+                    >
+                        {t(button.text)}
+                    </Button>
+                ))}
+            </Group>
+        )
+    }
+
+    const getIcon = (iconKey: string) => getIconFromLibrary(iconKey, svgLibrary)
+
+    return (
+        <Card className="glass-card" p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
+            <Stack gap="md">
+                <Group gap="sm" justify="space-between">
+                    <Title c="white" fw={600} order={4}>
+                        {t(baseTranslations.installationGuideHeader)}
+                    </Title>
+
+                    {availablePlatforms.length > 1 && (
+                        <NativeSelect
+                            data={availablePlatforms.map((opt) => ({
+                                value: opt.value,
+                                label: opt.label
+                            }))}
+                            leftSection={
+                                <span
+                                    dangerouslySetInnerHTML={{
+                                        __html: availablePlatforms.find(
+                                            (opt) => opt.value === selectedPlatform
+                                        )!.icon
+                                    }}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        width: 20,
+                                        height: 20
+                                    }}
+                                />
+                            }
+                            onChange={(event) => {
+                                vibrate([80])
+                                const value = event.target
+                                    .value as unknown as TSubscriptionPagePlatformKey
+                                setSelectedPlatform(value || 'windows')
+                            }}
+                            radius="md"
+                            size="sm"
+                            value={selectedPlatform}
+                            w={150}
+                        />
+                    )}
+                </Group>
+
+                {platformApps.length > 0 && (
+                    <Box>
+                        <Group gap="xs" mb="md">
+                            {platformApps.map((app: TSubscriptionPageAppConfig) => {
+                                const isActive = app.name === selectedAppName
+                                return (
+                                    <Button
+                                        className={
+                                            isActive ? classes.appButtonActive : classes.appButton
+                                        }
+                                        color={isActive ? 'cyan' : 'gray'}
+                                        key={app.name}
+                                        leftSection={
+                                            app.featured ? (
+                                                <IconStar color="gold" size={16} />
+                                            ) : undefined
+                                        }
+                                        onClick={() => {
+                                            vibrate('toggle')
+                                            setSelectedAppName(app.name)
+                                        }}
+                                        radius="md"
+                                        size="sm"
+                                        variant={isActive ? 'outline' : 'subtle'}
+                                    >
+                                        {app.name}
+                                    </Button>
+                                )
+                            })}
+                        </Group>
+
+                        {selectedApp && (
+                            <BlockRenderer
+                                blocks={selectedApp.blocks}
+                                currentLang={currentLang}
+                                getIconFromLibrary={getIcon}
+                                isMobile={isMobile}
+                                renderBlockButtons={renderBlockButtons}
+                                svgLibrary={svgLibrary}
+                            />
+                        )}
+                    </Box>
+                )}
+            </Stack>
+        </Card>
+    )
+}

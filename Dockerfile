@@ -34,4 +34,6 @@ ENV NODE_OPTIONS="--max-old-space-size=16384"
 
 RUN npm install pm2 -g
 
+ENTRYPOINT [ "/bin/sh", "docker-entrypoint.sh" ]
+
 CMD [ "pm2-runtime", "start", "ecosystem.config.js", "--env", "production" ]

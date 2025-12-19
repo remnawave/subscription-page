@@ -1,25 +1,34 @@
+import {
+    APP_CONFIG_ROUTE_LEADING_PATH,
+    SubscriptionPageRawConfigSchema
+} from '@remnawave/subscription-page-types'
 import { GetSubscriptionInfoByShortUuidCommand } from '@remnawave/backend-contract'
-import { useEffect, useLayoutEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import { useLayoutEffect } from 'react'
 import consola from 'consola/browser'
+import { ofetch } from 'ofetch'
 
-import { useSubscriptionInfoStoreActions } from '@entities/subscription-info-store/subscription-info-store'
-import { LoadingScreen } from '@shared/ui/loading-screen/loading-screen'
+import {
+    useSubscriptionInfoStoreActions,
+    useSubscriptionInfoStoreInfo
+} from '@entities/subscription-info-store'
+import { useAppConfigStoreActions, useIsConfigLoaded } from '@entities/app-config-store'
+import { LoadingScreen } from '@shared/ui'
 
 import classes from './root.module.css'
-import i18n from '../../i18n/i18n'
-import { Box } from '@mantine/core'
-import { AnimatedBackground } from '@shared/ui'
 
 export function RootLayout() {
-    const actions = useSubscriptionInfoStoreActions()
-    const [i18nInitialized, setI18nInitialized] = useState(i18n.isInitialized)
+    const subscriptionActions = useSubscriptionInfoStoreActions()
+    const configActions = useAppConfigStoreActions()
+
+    const { subscription } = useSubscriptionInfoStoreInfo()
+    const isConfigLoaded = useIsConfigLoaded()
 
     useLayoutEffect(() => {
-        const rootDiv = document.getElementById('root')
+        const subPageDiv = document.getElementById('sbpg')
 
-        if (rootDiv) {
-            const subscriptionUrl = rootDiv.dataset.panel
+        if (subPageDiv) {
+            const subscriptionUrl = subPageDiv.dataset.panel
 
             if (subscriptionUrl) {
                 try {
@@ -27,33 +36,59 @@ export function RootLayout() {
                         atob(subscriptionUrl)
                     )
 
-                    actions.setSubscriptionInfo({
+                    subscriptionActions.setSubscriptionInfo({
                         subscription: subscription.response
                     })
                 } catch (error) {
                     consola.log(error)
                 } finally {
-                    delete rootDiv.dataset.panel
+                    subPageDiv.remove()
                 }
             }
         }
+
+        const fetchConfig = async () => {
+            try {
+                const tempConfig = await ofetch<unknown>(
+                    `${APP_CONFIG_ROUTE_LEADING_PATH}?v=${Date.now()}`,
+                    {
+                        parseResponse: (response) => JSON.parse(response)
+                    }
+                )
+
+                const parsedConfig =
+                    await SubscriptionPageRawConfigSchema.safeParseAsync(tempConfig)
+
+                if (!parsedConfig.success) {
+                    consola.error('Failed to parse app config:', parsedConfig.error)
+                    return
+                }
+
+                configActions.setConfig(parsedConfig.data)
+            } catch (error) {
+                consola.error('Failed to fetch app config:', error)
+            }
+        }
+
+        fetchConfig()
     }, [])
 
-    useEffect(() => {
-        if (!i18nInitialized) {
-            i18n.on('initialized', () => {
-                setI18nInitialized(true)
-            })
-        }
-    }, [i18nInitialized])
-
-    if (!i18nInitialized) {
-        return <LoadingScreen height="100vh" />
+    if (!isConfigLoaded || !subscription) {
+        return (
+            <div className={classes.root}>
+                <div className="animated-background"></div>
+                <div className={classes.content}>
+                    <main className={classes.main}>
+                        <LoadingScreen height="100vh" />
+                    </main>
+                </div>
+            </div>
+        )
     }
 
     return (
         <div className={classes.root}>
-            <AnimatedBackground />
+            <div className="animated-background"></div>
             <div className={classes.content}>
                 <main className={classes.main}>
                     <Outlet />

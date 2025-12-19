@@ -1,12 +1,5 @@
-@layer mantine, mantine-datatable;
-
 html,
 body {
-    min-height: 100vh;
-}
-
-#root {
-    height: 100vh;
     min-height: 100vh;
     background-color: #161b23;
     background-image:
@@ -17,6 +10,10 @@ body {
     position: relative;
 }
 
+#root {
+    height: 100vh;
+}
+
 .animated-background {
     position: fixed;
     top: 0;
@@ -24,49 +21,25 @@ body {
     right: 0;
     bottom: 0;
     pointer-events: none;
-    overflow: hidden;
     z-index: 0;
-}
-
-.blob-1 {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(151, 117, 250, 0.15) 0%, transparent 50%);
-    filter: blur(60px);
-}
-
-.blob-2 {
-    position: absolute;
-    bottom: 10%;
-    right: 10%;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 50%);
-    filter: blur(60px);
-}
-
-@media (max-width: 48em) {
-    .blob-1,
-    .blob-2 {
-        width: 300px;
-        height: 300px;
-    }
+    background:
+        radial-gradient(ellipse 60% 40% at 25% 40%, rgba(151, 117, 250, 0.08), transparent 50%),
+        radial-gradient(ellipse 50% 50% at 85% 85%, rgba(34, 211, 238, 0.06), transparent 50%);
 }
 
 .glass-card {
     background: rgba(255, 255, 255, 0.02) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(10px);
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .glass-card:hover {
-    background: rgba(255, 255, 255, 0.04) !important;
+    /* background: rgba(255, 255, 255, 0.04) !important; */
     border-color: rgba(34, 211, 238, 0.3) !important;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
 }
@@ -75,7 +48,11 @@ body {
     background: rgba(255, 255, 255, 0.02) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(10px);
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .step-card:hover {
@@ -89,8 +66,13 @@ body {
     top: 0;
     z-index: 100;
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     background: rgba(22, 27, 35, 0.8);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    @media (min-width: 768px) {
+        border-radius: 0 0 var(--mantine-radius-lg) var(--mantine-radius-lg);
+    }
 }
 
 .logo-text-highlight {

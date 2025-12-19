@@ -1,0 +1,20 @@
+.appButton {
+    padding: 8px 14px;
+    height: auto;
+    line-height: 1.5;
+    min-width: 0;
+    flex: 1 0 auto;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.appButtonActive {
+    padding: 8px 14px;
+    height: auto;
+    line-height: 1.5;
+    min-width: 0;
+    flex: 1 0 auto;
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+    border: 1px solid rgba(34, 211, 238, 0.4);
+}
+

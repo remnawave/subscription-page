@@ -1,55 +1,82 @@
 import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
+import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
+import { useMemo } from 'react'
 
 import {
-    ISubscriptionPageAppConfig,
-    TEnabledLocales
-} from '@shared/constants/apps-config/interfaces/app-list.interface'
+    AccordionBlockRenderer,
+    CardsBlockRenderer,
+    InstallationGuideConnector,
+    MinimalBlockRenderer,
+    RawKeysWidget,
+    SubscriptionInfoCardsWidget,
+    SubscriptionInfoCollapsedWidget,
+    SubscriptionInfoExpandedWidget,
+    SubscriptionLinkWidget,
+    TimelineBlockRenderer
+} from '@widgets/main'
+import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
 import { Page, RemnawaveLogo } from '@shared/ui'
 
-import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
-import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
-import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
-import { RawKeysWidget } from '../../../../widgets/main/raw-keys/raw-keys.widget'
-
-export const MainPageComponent = ({
-    subscriptionPageAppConfig,
-    isMobile
-}: {
-    subscriptionPageAppConfig: ISubscriptionPageAppConfig
+interface IMainPageComponentProps {
     isMobile: boolean
-}) => {
-    let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh', 'fr']
+}
 
-    if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
-        additionalLocales = [
-            'en',
-            ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
-                ['fa', 'fr', 'ru', 'zh'].includes(locale)
-            )
-        ]
-    }
+const BLOCK_RENDERERS = {
+    cards: CardsBlockRenderer,
+    timeline: TimelineBlockRenderer,
+    accordion: AccordionBlockRenderer,
+    minimal: MinimalBlockRenderer
+} as const
 
-    const brandName = subscriptionPageAppConfig.config.branding?.name || 'Remnawave'
-    let hasCustomLogo = !!subscriptionPageAppConfig.config.branding?.logoUrl
+const SUBSCRIPTION_INFO_BLOCK_RENDERERS = {
+    cards: SubscriptionInfoCardsWidget,
+    collapsed: SubscriptionInfoCollapsedWidget,
+    expanded: SubscriptionInfoExpandedWidget,
+    hidden: null
+} as const
+
+export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
+    const config = useAppConfig()
+    const currentLang = useCurrentLang()
+    const { setLanguage } = useAppConfigStoreActions()
+
+    const brandName = config.brandingSettings.title
+    let hasCustomLogo = !!config.brandingSettings.logoUrl
 
     if (hasCustomLogo) {
-        if (subscriptionPageAppConfig.config.branding?.logoUrl?.includes('docs.rw')) {
+        if (config.brandingSettings.logoUrl.includes('docs.rw')) {
             hasCustomLogo = false
         }
     }
+
+    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = useMemo(
+        () => ({
+            ios: Boolean(config.platforms.ios?.apps.length),
+            android: Boolean(config.platforms.android?.apps.length),
+            linux: Boolean(config.platforms.linux?.apps.length),
+            macos: Boolean(config.platforms.macos?.apps.length),
+            windows: Boolean(config.platforms.windows?.apps.length),
+            androidTV: Boolean(config.platforms.androidTV?.apps.length),
+            appleTV: Boolean(config.platforms.appleTV?.apps.length)
+        }),
+        [config]
+    )
+
+    const SubscriptionInfoBlockRenderer =
+        SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfoBlockType]
 
     return (
         <Page>
             <Box className="header-wrapper" py="md">
                 <Container maw={1200} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
                     <Group justify="space-between" wrap="nowrap">
-                        <Group gap="sm" wrap="nowrap" style={{ userSelect: 'none' }}>
+                        <Group gap="sm" style={{ userSelect: 'none' }} wrap="nowrap">
                             {hasCustomLogo ? (
                                 <Image
                                     alt="logo"
                                     fit="contain"
-                                    src={subscriptionPageAppConfig.config.branding!.logoUrl}
+                                    src={config.brandingSettings.logoUrl}
                                     style={{
                                         maxWidth: '32px',
                                         maxHeight: '32px',
@@ -60,8 +87,8 @@ export const MainPageComponent = ({
                             ) : (
                                 <RemnawaveLogo c="cyan" size={32} />
                             )}
-                            <Title order={4} fw={700} size="lg">
-                                <Text component="span" inherit c={hasCustomLogo ? 'white' : 'cyan'}>
+                            <Title fw={700} order={4} size="lg">
+                                <Text c={hasCustomLogo ? 'white' : 'cyan'} component="span" inherit>
                                     {brandName}
                                 </Text>
                             </Title>
@@ -69,7 +96,7 @@ export const MainPageComponent = ({
 
                         <Group gap="xs">
                             <SubscriptionLinkWidget
-                                supportUrl={subscriptionPageAppConfig.config.branding?.supportUrl}
+                                supportUrl={config.brandingSettings.supportUrl}
                             />
                         </Group>
                     </Group>
@@ -83,16 +110,24 @@ export const MainPageComponent = ({
                 style={{ position: 'relative', zIndex: 1 }}
             >
                 <Stack gap="xl">
-                    <SubscriptionInfoWidget isMobile={isMobile} />
-                    <InstallationGuideWidget
-                        appsConfig={subscriptionPageAppConfig.platforms}
-                        enabledLocales={additionalLocales}
+                    {SubscriptionInfoBlockRenderer && (
+                        <SubscriptionInfoBlockRenderer isMobile={isMobile} />
+                    )}
+
+                    <InstallationGuideConnector
+                        BlockRenderer={BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]}
+                        hasPlatformApps={hasPlatformApps}
                         isMobile={isMobile}
                     />
+
                     <RawKeysWidget isMobile={isMobile} />
 
                     <Center>
-                        <LanguagePicker enabledLocales={additionalLocales} />
+                        <LanguagePicker
+                            currentLang={currentLang}
+                            locales={config.locales}
+                            onLanguageChange={setLanguage}
+                        />
                     </Center>
                 </Stack>
             </Container>

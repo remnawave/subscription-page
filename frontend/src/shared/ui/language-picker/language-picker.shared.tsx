@@ -1,81 +1,63 @@
+import { getLanguageInfo, TSubscriptionPageLanguageCode } from '@remnawave/subscription-page-types'
 import { ActionIcon, Menu, Text, useDirection } from '@mantine/core'
 import { IconLanguage } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import { TEnabledLocales } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import { vibrate } from '@shared/utils/vibrate'
 
-const data = [
-    { label: 'English', emoji: '🇺🇸', value: 'en' },
-    { label: 'Русский', emoji: '🇷🇺', value: 'ru' },
-    { label: 'فارسی', emoji: '🇮🇷', value: 'fa' },
-    { label: '简体中文', emoji: '🇨🇳', value: 'zh' },
-    { label: 'Français', emoji: '🇫🇷', value: 'fr' }
-]
+interface IProps {
+    currentLang: TSubscriptionPageLanguageCode
+    locales: TSubscriptionPageLanguageCode[]
+    onLanguageChange: (lang: TSubscriptionPageLanguageCode) => void
+}
 
-export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLocales[] }) {
-    const [selectedLanguage, setSelectedLanguage] = useState('en')
+export function LanguagePicker(props: IProps) {
+    const { locales, currentLang, onLanguageChange } = props
+
     const { toggleDirection, dir } = useDirection()
 
-    const filteredData = data.filter((item) =>
-        enabledLocales.includes(item.value as TEnabledLocales)
-    )
-
-    const { i18n } = useTranslation()
-
     useEffect(() => {
-        const savedLanguage = i18n.language
-
-        if (savedLanguage) {
-            if (savedLanguage === 'fa') {
-                if (dir === 'ltr') {
-                    toggleDirection()
-                }
-            }
-        }
-    }, [i18n])
-
-    useEffect(() => {
-        setSelectedLanguage(i18n.language)
-    }, [i18n])
-
-    const changeLanguage = (value: string) => {
-        i18n.changeLanguage(value)
-
-        if (value === 'fa' && dir === 'ltr') {
+        if (currentLang === 'fa' && dir === 'ltr') {
             toggleDirection()
         }
-
-        if (dir === 'rtl' && value !== 'fa') {
+        if (currentLang !== 'fa' && dir === 'rtl') {
             toggleDirection()
         }
+    }, [currentLang])
 
-        setSelectedLanguage(value)
+    const changeLanguage = (value: TSubscriptionPageLanguageCode) => {
+        onLanguageChange(value)
     }
 
-    const items = filteredData.map((item) => (
-        <Menu.Item
-            key={item.value}
-            leftSection={<Text>{item.emoji}</Text>}
-            onClick={() => changeLanguage(item.value)}
-        >
-            {item.label}
-        </Menu.Item>
-    ))
+    const items = locales.map((item) => {
+        const localeInfo = getLanguageInfo(item)
+        if (!localeInfo) return null
+        return (
+            <Menu.Item
+                key={item}
+                leftSection={<Text>{localeInfo.emoji}</Text>}
+                onClick={() => {
+                    vibrate('doubleTap')
+                    changeLanguage(item)
+                }}
+            >
+                {localeInfo.nativeName}
+            </Menu.Item>
+        )
+    })
 
     return (
-        <Menu position="bottom-end" width={150} withinPortal>
+        <Menu position="bottom" width={150} withArrow={false} withinPortal>
             <Menu.Target>
                 <ActionIcon
                     color="gray"
-                    size="xl"
                     radius="md"
-                    variant="default"
+                    size="xl"
                     style={{
                         background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        transition: 'all 0.2s ease'
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}
+                    variant="default"
                 >
                     <IconLanguage size={22} />
                 </ActionIcon>

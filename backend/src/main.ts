@@ -1,10 +1,9 @@
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
+import { json } from 'express';
 import cookieParser from 'cookie-parser';
 import { createLogger } from 'winston';
 import compression from 'compression';
 import * as winston from 'winston';
-import { nanoid } from 'nanoid';
-import { json } from 'express';
 import path from 'node:path';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -22,6 +21,7 @@ import { customLogFilter } from '@common/utils/filter-logs/filter-logs';
 import { getRealIp } from '@common/middlewares/get-real-ip';
 
 import { AppModule } from './app.module';
+import { APP_CONFIG_ROUTE_WO_LEADING_PATH } from '@remnawave/subscription-page-types';
 
 // const levels = {
 //     error: 0,
@@ -32,8 +32,6 @@ import { AppModule } from './app.module';
 //     debug: 5,
 //     silly: 6,
 // };
-
-process.env.INTERNAL_JWT_SECRET = nanoid(64);
 
 const instanceId = process.env.INSTANCE_ID || '0';
 
@@ -76,6 +74,7 @@ async function bootstrap(): Promise<void> {
 
     app.useStaticAssets(assetsPath, {
         index: false,
+        dotfiles: 'ignore',
     });
 
     app.setBaseViewsDir(assetsPath);
@@ -97,12 +96,15 @@ async function bootstrap(): Promise<void> {
     app.use(
         morgan(
             ':remote-addr - ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"',
+            {
+                skip: (req) => req?.url?.startsWith('/assets') ?? false,
+            },
         ),
     );
 
     const customSubPrefix = config.get<string>('CUSTOM_SUB_PREFIX') || '';
 
-    app.setGlobalPrefix(customSubPrefix);
+    app.setGlobalPrefix(customSubPrefix, { exclude: [APP_CONFIG_ROUTE_WO_LEADING_PATH] });
 
     if (customSubPrefix) {
         logger.info('[CONFIG] CUSTOM_SUB_PREFIX: ' + customSubPrefix);

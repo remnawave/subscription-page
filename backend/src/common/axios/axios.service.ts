@@ -203,11 +203,13 @@ export class AxiosService implements OnModuleInit {
                     );
                     return { isOk: false };
                 }
+
+                this.logger.error(`Subpage Config List Request failed: ${error.message}`);
+                return { isOk: false };
+            } else {
+                this.logger.error(`Subpage Config List Request failed: ${error}`);
+                return { isOk: false };
             }
-
-            this.logger.error('Error in GetSubscriptionPageConfigList Request:', error);
-
-            return { isOk: false };
         }
     }
 

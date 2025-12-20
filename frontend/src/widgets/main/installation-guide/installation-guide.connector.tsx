@@ -4,9 +4,8 @@ import {
     TSubscriptionPagePlatformKey
 } from '@remnawave/subscription-page-types'
 import { Box, Button, ButtonVariant, Card, Group, NativeSelect, Stack, Title } from '@mantine/core'
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { IconStar } from '@tabler/icons-react'
-import { useOs } from '@mantine/hooks'
+import { useState } from 'react'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscription } from '@entities/subscription-info-store'
@@ -25,77 +24,44 @@ interface IProps {
     BlockRenderer: React.ComponentType<IBlockRendererProps>
     hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
     isMobile: boolean
+    platform: TSubscriptionPagePlatformKey | undefined
 }
 
 export const InstallationGuideConnector = (props: IProps) => {
-    const { isMobile, hasPlatformApps, BlockRenderer } = props
+    const { isMobile, hasPlatformApps, BlockRenderer, platform } = props
 
     const { t, currentLang, baseTranslations } = useTranslation()
+
     const { platforms, svgLibrary } = useAppConfig()
     const subscription = useSubscription()
 
-    const os = useOs()
-
-    const [selectedPlatform, setSelectedPlatform] =
-        useState<TSubscriptionPagePlatformKey>('windows')
-    const [selectedAppName, setSelectedAppName] = useState<string>('')
-
-    useLayoutEffect(() => {
-        const osToplatform: Record<string, TSubscriptionPagePlatformKey> = {
-            android: 'android',
-            ios: 'ios',
-            linux: 'linux',
-            macos: 'macos',
-            windows: 'windows'
-        }
-
-        const preferredPlatform = osToplatform[os] ?? 'windows'
-
-        if (hasPlatformApps[preferredPlatform]) {
-            setSelectedPlatform(preferredPlatform)
-            return
+    const [selectedAppIndex, setSelectedAppIndex] = useState(0)
+    const [selectedPlatform, setSelectedPlatform] = useState<TSubscriptionPagePlatformKey>(() => {
+        if (platform && hasPlatformApps[platform]) {
+            return platform
         }
 
         const firstAvailable = (
             Object.keys(hasPlatformApps) as TSubscriptionPagePlatformKey[]
         ).find((key) => hasPlatformApps[key])
+        return firstAvailable!
+    })
 
-        if (firstAvailable) {
-            setSelectedPlatform(firstAvailable)
-        }
-    }, [os, hasPlatformApps])
+    const platformApps = platforms[selectedPlatform]!.apps
+    const selectedApp = platformApps[selectedAppIndex] ?? platformApps[0]
 
-    const platformApps = useMemo((): TSubscriptionPageAppConfig[] => {
-        const platformConfig = platforms[selectedPlatform]
-        if (!platformConfig) return []
-        return platformConfig.apps
-    }, [platforms, selectedPlatform])
-
-    useEffect(() => {
-        if (platformApps.length > 0) {
-            setSelectedAppName(platformApps[0].name)
-        }
-    }, [selectedPlatform, platformApps])
-
-    const selectedApp = useMemo(() => {
-        if (!selectedAppName) return platformApps[0] ?? null
-        return platformApps.find((app) => app.name === selectedAppName) ?? platformApps[0] ?? null
-    }, [selectedAppName, platformApps])
-
-    const availablePlatforms = useMemo(
-        () =>
-            (Object.entries(hasPlatformApps) as [TSubscriptionPagePlatformKey, boolean][])
-                .filter(([_, hasApps]) => hasApps)
-                .map(([platform]) => {
-                    const platformConfig = platforms[platform]!
-                    return {
-                        value: platform,
-                        label: t(platformConfig.displayName),
-                        icon: getIconFromLibrary(platformConfig.svgIconKey, svgLibrary)
-                    }
-                }),
-        [hasPlatformApps, platforms, currentLang, svgLibrary, t]
+    const availablePlatforms = (
+        Object.entries(hasPlatformApps) as [TSubscriptionPagePlatformKey, boolean][]
     )
+        .filter(([_, hasApps]) => hasApps)
+        .map(([platform]) => {
+            const platformConfig = platforms[platform]!
+            return {
+                value: platform,
+                label: t(platformConfig.displayName),
+                icon: getIconFromLibrary(platformConfig.svgIconKey, svgLibrary)
+            }
+        })
 
     const subscriptionUrl = constructSubscriptionUrl(
         window.location.href,
@@ -179,7 +145,8 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 vibrate([80])
                                 const value = event.target
                                     .value as unknown as TSubscriptionPagePlatformKey
-                                setSelectedPlatform(value || 'windows')
+                                setSelectedPlatform(value)
+                                setSelectedAppIndex(0)
                             }}
                             radius="md"
                             size="sm"
@@ -192,8 +159,8 @@ export const InstallationGuideConnector = (props: IProps) => {
                 {platformApps.length > 0 && (
                     <Box>
                         <Group gap="xs" mb="md">
-                            {platformApps.map((app: TSubscriptionPageAppConfig) => {
-                                const isActive = app.name === selectedAppName
+                            {platformApps.map((app: TSubscriptionPageAppConfig, index: number) => {
+                                const isActive = index === selectedAppIndex
                                 return (
                                     <Button
                                         className={
@@ -208,7 +175,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                                         }
                                         onClick={() => {
                                             vibrate('toggle')
-                                            setSelectedAppName(app.name)
+                                            setSelectedAppIndex(index)
                                         }}
                                         radius="md"
                                         size="sm"

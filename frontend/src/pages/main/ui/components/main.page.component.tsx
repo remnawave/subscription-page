@@ -1,6 +1,5 @@
 import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
 import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
-import { useMemo } from 'react'
 
 import {
     AccordionBlockRenderer,
@@ -20,6 +19,7 @@ import { Page, RemnawaveLogo } from '@shared/ui'
 
 interface IMainPageComponentProps {
     isMobile: boolean
+    platform: TSubscriptionPagePlatformKey | undefined
 }
 
 const BLOCK_RENDERERS = {
@@ -36,7 +36,7 @@ const SUBSCRIPTION_INFO_BLOCK_RENDERERS = {
     hidden: null
 } as const
 
-export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
+export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProps) => {
     const config = useAppConfig()
     const currentLang = useCurrentLang()
     const { setLanguage } = useAppConfigStoreActions()
@@ -50,18 +50,17 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
         }
     }
 
-    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = useMemo(
-        () => ({
-            ios: Boolean(config.platforms.ios?.apps.length),
-            android: Boolean(config.platforms.android?.apps.length),
-            linux: Boolean(config.platforms.linux?.apps.length),
-            macos: Boolean(config.platforms.macos?.apps.length),
-            windows: Boolean(config.platforms.windows?.apps.length),
-            androidTV: Boolean(config.platforms.androidTV?.apps.length),
-            appleTV: Boolean(config.platforms.appleTV?.apps.length)
-        }),
-        [config]
-    )
+    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
+        ios: Boolean(config.platforms.ios?.apps.length),
+        android: Boolean(config.platforms.android?.apps.length),
+        linux: Boolean(config.platforms.linux?.apps.length),
+        macos: Boolean(config.platforms.macos?.apps.length),
+        windows: Boolean(config.platforms.windows?.apps.length),
+        androidTV: Boolean(config.platforms.androidTV?.apps.length),
+        appleTV: Boolean(config.platforms.appleTV?.apps.length)
+    }
+
+    const atLeastOnePlatformApp = Object.values(hasPlatformApps).some((value) => value)
 
     const SubscriptionInfoBlockRenderer =
         SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfoBlockType]
@@ -114,11 +113,16 @@ export const MainPageComponent = ({ isMobile }: IMainPageComponentProps) => {
                         <SubscriptionInfoBlockRenderer isMobile={isMobile} />
                     )}
 
-                    <InstallationGuideConnector
-                        BlockRenderer={BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]}
-                        hasPlatformApps={hasPlatformApps}
-                        isMobile={isMobile}
-                    />
+                    {atLeastOnePlatformApp && (
+                        <InstallationGuideConnector
+                            BlockRenderer={
+                                BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]
+                            }
+                            hasPlatformApps={hasPlatformApps}
+                            isMobile={isMobile}
+                            platform={platform}
+                        />
+                    )}
 
                     <RawKeysWidget isMobile={isMobile} />
 

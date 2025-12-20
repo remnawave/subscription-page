@@ -195,6 +195,16 @@ export class AxiosService implements OnModuleInit {
                 response: response.data.response,
             };
         } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.response?.status === 404) {
+                    this.logger.error('Request failed with 404 status code.');
+                    this.logger.error(
+                        'This version of Subscription Page requires Remnawave Panel version >=2.4.0. Please upgrade Remnawave Panel to the latest version or downgrade Subscription Page.',
+                    );
+                    return { isOk: false };
+                }
+            }
+
             this.logger.error('Error in GetSubscriptionPageConfigList Request:', error);
 
             return { isOk: false };

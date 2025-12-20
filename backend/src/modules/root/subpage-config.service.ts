@@ -106,33 +106,18 @@ export class SubpageConfigService implements OnApplicationBootstrap {
     }
 
     public getEncryptedSubpageConfigUuid(subpageConfigUuidFromRemnawave: string | null): string {
-        let uuidToEncrypt: string;
-
-        const isDefaultUuid = this.subpageConfigUuid === SUBPAGE_DEFAULT_CONFIG_UUID;
-
-        if (isDefaultUuid && subpageConfigUuidFromRemnawave) {
-            uuidToEncrypt = subpageConfigUuidFromRemnawave;
-        } else {
-            uuidToEncrypt = this.subpageConfigUuid;
-        }
-
-        return encryptUuid(uuidToEncrypt, this.internalJwtSecret);
+        return encryptUuid(
+            this.getFinalSubpageConfigUuid(subpageConfigUuidFromRemnawave),
+            this.internalJwtSecret,
+        );
     }
 
     public getBaseSettings(
         subpageConfigUuid: string | null,
     ): TSubscriptionPageRawConfig['baseSettings'] {
-        let finalSubpageConfigUuid: string;
-
-        const isDefaultUuid = this.subpageConfigUuid === SUBPAGE_DEFAULT_CONFIG_UUID;
-
-        if (isDefaultUuid && subpageConfigUuid) {
-            finalSubpageConfigUuid = subpageConfigUuid;
-        } else {
-            finalSubpageConfigUuid = this.subpageConfigUuid;
-        }
-
-        const subpageConfig = this.subpageConfigMap.get(finalSubpageConfigUuid);
+        const subpageConfig = this.subpageConfigMap.get(
+            this.getFinalSubpageConfigUuid(subpageConfigUuid),
+        );
 
         if (!subpageConfig) {
             return {
@@ -147,5 +132,19 @@ export class SubpageConfigService implements OnApplicationBootstrap {
             metaDescription: subpageConfig.baseSettings.metaDescription,
             showConnectionKeys: subpageConfig.baseSettings.showConnectionKeys,
         };
+    }
+
+    private getFinalSubpageConfigUuid(subpageConfigUuid: string | null): string {
+        let finalSubpageConfigUuid: string;
+
+        const isDefaultUuid = this.subpageConfigUuid === SUBPAGE_DEFAULT_CONFIG_UUID;
+
+        if (isDefaultUuid && subpageConfigUuid) {
+            finalSubpageConfigUuid = subpageConfigUuid;
+        } else {
+            finalSubpageConfigUuid = this.subpageConfigUuid;
+        }
+
+        return finalSubpageConfigUuid;
     }
 }

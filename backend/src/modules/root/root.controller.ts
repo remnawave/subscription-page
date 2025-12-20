@@ -6,6 +6,7 @@ import {
     REQUEST_TEMPLATE_TYPE_VALUES,
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
+import { APP_CONFIG_ROUTE_WO_LEADING_PATH } from '@remnawave/subscription-page-types';
 
 import { GetJWTPayload } from '@common/decorators/get-jwt-payload';
 import { ClientIp } from '@common/decorators/get-ip';
@@ -13,7 +14,6 @@ import { IJwtPayload } from '@common/constants';
 
 import { SubpageConfigService } from './subpage-config.service';
 import { RootService } from './root.service';
-import { APP_CONFIG_ROUTE_WO_LEADING_PATH } from '@remnawave/subscription-page-types';
 
 @Controller()
 export class RootController {

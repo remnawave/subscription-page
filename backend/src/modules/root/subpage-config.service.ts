@@ -8,6 +8,7 @@ import { Logger } from '@nestjs/common';
 import {
     SubscriptionPageRawConfigSchema,
     TSubscriptionPageRawConfig,
+    SUBPAGE_DEFAULT_CONFIG_UUID,
 } from '@remnawave/subscription-page-types';
 
 import { decryptUuid, encryptUuid } from '@common/utils/crypt-utils';
@@ -107,7 +108,7 @@ export class SubpageConfigService implements OnApplicationBootstrap {
     public getEncryptedSubpageConfigUuid(subpageConfigUuidFromRemnawave: string | null): string {
         let uuidToEncrypt: string;
 
-        const isDefaultUuid = this.subpageConfigUuid === '00000000-0000-0000-0000-000000000000';
+        const isDefaultUuid = this.subpageConfigUuid === SUBPAGE_DEFAULT_CONFIG_UUID;
 
         if (isDefaultUuid && subpageConfigUuidFromRemnawave) {
             uuidToEncrypt = subpageConfigUuidFromRemnawave;
@@ -116,5 +117,27 @@ export class SubpageConfigService implements OnApplicationBootstrap {
         }
 
         return encryptUuid(uuidToEncrypt, this.internalJwtSecret);
+    }
+
+    public getBaseSettings(
+        subpageConfigUuid: string | null,
+    ): TSubscriptionPageRawConfig['baseSettings'] {
+        const subpageConfig = this.subpageConfigMap.get(
+            subpageConfigUuid || SUBPAGE_DEFAULT_CONFIG_UUID,
+        );
+
+        if (!subpageConfig) {
+            return {
+                metaTitle: 'Subscription Page',
+                metaDescription: 'Subscription Page',
+                showConnectionKeys: false,
+            };
+        }
+
+        return {
+            metaTitle: subpageConfig.baseSettings.metaTitle,
+            metaDescription: subpageConfig.baseSettings.metaDescription,
+            showConnectionKeys: subpageConfig.baseSettings.showConnectionKeys,
+        };
     }
 }

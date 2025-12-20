@@ -16,29 +16,18 @@ export const configSchema = z
             .min(1, REQUIRED_REMNAWAVE_API_TOKEN_MESSAGE),
 
         SUBPAGE_CONFIG_UUID: z.string().default('00000000-0000-0000-0000-000000000000'),
+        CUSTOM_SUB_PREFIX: z.optional(z.string()),
+
+        CADDY_AUTH_API_TOKEN: z.optional(z.string()),
+        CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.optional(z.string()),
+        CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.optional(z.string()),
 
         MARZBAN_LEGACY_LINK_ENABLED: z
             .string()
             .default('false')
             .transform((val) => val === 'true'),
         MARZBAN_LEGACY_SECRET_KEY: z.optional(z.string()),
-
         MARZBAN_LEGACY_SUBSCRIPTION_VALID_FROM: z.optional(z.string()),
-
-        CUSTOM_SUB_PREFIX: z.optional(z.string()),
-
-        CADDY_AUTH_API_TOKEN: z.optional(z.string()),
-
-        META_TITLE: z.string(),
-        META_DESCRIPTION: z.string(),
-
-        CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.optional(z.string()),
-        CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.optional(z.string()),
-
-        SUBSCRIPTION_UI_DISPLAY_RAW_KEYS: z
-            .string()
-            .default('false')
-            .transform((val) => val === 'true'),
     })
     .superRefine((data, ctx) => {
         if (

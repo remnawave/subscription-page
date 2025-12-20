@@ -22,7 +22,6 @@ export class RootService {
 
     private readonly isMarzbanLegacyLinkEnabled: boolean;
     private readonly marzbanSecretKey?: string;
-    private readonly subscriptionUiDisplayRawKeys: boolean;
 
     constructor(
         private readonly configService: ConfigService,
@@ -34,9 +33,6 @@ export class RootService {
             'MARZBAN_LEGACY_LINK_ENABLED',
         );
         this.marzbanSecretKey = this.configService.get<string>('MARZBAN_LEGACY_SECRET_KEY');
-        this.subscriptionUiDisplayRawKeys = this.configService.getOrThrow<boolean>(
-            'SUBSCRIPTION_UI_DISPLAY_RAW_KEYS',
-        );
     }
 
     public async serveSubscriptionPage(
@@ -203,9 +199,13 @@ export class RootService {
                 return;
             }
 
+            const baseSettings = this.subpageConfigService.getBaseSettings(
+                subpageConfig.subpageConfigUuid,
+            );
+
             const subscriptionData = subscriptionDataResponse.response;
 
-            if (!this.subscriptionUiDisplayRawKeys) {
+            if (!baseSettings.showConnectionKeys) {
                 subscriptionData.response.links = [];
                 subscriptionData.response.ssConfLinks = {};
             }
@@ -217,12 +217,8 @@ export class RootService {
             });
 
             res.render('index', {
-                metaTitle: this.configService
-                    .getOrThrow<string>('META_TITLE')
-                    .replace(/^"|"$/g, ''),
-                metaDescription: this.configService
-                    .getOrThrow<string>('META_DESCRIPTION')
-                    .replace(/^"|"$/g, ''),
+                metaTitle: baseSettings.metaTitle,
+                metaDescription: baseSettings.metaDescription,
                 panelData: Buffer.from(JSON.stringify(subscriptionData)).toString('base64'),
             });
         } catch (error) {

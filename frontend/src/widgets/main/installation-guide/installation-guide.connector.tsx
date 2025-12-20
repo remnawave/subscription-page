@@ -4,7 +4,9 @@ import {
     TSubscriptionPagePlatformKey
 } from '@remnawave/subscription-page-types'
 import { Box, Button, ButtonVariant, Card, Group, NativeSelect, Stack, Title } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 import { IconStar } from '@tabler/icons-react'
+import { useClipboard } from '@mantine/hooks'
 import { useState } from 'react'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
@@ -33,6 +35,7 @@ export const InstallationGuideConnector = (props: IProps) => {
     const { t, currentLang, baseTranslations } = useTranslation()
 
     const { platforms, svgLibrary } = useAppConfig()
+    const { copy } = useClipboard({ timeout: 2_000 })
     const subscription = useSubscription()
 
     const [selectedAppIndex, setSelectedAppIndex] = useState(0)
@@ -69,14 +72,39 @@ export const InstallationGuideConnector = (props: IProps) => {
     )
 
     const handleButtonClick = (button: TSubscriptionPageButtonConfig) => {
-        if (button.type === 'subscriptionLink') {
-            const formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
+        let formattedUrl: string | undefined
+
+        if (button.type === 'subscriptionLink' || button.type === 'copyButton') {
+            formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
                 username: subscription.user.username,
                 subscriptionUrl
             })
-            window.open(formattedUrl, '_blank')
-        } else if (button.type === 'external') {
-            window.open(button.link, '_blank')
+        }
+
+        switch (button.type) {
+            case 'copyButton': {
+                if (!formattedUrl) return
+
+                copy(formattedUrl)
+                notifications.show({
+                    title: t(baseTranslations.linkCopied),
+                    message: t(baseTranslations.linkCopiedToClipboard),
+                    color: 'cyan'
+                })
+                break
+            }
+            case 'external': {
+                window.open(button.link, '_blank')
+                break
+            }
+            case 'subscriptionLink': {
+                if (!formattedUrl) return
+
+                window.open(formattedUrl, '_blank')
+                break
+            }
+            default:
+                break
         }
     }
 

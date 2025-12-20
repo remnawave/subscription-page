@@ -102,10 +102,12 @@ export class AxiosService implements OnModuleInit {
         error?: unknown;
     }> {
         try {
-            await this.axiosInstance.request<GetStatusCommand.Response>({
+            const response = await this.axiosInstance.request<GetStatusCommand.Response>({
                 method: GetStatusCommand.endpointDetails.REQUEST_METHOD,
                 url: GetStatusCommand.TSQ_url,
             });
+
+            await GetStatusCommand.ResponseSchema.parseAsync(response.data);
 
             return {
                 isOk: true,
@@ -190,9 +192,12 @@ export class AxiosService implements OnModuleInit {
                     url: GetSubscriptionPageConfigsCommand.url,
                 });
 
+            const validationResult =
+                await GetSubscriptionPageConfigsCommand.ResponseSchema.parseAsync(response.data);
+
             return {
                 isOk: true,
-                response: response.data.response,
+                response: validationResult.response,
             };
         } catch (error) {
             if (error instanceof AxiosError) {

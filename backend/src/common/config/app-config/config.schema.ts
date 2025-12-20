@@ -28,6 +28,7 @@ export const configSchema = z
             .transform((val) => val === 'true'),
         MARZBAN_LEGACY_SECRET_KEY: z.optional(z.string()),
         MARZBAN_LEGACY_SUBSCRIPTION_VALID_FROM: z.optional(z.string()),
+        INTERNAL_JWT_SECRET: z.string(),
     })
     .superRefine((data, ctx) => {
         if (

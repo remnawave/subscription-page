@@ -122,9 +122,17 @@ export class SubpageConfigService implements OnApplicationBootstrap {
     public getBaseSettings(
         subpageConfigUuid: string | null,
     ): TSubscriptionPageRawConfig['baseSettings'] {
-        const subpageConfig = this.subpageConfigMap.get(
-            subpageConfigUuid || SUBPAGE_DEFAULT_CONFIG_UUID,
-        );
+        let finalSubpageConfigUuid: string;
+
+        const isDefaultUuid = this.subpageConfigUuid === SUBPAGE_DEFAULT_CONFIG_UUID;
+
+        if (isDefaultUuid && subpageConfigUuid) {
+            finalSubpageConfigUuid = subpageConfigUuid;
+        } else {
+            finalSubpageConfigUuid = this.subpageConfigUuid;
+        }
+
+        const subpageConfig = this.subpageConfigMap.get(finalSubpageConfigUuid);
 
         if (!subpageConfig) {
             return {

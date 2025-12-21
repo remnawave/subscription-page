@@ -77,10 +77,9 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
                                     fit="contain"
                                     src={config.brandingSettings.logoUrl}
                                     style={{
-                                        maxWidth: '32px',
-                                        maxHeight: '32px',
-                                        width: 'auto',
-                                        height: 'auto'
+                                        width: '32px',
+                                        height: '32px',
+                                        flexShrink: 0
                                     }}
                                 />
                             ) : (

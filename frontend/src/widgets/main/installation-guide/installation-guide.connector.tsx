@@ -3,11 +3,21 @@ import {
     TSubscriptionPageButtonConfig,
     TSubscriptionPagePlatformKey
 } from '@remnawave/subscription-page-types'
-import { Box, Button, ButtonVariant, Card, Group, NativeSelect, Stack, Title } from '@mantine/core'
+import {
+    Box,
+    Button,
+    ButtonVariant,
+    Card,
+    Group,
+    NativeSelect,
+    Stack,
+    Title,
+    UnstyledButton
+} from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconStar } from '@tabler/icons-react'
 import { useClipboard } from '@mantine/hooks'
 import { useState } from 'react'
+import clsx from 'clsx'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
 import { useSubscription } from '@entities/subscription-info-store'
@@ -186,34 +196,44 @@ export const InstallationGuideConnector = (props: IProps) => {
 
                 {platformApps.length > 0 && (
                     <Box>
-                        <Group gap="xs" mb="md">
+                        <div className={classes.appsGrid}>
                             {platformApps.map((app: TSubscriptionPageAppConfig, index: number) => {
                                 const isActive = index === selectedAppIndex
+                                const hasIcon = Boolean(app.svgIconKey)
+
                                 return (
-                                    <Button
-                                        className={
-                                            isActive ? classes.appButtonActive : classes.appButton
-                                        }
-                                        color={isActive ? 'cyan' : 'gray'}
+                                    <UnstyledButton
+                                        className={clsx(
+                                            classes.appButton,
+                                            isActive && classes.appButtonActive,
+                                            app.featured && classes.appButtonFeatured
+                                        )}
                                         key={app.name}
-                                        leftSection={
-                                            app.featured ? (
-                                                <IconStar color="gold" size={16} />
-                                            ) : undefined
-                                        }
                                         onClick={() => {
                                             vibrate('toggle')
                                             setSelectedAppIndex(index)
                                         }}
-                                        radius="md"
-                                        size="sm"
-                                        variant={isActive ? 'outline' : 'subtle'}
                                     >
-                                        {app.name}
-                                    </Button>
+                                        {app.featured && <span className={classes.featuredBadge} />}
+                                        {hasIcon && (
+                                            <span
+                                                className={clsx(
+                                                    classes.bgIcon,
+                                                    isActive && classes.bgIconActive
+                                                )}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: getIconFromLibrary(
+                                                        app.svgIconKey!,
+                                                        svgLibrary
+                                                    )
+                                                }}
+                                            />
+                                        )}
+                                        <span className={classes.appName}>{app.name}</span>
+                                    </UnstyledButton>
                                 )
                             })}
-                        </Group>
+                        </div>
 
                         {selectedApp && (
                             <BlockRenderer

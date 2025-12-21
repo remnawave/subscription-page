@@ -108,15 +108,15 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: IProps) => {
                             color="var(--mantine-color-dimmed)"
                             size={18}
                             style={{
-                                transition: 'transform 200ms ease',
-                                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                transition: 'transform 150ms ease'
                             }}
                         />
                     </Group>
                 </Group>
             </UnstyledButton>
 
-            <Collapse in={isExpanded}>
+            <Collapse in={isExpanded} keepMounted>
                 <Stack gap="xs" pb={{ base: 'xs', sm: 'sm' }} px={{ base: 'xs', sm: 'sm' }}>
                     <SimpleGrid cols={2} spacing="xs" verticalSpacing="xs">
                         <InfoBlockShared

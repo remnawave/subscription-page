@@ -121,7 +121,7 @@ export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
     }
 
     return (
-        <Group gap="xs">
+        <Group gap="xs" ml="auto" wrap="nowrap">
             <ActionIcon
                 className={classes.actionIcon}
                 onClick={handleGetLink}

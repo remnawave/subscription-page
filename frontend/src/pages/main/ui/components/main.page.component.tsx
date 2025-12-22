@@ -1,4 +1,4 @@
-import { Box, Center, Container, Group, Image, Stack, Text, Title } from '@mantine/core'
+import { Box, Center, Container, Group, Image, Stack, Title } from '@mantine/core'
 import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
 
 import {
@@ -69,7 +69,7 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
         <Page>
             <Box className="header-wrapper" py="md">
                 <Container maw={1200} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
-                    <Group justify="space-between" wrap="nowrap">
+                    <Group justify="space-between">
                         <Group gap="sm" style={{ userSelect: 'none' }} wrap="nowrap">
                             {hasCustomLogo ? (
                                 <Image
@@ -77,27 +77,25 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
                                     fit="contain"
                                     src={config.brandingSettings.logoUrl}
                                     style={{
-                                        maxWidth: '32px',
-                                        maxHeight: '32px',
-                                        width: 'auto',
-                                        height: 'auto'
+                                        width: '32px',
+                                        height: '32px',
+                                        flexShrink: 0
                                     }}
                                 />
                             ) : (
                                 <RemnawaveLogo c="cyan" size={32} />
                             )}
-                            <Title fw={700} order={4} size="lg">
-                                <Text c={hasCustomLogo ? 'white' : 'cyan'} component="span" inherit>
-                                    {brandName}
-                                </Text>
+                            <Title
+                                c={hasCustomLogo ? 'white' : 'cyan'}
+                                fw={700}
+                                order={4}
+                                size="lg"
+                            >
+                                {brandName}
                             </Title>
                         </Group>
 
-                        <Group gap="xs">
-                            <SubscriptionLinkWidget
-                                supportUrl={config.brandingSettings.supportUrl}
-                            />
-                        </Group>
+                        <SubscriptionLinkWidget supportUrl={config.brandingSettings.supportUrl} />
                     </Group>
                 </Container>
             </Box>

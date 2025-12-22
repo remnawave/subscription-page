@@ -102,10 +102,12 @@ export class AxiosService implements OnModuleInit {
         error?: unknown;
     }> {
         try {
-            await this.axiosInstance.request<GetStatusCommand.Response>({
+            const response = await this.axiosInstance.request<GetStatusCommand.Response>({
                 method: GetStatusCommand.endpointDetails.REQUEST_METHOD,
                 url: GetStatusCommand.TSQ_url,
             });
+
+            await GetStatusCommand.ResponseSchema.parseAsync(response.data);
 
             return {
                 isOk: true,
@@ -190,9 +192,12 @@ export class AxiosService implements OnModuleInit {
                     url: GetSubscriptionPageConfigsCommand.url,
                 });
 
+            const validationResult =
+                await GetSubscriptionPageConfigsCommand.ResponseSchema.parseAsync(response.data);
+
             return {
                 isOk: true,
-                response: response.data.response,
+                response: validationResult.response,
             };
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -203,11 +208,13 @@ export class AxiosService implements OnModuleInit {
                     );
                     return { isOk: false };
                 }
+
+                this.logger.error(`Subpage Config List Request failed: ${error.message}`);
+                return { isOk: false };
+            } else {
+                this.logger.error(`Subpage Config List Request failed: ${error}`);
+                return { isOk: false };
             }
-
-            this.logger.error('Error in GetSubscriptionPageConfigList Request:', error);
-
-            return { isOk: false };
         }
     }
 

@@ -2,25 +2,31 @@ import {
     IconBrandDiscord,
     IconBrandTelegram,
     IconBrandVk,
+    IconCopy,
     IconLink,
     IconMessageChatbot
 } from '@tabler/icons-react'
 import { ActionIcon, Button, Group, Image, Stack, Text } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { useTranslation } from 'react-i18next'
 import { useClipboard } from '@mantine/hooks'
 import { modals } from '@mantine/modals'
 import { renderSVG } from 'uqr'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
-import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
+import { useSubscription } from '@entities/subscription-info-store'
+import { vibrate } from '@shared/utils/vibrate'
+import { useTranslation } from '@shared/hooks'
 
-export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) => {
-    const { t } = useTranslation()
-    const { subscription } = useSubscriptionInfoStoreInfo()
+import classes from './subscription-link.module.css'
+
+interface IProps {
+    supportUrl: string
+}
+
+export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
+    const { t, baseTranslations } = useTranslation()
+    const subscription = useSubscription()
     const clipboard = useClipboard({ timeout: 10000 })
-
-    if (!subscription) return null
 
     const subscriptionUrl = constructSubscriptionUrl(
         window.location.href,
@@ -29,9 +35,9 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
 
     const handleCopy = () => {
         notifications.show({
-            title: t('subscription-link.widget.link-copied'),
-            message: t('subscription-link.widget.link-copied-to-clipboard'),
-            color: 'teal'
+            title: t(baseTranslations.linkCopied),
+            message: t(baseTranslations.linkCopiedToClipboard),
+            color: 'cyan'
         })
         clipboard.copy(subscriptionUrl)
     }
@@ -49,15 +55,20 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
 
         const { icon: Icon, color } = matchedPlatform
             ? matchedPlatform[1]
-            : { icon: IconMessageChatbot, color: 'teal' }
+            : { icon: IconMessageChatbot, color: 'cyan' }
 
         return (
             <ActionIcon
                 c={color}
                 component="a"
                 href={supportUrl}
+                radius="md"
                 rel="noopener noreferrer"
                 size="xl"
+                style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}
                 target="_blank"
                 variant="default"
             >
@@ -66,45 +77,62 @@ export const SubscriptionLinkWidget = ({ supportUrl }: { supportUrl?: string }) 
         )
     }
 
+    const handleGetLink = () => {
+        vibrate('tap')
+
+        const subscriptionQrCode = renderSVG(subscriptionUrl, {
+            whiteColor: '#161B22',
+            blackColor: '#22d3ee'
+        })
+
+        modals.open({
+            centered: true,
+            title: t(baseTranslations.getLink),
+            classNames: {
+                content: classes.modalContent,
+                header: classes.modalHeader,
+                title: classes.modalTitle
+            },
+            children: (
+                <Stack align="center">
+                    <Image
+                        src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
+                        style={{ borderRadius: 'var(--mantine-radius-md)' }}
+                    />
+                    <Text c="white" fw={600} size="lg" ta="center">
+                        {t(baseTranslations.scanQrCode)}
+                    </Text>
+                    <Text c="dimmed" size="sm" ta="center">
+                        {t(baseTranslations.scanQrCodeDescription)}
+                    </Text>
+
+                    <Button
+                        fullWidth
+                        leftSection={<IconCopy />}
+                        onClick={handleCopy}
+                        radius="md"
+                        variant="light"
+                    >
+                        {t(baseTranslations.copyLink)}
+                    </Button>
+                </Stack>
+            )
+        })
+    }
+
     return (
-        <Group gap="xs">
+        <Group gap="xs" ml="auto" wrap="nowrap">
             <ActionIcon
-                onClick={() => {
-                    const subscriptionQrCode = renderSVG(subscriptionUrl, {
-                        whiteColor: '#161B22',
-                        blackColor: '#3CC9DB'
-                    })
-
-                    modals.open({
-                        centered: true,
-                        title: t('subscription-link.widget.get-link'),
-                        children: (
-                            <>
-                                <Stack align="center">
-                                    <Image
-                                        src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
-                                    />
-                                    <Text fw={600} size="lg" ta="center">
-                                        {t('subscription-link.widget.scan-qr-code')}
-                                    </Text>
-                                    <Text c="dimmed" size="sm" ta="center">
-                                        {t('subscription-link.widget.line-1')}
-                                    </Text>
-
-                                    <Button fullWidth onClick={handleCopy} variant="filled">
-                                        {t('subscription-link.widget.copy-link')}
-                                    </Button>
-                                </Stack>
-                            </>
-                        )
-                    })
-                }}
+                className={classes.actionIcon}
+                onClick={handleGetLink}
+                radius="md"
                 size="xl"
                 variant="default"
             >
                 <IconLink />
             </ActionIcon>
-            {supportUrl && renderSupportLink(supportUrl)}
+
+            {supportUrl !== '' && renderSupportLink(supportUrl)}
         </Group>
     )
 }

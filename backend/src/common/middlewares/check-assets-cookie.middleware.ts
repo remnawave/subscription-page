@@ -3,9 +3,15 @@ import * as jwt from 'jsonwebtoken';
 
 import { Logger } from '@nestjs/common';
 
+import { IJwtPayload } from '@common/constants';
+
 const logger = new Logger('CheckAssetsCookieMiddleware');
 
-export function checkAssetsCookieMiddleware(req: Request, res: Response, next: NextFunction) {
+export function checkAssetsCookieMiddleware(
+    req: { user: IJwtPayload } & Request,
+    res: Response,
+    next: NextFunction,
+) {
     if (req.path.startsWith('/assets') || req.path.startsWith('/locales')) {
         const secret = process.env.INTERNAL_JWT_SECRET;
 
@@ -24,7 +30,9 @@ export function checkAssetsCookieMiddleware(req: Request, res: Response, next: N
         }
 
         try {
-            jwt.verify(req.cookies.session, secret);
+            const jwtPayload = jwt.verify(req.cookies.session, secret);
+
+            req.user = jwtPayload as unknown as IJwtPayload;
         } catch (error) {
             logger.debug(error);
             res.socket?.destroy();

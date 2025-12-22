@@ -1,0 +1,110 @@
+.appsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: var(--mantine-spacing-md);
+}
+
+.appButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    padding: 0 48px 0 16px;
+    height: 48px;
+    min-width: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 3px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--mantine-radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.appButton:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(255, 255, 255, 0.25);
+}
+
+.appButton:hover .bgIcon {
+    opacity: 0.3;
+}
+
+.appButtonActive,
+.appButtonActive:hover {
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0.12) 0%, rgba(34, 211, 238, 0.04) 100%);
+    border-color: rgba(34, 211, 238, 0.2);
+    border-left-color: var(--mantine-color-cyan-5);
+    box-shadow:
+        inset 4px 0 12px -4px rgba(34, 211, 238, 0.3),
+        0 0 12px rgba(34, 211, 238, 0.1);
+}
+
+.appButtonActive .appName {
+    color: var(--mantine-color-cyan-3);
+}
+
+.appButtonActive .bgIcon,
+.appButtonActive:hover .bgIcon {
+    opacity: 0.25;
+}
+
+.bgIcon {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    opacity: 0.25;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    mask-image: linear-gradient(to right, transparent 0%, black 40%, black 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%, black 100%);
+}
+
+.bgIcon svg,
+.bgIcon svg path {
+    width: 100%;
+    height: 100%;
+}
+
+.bgIconActive {
+    opacity: 0.25;
+}
+
+.bgIconActive svg,
+.bgIconActive svg path {
+    width: 100%;
+    height: 100%;
+}
+
+.appName {
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: var(--mantine-font-size-md);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.featuredBadge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    opacity: 1;
+    z-index: 0;
+    border-radius: 50%;
+    background: #efbf04;
+
+    box-shadow: 0 0 6px rgba(239, 191, 4, 0.6);
+}
+
+.appButtonActive .featuredBadge {
+    opacity: 0.8;
+    box-shadow: 0 0 8px rgba(239, 191, 4, 0.4);
+}

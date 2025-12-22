@@ -1,90 +1,68 @@
-import { Button, Group, Menu, Text, useDirection } from '@mantine/core'
-import { IconChevronDown } from '@tabler/icons-react'
-import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { getLanguageInfo, TSubscriptionPageLanguageCode } from '@remnawave/subscription-page-types'
+import { ActionIcon, Menu, Text, useDirection } from '@mantine/core'
+import { IconLanguage } from '@tabler/icons-react'
+import { useEffect } from 'react'
 
-import { TEnabledLocales } from '@shared/constants/apps-config/interfaces/app-list.interface'
+import { vibrate } from '@shared/utils/vibrate'
 
-import classes from './LanguagePicker.module.css'
+interface IProps {
+    currentLang: TSubscriptionPageLanguageCode
+    locales: TSubscriptionPageLanguageCode[]
+    onLanguageChange: (lang: TSubscriptionPageLanguageCode) => void
+}
 
-const data = [
-    { label: 'English', emoji: '🇺🇸', value: 'en' },
-    { label: 'Русский', emoji: '🇷🇺', value: 'ru' },
-    { label: 'فارسی', emoji: '🇮🇷', value: 'fa' },
-    { label: '简体中文', emoji: '🇨🇳', value: 'zh' },
-    { label: 'Français', emoji: '🇫🇷', value: 'fr' }
-]
+export function LanguagePicker(props: IProps) {
+    const { locales, currentLang, onLanguageChange } = props
 
-export function LanguagePicker({ enabledLocales }: { enabledLocales: TEnabledLocales[] }) {
-    const [opened, setOpened] = useState(false)
-    const [selectedLanguage, setSelectedLanguage] = useState('en')
     const { toggleDirection, dir } = useDirection()
 
-    const filteredData = data.filter((item) =>
-        enabledLocales.includes(item.value as TEnabledLocales)
-    )
-
-    const { i18n } = useTranslation()
-
     useEffect(() => {
-        const savedLanguage = i18n.language
-
-        if (savedLanguage) {
-            if (savedLanguage === 'fa') {
-                if (dir === 'ltr') {
-                    toggleDirection()
-                }
-            }
-        }
-    }, [i18n])
-
-    useEffect(() => {
-        setSelectedLanguage(i18n.language)
-    }, [i18n])
-
-    const changeLanguage = (value: string) => {
-        i18n.changeLanguage(value)
-
-        if (value === 'fa' && dir === 'ltr') {
+        if (currentLang === 'fa' && dir === 'ltr') {
             toggleDirection()
         }
-
-        if (dir === 'rtl' && value !== 'fa') {
+        if (currentLang !== 'fa' && dir === 'rtl') {
             toggleDirection()
         }
+    }, [currentLang])
 
-        setSelectedLanguage(value)
+    const changeLanguage = (value: TSubscriptionPageLanguageCode) => {
+        onLanguageChange(value)
     }
 
-    const selected =
-        filteredData.find((item) => selectedLanguage.startsWith(item.value)) || filteredData[0]
+    const items = locales.map((item) => {
+        const localeInfo = getLanguageInfo(item)
+        if (!localeInfo) return null
+        return (
+            <Menu.Item
+                key={item}
+                leftSection={<Text>{localeInfo.emoji}</Text>}
+                onClick={() => {
+                    vibrate('doubleTap')
+                    changeLanguage(item)
+                }}
+            >
+                {localeInfo.nativeName}
+            </Menu.Item>
+        )
+    })
 
-    const items = filteredData.map((item) => (
-        <Menu.Item
-            key={item.value}
-            leftSection={<Text>{item.emoji}</Text>}
-            onClick={() => changeLanguage(item.value)}
-        >
-            {item.label}
-        </Menu.Item>
-    ))
+    if (locales.length === 1) return null
 
     return (
-        <Menu
-            onClose={() => setOpened(false)}
-            onOpen={() => setOpened(true)}
-            radius="md"
-            width="target"
-            withinPortal
-        >
+        <Menu position="bottom" width={150} withArrow={false} withinPortal>
             <Menu.Target>
-                <Button color="grape" data-expanded={opened || undefined}>
-                    <Group gap="xs">
-                        <Text>{selected.emoji}</Text>
-                        <span>{selected.label}</span>
-                        <IconChevronDown className={classes.icon} size={16} stroke={1.5} />
-                    </Group>
-                </Button>
+                <ActionIcon
+                    color="gray"
+                    radius="md"
+                    size="xl"
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}
+                    variant="default"
+                >
+                    <IconLanguage size={22} />
+                </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>{items}</Menu.Dropdown>
         </Menu>

@@ -1,0 +1,43 @@
+.modalContent {
+    background: rgba(22, 27, 35, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalHeader {
+    background: transparent;
+}
+
+.modalTitle {
+    font-weight: 600;
+    color: white;
+}
+
+.keyBox {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--mantine-radius-md);
+}
+
+.keyRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--mantine-spacing-xs);
+}
+
+.keyInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--mantine-spacing-xs);
+    min-width: 0;
+    overflow: hidden;
+}
+
+.keyName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}

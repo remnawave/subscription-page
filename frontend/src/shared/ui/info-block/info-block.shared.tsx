@@ -1,23 +1,25 @@
-import { Group, Paper, Text, ThemeIcon } from '@mantine/core'
+import { Box, Group, Stack, Text, ThemeIcon } from '@mantine/core'
+import clsx from 'clsx'
 
 import { IInfoBlockProps } from './interfaces/props.interface'
+import classes from './info-block.module.css'
 
-export const InfoBlockShared = (props: IInfoBlockProps) => {
-    const { color, icon, title, value } = props
-
+export const InfoBlockShared = ({ color, icon, title, value }: IInfoBlockProps) => {
     return (
-        <Paper p="xs" radius="lg">
-            <Group mb={4} wrap="nowrap">
-                <ThemeIcon color={color} size="md" variant="light">
-                    {icon}
-                </ThemeIcon>
-                <Text fw={500} size="md" truncate>
-                    {title}
+        <Box className={clsx(classes.infoBlock, classes[color] || classes.cyan)}>
+            <Stack gap={4}>
+                <Group gap={4} wrap="nowrap">
+                    <ThemeIcon color={color} radius="sm" size="xs" variant="light">
+                        {icon}
+                    </ThemeIcon>
+                    <Text c="dimmed" fw={500} size="xs" truncate>
+                        {title}
+                    </Text>
+                </Group>
+                <Text c="white" fw={600} size="sm" truncate>
+                    {value}
                 </Text>
-            </Group>
-            <Text c="dimmed" truncate>
-                {value}
-            </Text>
-        </Paper>
+            </Stack>
+        </Box>
     )
 }

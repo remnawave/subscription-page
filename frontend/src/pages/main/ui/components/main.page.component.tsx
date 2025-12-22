@@ -1,79 +1,138 @@
-import { Center, Container, Group, Image, Stack, Title } from '@mantine/core'
+import { Box, Center, Container, Group, Image, Stack, Title } from '@mantine/core'
+import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
 
 import {
-    ISubscriptionPageAppConfig,
-    TEnabledLocales
-} from '@shared/constants/apps-config/interfaces/app-list.interface'
+    AccordionBlockRenderer,
+    CardsBlockRenderer,
+    InstallationGuideConnector,
+    MinimalBlockRenderer,
+    RawKeysWidget,
+    SubscriptionInfoCardsWidget,
+    SubscriptionInfoCollapsedWidget,
+    SubscriptionInfoExpandedWidget,
+    SubscriptionLinkWidget,
+    TimelineBlockRenderer
+} from '@widgets/main'
+import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
+import { Page, RemnawaveLogo } from '@shared/ui'
 
-import { InstallationGuideWidget } from '../../../../widgets/main/installation-guide/installation-guide.widget'
-import { SubscriptionLinkWidget } from '../../../../widgets/main/subscription-link/subscription-link.widget'
-import { SubscriptionInfoWidget } from '../../../../widgets/main/subscription-info/subscription-info.widget'
+interface IMainPageComponentProps {
+    isMobile: boolean
+    platform: TSubscriptionPagePlatformKey | undefined
+}
 
-export const MainPageComponent = ({
-    subscriptionPageAppConfig
-}: {
-    subscriptionPageAppConfig: ISubscriptionPageAppConfig
-}) => {
-    let additionalLocales: TEnabledLocales[] = ['en', 'ru', 'fa', 'zh', 'fr']
+const BLOCK_RENDERERS = {
+    cards: CardsBlockRenderer,
+    timeline: TimelineBlockRenderer,
+    accordion: AccordionBlockRenderer,
+    minimal: MinimalBlockRenderer
+} as const
 
-    if (subscriptionPageAppConfig.config.additionalLocales !== undefined) {
-        additionalLocales = [
-            'en',
-            ...subscriptionPageAppConfig.config.additionalLocales.filter((locale) =>
-                ['fa', 'fr', 'ru', 'zh'].includes(locale)
-            )
-        ]
+const SUBSCRIPTION_INFO_BLOCK_RENDERERS = {
+    cards: SubscriptionInfoCardsWidget,
+    collapsed: SubscriptionInfoCollapsedWidget,
+    expanded: SubscriptionInfoExpandedWidget,
+    hidden: null
+} as const
+
+export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProps) => {
+    const config = useAppConfig()
+    const currentLang = useCurrentLang()
+    const { setLanguage } = useAppConfigStoreActions()
+
+    const brandName = config.brandingSettings.title
+    let hasCustomLogo = !!config.brandingSettings.logoUrl
+
+    if (hasCustomLogo) {
+        if (config.brandingSettings.logoUrl.includes('docs.rw')) {
+            hasCustomLogo = false
+        }
     }
 
+    const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
+        ios: Boolean(config.platforms.ios?.apps.length),
+        android: Boolean(config.platforms.android?.apps.length),
+        linux: Boolean(config.platforms.linux?.apps.length),
+        macos: Boolean(config.platforms.macos?.apps.length),
+        windows: Boolean(config.platforms.windows?.apps.length),
+        androidTV: Boolean(config.platforms.androidTV?.apps.length),
+        appleTV: Boolean(config.platforms.appleTV?.apps.length)
+    }
+
+    const atLeastOnePlatformApp = Object.values(hasPlatformApps).some((value) => value)
+
+    const SubscriptionInfoBlockRenderer =
+        SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfoBlockType]
+
     return (
-        <Container my="xl" size="xl">
-            <Stack gap="xl">
-                <Group justify="space-between">
-                    <Group
-                        gap="xs"
-                        style={{
-                            userSelect: 'none'
-                        }}
-                    >
-                        {subscriptionPageAppConfig.config.branding?.logoUrl && (
-                            <Image
-                                alt="logo"
-                                fit="contain"
-                                src={subscriptionPageAppConfig.config.branding.logoUrl}
-                                style={{
-                                    maxWidth: '36px',
-                                    maxHeight: '36px',
-                                    width: 'auto',
-                                    height: 'auto'
-                                }}
-                            />
-                        )}
+        <Page>
+            <Box className="header-wrapper" py="md">
+                <Container maw={1200} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
+                    <Group justify="space-between">
+                        <Group gap="sm" style={{ userSelect: 'none' }} wrap="nowrap">
+                            {hasCustomLogo ? (
+                                <Image
+                                    alt="logo"
+                                    fit="contain"
+                                    src={config.brandingSettings.logoUrl}
+                                    style={{
+                                        width: '32px',
+                                        height: '32px',
+                                        flexShrink: 0
+                                    }}
+                                />
+                            ) : (
+                                <RemnawaveLogo c="cyan" size={32} />
+                            )}
+                            <Title
+                                c={hasCustomLogo ? 'white' : 'cyan'}
+                                fw={700}
+                                order={4}
+                                size="lg"
+                            >
+                                {brandName}
+                            </Title>
+                        </Group>
 
-                        <Title order={4} size="md">
-                            {subscriptionPageAppConfig.config.branding?.name || 'Subscription'}
-                        </Title>
+                        <SubscriptionLinkWidget supportUrl={config.brandingSettings.supportUrl} />
                     </Group>
+                </Container>
+            </Box>
 
-                    <Group gap="xs">
-                        <SubscriptionLinkWidget
-                            supportUrl={subscriptionPageAppConfig.config.branding?.supportUrl}
-                        />
-                    </Group>
-                </Group>
-
+            <Container
+                maw={1200}
+                px={{ base: 'md', sm: 'lg', md: 'xl' }}
+                py="xl"
+                style={{ position: 'relative', zIndex: 1 }}
+            >
                 <Stack gap="xl">
-                    <SubscriptionInfoWidget />
-                    <InstallationGuideWidget
-                        appsConfig={subscriptionPageAppConfig.platforms}
-                        enabledLocales={additionalLocales}
-                    />
-                </Stack>
+                    {SubscriptionInfoBlockRenderer && (
+                        <SubscriptionInfoBlockRenderer isMobile={isMobile} />
+                    )}
 
-                <Center>
-                    <LanguagePicker enabledLocales={additionalLocales} />
-                </Center>
-            </Stack>
-        </Container>
+                    {atLeastOnePlatformApp && (
+                        <InstallationGuideConnector
+                            BlockRenderer={
+                                BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]
+                            }
+                            hasPlatformApps={hasPlatformApps}
+                            isMobile={isMobile}
+                            platform={platform}
+                        />
+                    )}
+
+                    <RawKeysWidget isMobile={isMobile} />
+
+                    <Center>
+                        <LanguagePicker
+                            currentLang={currentLang}
+                            locales={config.locales}
+                            onLanguageChange={setLanguage}
+                        />
+                    </Center>
+                </Stack>
+            </Container>
+        </Page>
     )
 }

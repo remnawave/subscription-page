@@ -141,3 +141,5 @@ docker-compose-local.yml
 
 /backend/.env
 .idea
+
+/frontend/public/assets/.app-config-v2.json

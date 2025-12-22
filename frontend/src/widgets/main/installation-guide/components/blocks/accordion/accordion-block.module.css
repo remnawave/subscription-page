@@ -1,0 +1,45 @@
+.accordionItem {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.accordionItem[data-active] {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(34, 211, 238, 0.3);
+}
+
+.accordionControl {
+    padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+    border-radius: var(--mantine-radius-lg);
+}
+
+.accordionControl:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--mantine-radius-lg);
+}
+
+.accordionChevron {
+    color: var(--mantine-color-dimmed);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+.accordionContent {
+    padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
+
+    will-change: height;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.accordionLabel {
+    padding: 0;
+}
+
+.stepBadge {
+    font-weight: 700;
+    font-size: 10px;
+    padding: 0 6px;
+    min-width: 20px;
+    height: 18px;
+}

@@ -1,0 +1,46 @@
+.infoBlock {
+    padding: var(--mantine-spacing-xs);
+    border-radius: var(--mantine-radius-md);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.blue {
+    background: linear-gradient(135deg, rgba(34, 139, 230, 0.1) 0%, rgba(28, 126, 214, 0.05) 100%);
+    border: 1px solid rgba(34, 139, 230, 0.2);
+}
+
+.cyan {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.green {
+    background: linear-gradient(135deg, rgba(64, 192, 87, 0.1) 0%, rgba(55, 178, 77, 0.05) 100%);
+    border: 1px solid rgba(64, 192, 87, 0.2);
+}
+
+.teal {
+    background: linear-gradient(135deg, rgba(32, 201, 151, 0.1) 0%, rgba(18, 184, 134, 0.05) 100%);
+    border: 1px solid rgba(32, 201, 151, 0.2);
+}
+
+.red {
+    background: linear-gradient(135deg, rgba(250, 82, 82, 0.1) 0%, rgba(224, 49, 49, 0.05) 100%);
+    border: 1px solid rgba(250, 82, 82, 0.2);
+}
+
+.yellow {
+    background: linear-gradient(135deg, rgba(250, 176, 5, 0.1) 0%, rgba(245, 159, 0, 0.05) 100%);
+    border: 1px solid rgba(250, 176, 5, 0.2);
+}
+
+.orange {
+    background: linear-gradient(135deg, rgba(253, 126, 20, 0.1) 0%, rgba(247, 103, 7, 0.05) 100%);
+    border: 1px solid rgba(253, 126, 20, 0.2);
+}
+
+.violet {
+    background: linear-gradient(135deg, rgba(151, 117, 250, 0.1) 0%, rgba(132, 94, 247, 0.05) 100%);
+    border: 1px solid rgba(151, 117, 250, 0.2);
+}

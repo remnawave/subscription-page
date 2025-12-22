@@ -1,9 +1,12 @@
+import type { IncomingHttpHeaders } from 'node:http';
+
 import axios, {
     AxiosError,
     AxiosInstance,
     AxiosResponseHeaders,
     RawAxiosResponseHeaders,
 } from 'axios';
+import { exit } from 'node:process';
 import { table } from 'table';
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
@@ -11,7 +14,10 @@ import { ConfigService } from '@nestjs/config';
 
 import {
     GetStatusCommand,
+    GetSubpageConfigByShortUuidCommand,
     GetSubscriptionInfoByShortUuidCommand,
+    GetSubscriptionPageConfigCommand,
+    GetSubscriptionPageConfigsCommand,
     GetUserByUsernameCommand,
     REMNAWAVE_REAL_IP_HEADER,
     TRequestTemplateTypeKeys,
@@ -30,7 +36,7 @@ export class AxiosService implements OnModuleInit {
             timeout: 10_000,
             headers: {
                 'user-agent': 'Remnawave Subscription Page',
-                Authorization: `Bearer ${this.configService.get('REMNAWAVE_API_TOKEN')}`,
+                Authorization: `Bearer ${this.configService.getOrThrow('REMNAWAVE_API_TOKEN')}`,
             },
         });
 
@@ -85,9 +91,10 @@ export class AxiosService implements OnModuleInit {
             );
             this.logger.error(authStatus.error);
 
-            // exit(1);
+            exit(1);
+        } else {
+            this.logger.log('Connection to Remnawave established successfully.');
         }
-        this.logger.log('Connection to Remnawave established successfully.');
     }
 
     public async getAuthStatus(): Promise<{
@@ -95,10 +102,12 @@ export class AxiosService implements OnModuleInit {
         error?: unknown;
     }> {
         try {
-            await this.axiosInstance.request<GetStatusCommand.Response>({
+            const response = await this.axiosInstance.request<GetStatusCommand.Response>({
                 method: GetStatusCommand.endpointDetails.REQUEST_METHOD,
                 url: GetStatusCommand.TSQ_url,
             });
+
+            await GetStatusCommand.ResponseSchema.parseAsync(response.data);
 
             return {
                 isOk: true,
@@ -152,6 +161,63 @@ export class AxiosService implements OnModuleInit {
         }
     }
 
+    public async getSubscriptionPageConfigByUuid(
+        uuid: string,
+    ): Promise<ICommandResponse<GetSubscriptionPageConfigCommand.Response['response']>> {
+        try {
+            const response =
+                await this.axiosInstance.request<GetSubscriptionPageConfigCommand.Response>({
+                    method: GetSubscriptionPageConfigCommand.endpointDetails.REQUEST_METHOD,
+                    url: GetSubscriptionPageConfigCommand.url(uuid),
+                });
+
+            return {
+                isOk: true,
+                response: response.data.response,
+            };
+        } catch (error) {
+            this.logger.error('Error in GetSubscriptionPageConfigByUuid Request:', error);
+
+            return { isOk: false };
+        }
+    }
+
+    public async getSubscriptionPageConfigList(): Promise<
+        ICommandResponse<GetSubscriptionPageConfigsCommand.Response['response']>
+    > {
+        try {
+            const response =
+                await this.axiosInstance.request<GetSubscriptionPageConfigsCommand.Response>({
+                    method: GetSubscriptionPageConfigsCommand.endpointDetails.REQUEST_METHOD,
+                    url: GetSubscriptionPageConfigsCommand.url,
+                });
+
+            const validationResult =
+                await GetSubscriptionPageConfigsCommand.ResponseSchema.parseAsync(response.data);
+
+            return {
+                isOk: true,
+                response: validationResult.response,
+            };
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.response?.status === 404) {
+                    this.logger.error('Request failed with 404 status code.');
+                    this.logger.error(
+                        'This version of Subscription Page requires Remnawave Panel version >=2.4.0. Please upgrade Remnawave Panel to the latest version or downgrade Subscription Page.',
+                    );
+                    return { isOk: false };
+                }
+
+                this.logger.error(`Subpage Config List Request failed: ${error.message}`);
+                return { isOk: false };
+            } else {
+                this.logger.error(`Subpage Config List Request failed: ${error}`);
+                return { isOk: false };
+            }
+        }
+    }
+
     public async getSubscriptionInfo(
         clientIp: string,
         shortUuid: string,
@@ -177,6 +243,30 @@ export class AxiosService implements OnModuleInit {
                 this.logger.error('Error in GetSubscriptionInfo Request:', error);
             }
 
+            return { isOk: false };
+        }
+    }
+
+    public async getSubpageConfig(
+        shortUuid: string,
+        requestHeaders: IncomingHttpHeaders,
+    ): Promise<ICommandResponse<GetSubpageConfigByShortUuidCommand.Response['response']>> {
+        try {
+            const response =
+                await this.axiosInstance.request<GetSubpageConfigByShortUuidCommand.Response>({
+                    method: GetSubpageConfigByShortUuidCommand.endpointDetails.REQUEST_METHOD,
+                    url: GetSubpageConfigByShortUuidCommand.url(shortUuid),
+                    data: {
+                        requestHeaders,
+                    },
+                });
+
+            return {
+                isOk: true,
+                response: response.data.response,
+            };
+        } catch (error) {
+            this.logger.error('Error in GetSubpageConfig Request:', error);
             return { isOk: false };
         }
     }

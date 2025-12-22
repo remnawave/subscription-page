@@ -1,13 +1,14 @@
-/* eslint-disable indent */
-import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator'
-import removeConsole from 'vite-plugin-remove-console'
+// import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator'
 // import { visualizer } from 'rollup-plugin-visualizer'
+// import deadFile from 'vite-plugin-deadfile'
+import removeConsole from 'vite-plugin-remove-console'
 import webfontDownload from 'vite-plugin-webfont-dl'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { ViteEjsPlugin } from 'vite-plugin-ejs'
 import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react-swc'
 import { defineConfig } from 'vite'
-// import deadFile from 'vite-plugin-deadfile'
+import 'dotenv/config'
 
 export default defineConfig({
     plugins: [
@@ -15,42 +16,58 @@ export default defineConfig({
         tsconfigPaths(),
         removeConsole(),
         webfontDownload(undefined, {}),
-        obfuscatorPlugin({
-            exclude: [/node_modules/, /app.tsx/],
-            apply: 'build',
-            debugger: false,
-            options: {
-                compact: true,
-                controlFlowFlattening: false,
-                deadCodeInjection: false,
-                debugProtection: true,
-                debugProtectionInterval: 0,
-                domainLock: [],
-                disableConsoleOutput: true,
-                identifierNamesGenerator: 'hexadecimal',
-                log: false,
-                numbersToExpressions: false,
-                renameGlobals: false,
-                selfDefending: false,
-                simplify: true,
-                splitStrings: false,
-                stringArray: true,
-                stringArrayCallsTransform: false,
-                stringArrayCallsTransformThreshold: 0.5,
-                stringArrayEncoding: [],
-                stringArrayIndexShift: true,
-                stringArrayRotate: true,
-                stringArrayShuffle: true,
-                stringArrayWrappersCount: 1,
-                stringArrayWrappersChainedCalls: true,
-                stringArrayWrappersParametersMaxCount: 2,
-                stringArrayWrappersType: 'variable',
-                stringArrayThreshold: 0.75,
-                unicodeEscapeSequence: false
-                // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
+        ViteEjsPlugin((viteConfig) => {
+            if (process.env.NODE_ENV === 'production') {
+                return {
+                    root: viteConfig.root,
+                    panelData: '<%- panelData %>',
+                    metaDescription: '<%= metaDescription %>',
+                    metaTitle: '<%= metaTitle %>'
+                }
+            }
+            return {
+                root: viteConfig.root,
+                panelData: process.env.PANEL_DATA,
+                metaDescription: process.env.META_DESCRIPTION,
+                metaTitle: process.env.META_TITLE
             }
         })
-        // visualizer() as PluginOption
+        // obfuscatorPlugin({
+        //     exclude: [/node_modules/, /app.tsx/],
+        //     apply: 'build',
+        //     debugger: false,
+        //     options: {
+        //         compact: true,
+        //         controlFlowFlattening: false,
+        //         deadCodeInjection: false,
+        //         debugProtection: true,
+        //         debugProtectionInterval: 0,
+        //         domainLock: [],
+        //         disableConsoleOutput: true,
+        //         identifierNamesGenerator: 'hexadecimal',
+        //         log: false,
+        //         numbersToExpressions: false,
+        //         renameGlobals: false,
+        //         selfDefending: false,
+        //         simplify: true,
+        //         splitStrings: false,
+        //         stringArray: true,
+        //         stringArrayCallsTransform: false,
+        //         stringArrayCallsTransformThreshold: 0.5,
+        //         stringArrayEncoding: [],
+        //         stringArrayIndexShift: true,
+        //         stringArrayRotate: true,
+        //         stringArrayShuffle: true,
+        //         stringArrayWrappersCount: 1,
+        //         stringArrayWrappersChainedCalls: true,
+        //         stringArrayWrappersParametersMaxCount: 2,
+        //         stringArrayWrappersType: 'variable',
+        //         stringArrayThreshold: 0.75,
+        //         unicodeEscapeSequence: false
+        //         // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
+        //     }
+        // })
+        // visualizer()
     ],
     optimizeDeps: {
         include: ['html-parse-stringify']
@@ -63,25 +80,32 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    react: ['react', 'react-dom', 'react-router-dom', 'zustand'],
-                    icons: ['react-icons/pi'],
+                    icons: ['react-icons/pi', '@tabler/icons-react'],
                     date: ['dayjs'],
+                    react: [
+                        'react',
+                        'zustand',
+                        'react-dom',
+                        'react-router-dom',
+                        'react-error-boundary',
+                        'react-dom/client'
+                    ],
                     mantine: [
                         '@mantine/core',
                         '@mantine/hooks',
-                        '@mantine/dates',
                         '@mantine/nprogress',
                         '@mantine/notifications',
-                        '@mantine/modals',
-                        '@remnawave/backend-contract'
+                        '@mantine/modals'
                     ],
-                    i18n: ['i18next', 'i18next-http-backend', 'i18next-browser-languagedetector'],
-                    motion: ['framer-motion']
+                    i18n: [
+                        'i18next-browser-languagedetector',
+                        '@remnawave/backend-contract',
+                        '@remnawave/subscription-page-types'
+                    ]
                 }
             }
         }
     },
-    define: {},
     server: {
         host: '0.0.0.0',
         port: 3334,

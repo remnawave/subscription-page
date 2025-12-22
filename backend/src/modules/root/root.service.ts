@@ -14,6 +14,8 @@ import { TRequestTemplateTypeKeys } from '@remnawave/backend-contract';
 import { AxiosService } from '@common/axios/axios.service';
 import { sanitizeUsername } from '@common/utils';
 
+import { SubpageConfigService } from './subpage-config.service';
+
 @Injectable()
 export class RootService {
     private readonly logger = new Logger(RootService.name);
@@ -25,6 +27,7 @@ export class RootService {
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
         private readonly axiosService: AxiosService,
+        private readonly subpageConfigService: SubpageConfigService,
     ) {
         this.isMarzbanLegacyLinkEnabled = this.configService.getOrThrow<boolean>(
             'MARZBAN_LEGACY_LINK_ENABLED',
@@ -118,13 +121,14 @@ export class RootService {
         }
     }
 
-    private async generateJwtForCookie(): Promise<string> {
+    private generateJwtForCookie(uuid: string | null): string {
         return this.jwtService.sign(
             {
                 sessionId: nanoid(32),
+                su: this.subpageConfigService.getEncryptedSubpageConfigUuid(uuid),
             },
             {
-                expiresIn: '1h',
+                expiresIn: '33m',
             },
         );
     }
@@ -145,7 +149,17 @@ export class RootService {
     }
 
     private isGenericPath(path: string): boolean {
-        const genericPaths = ['favicon.ico', 'robots.txt'];
+        const genericPaths = [
+            'favicon.ico',
+            'robots.txt',
+            '.png',
+            '.jpg',
+            '.jpeg',
+            '.gif',
+            '.svg',
+            '.webp',
+            '.ico',
+        ];
 
         return genericPaths.some((genericPath) => path.includes(genericPath));
     }
@@ -157,35 +171,54 @@ export class RootService {
         shortUuid: string,
     ): Promise<void> {
         try {
-            const cookieJwt = await this.generateJwtForCookie();
-
             const subscriptionDataResponse = await this.axiosService.getSubscriptionInfo(
                 clientIp,
                 shortUuid,
             );
 
-            if (!subscriptionDataResponse.isOk) {
-                this.logger.error(`Get subscription info failed, shortUuid: ${shortUuid}`);
-
+            if (!subscriptionDataResponse.isOk || !subscriptionDataResponse.response) {
                 res.socket?.destroy();
                 return;
             }
 
+            const subpageConfigResponse = await this.axiosService.getSubpageConfig(
+                shortUuid,
+                req.headers,
+            );
+
+            if (!subpageConfigResponse.isOk || !subpageConfigResponse.response) {
+                res.socket?.destroy();
+                return;
+            }
+
+            const subpageConfig = subpageConfigResponse.response;
+
+            if (subpageConfig.webpageAllowed === false) {
+                this.logger.log(`Webpage access is not allowed by Remnawave's SRR.`);
+                res.socket?.destroy();
+                return;
+            }
+
+            const baseSettings = this.subpageConfigService.getBaseSettings(
+                subpageConfig.subpageConfigUuid,
+            );
+
             const subscriptionData = subscriptionDataResponse.response;
 
-            res.cookie('session', cookieJwt, {
+            if (!baseSettings.showConnectionKeys) {
+                subscriptionData.response.links = [];
+                subscriptionData.response.ssConfLinks = {};
+            }
+
+            res.cookie('session', this.generateJwtForCookie(subpageConfig.subpageConfigUuid), {
                 httpOnly: true,
                 secure: true,
-                maxAge: 3_600_000, // 1 hour
+                maxAge: 1_800_000, // 30 minutes
             });
 
             res.render('index', {
-                metaTitle: this.configService
-                    .getOrThrow<string>('META_TITLE')
-                    .replace(/^"|"$/g, ''),
-                metaDescription: this.configService
-                    .getOrThrow<string>('META_DESCRIPTION')
-                    .replace(/^"|"$/g, ''),
+                metaTitle: baseSettings.metaTitle,
+                metaDescription: baseSettings.metaDescription,
                 panelData: Buffer.from(JSON.stringify(subscriptionData)).toString('base64'),
             });
         } catch (error) {

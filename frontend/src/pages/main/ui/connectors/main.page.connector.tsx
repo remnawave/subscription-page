@@ -1,63 +1,49 @@
+import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
+import { useMediaQuery, useOs } from '@mantine/hooks'
 import { useEffect, useState } from 'react'
-import consola from 'consola/browser'
-import { ofetch } from 'ofetch'
 
 import { useSubscriptionInfoStoreInfo } from '@entities/subscription-info-store'
-import { ISubscriptionPageAppConfig } from '@shared/constants/apps-config'
-import { isOldFormat } from '@shared/utils/migration.utils'
+import { useAppConfig, useIsConfigLoaded } from '@entities/app-config-store'
 import { LoadingScreen } from '@shared/ui'
 
 import { MainPageComponent } from '../components/main.page.component'
 
+function osToPlatform(os: string): TSubscriptionPagePlatformKey | undefined {
+    switch (os) {
+        case 'android':
+            return 'android'
+        case 'ios':
+            return 'ios'
+        case 'linux':
+            return 'linux'
+        case 'macos':
+            return 'macos'
+        case 'windows':
+            return 'windows'
+        default:
+            return undefined
+    }
+}
+
 export const MainPageConnector = () => {
     const { subscription } = useSubscriptionInfoStoreInfo()
-    const [appsConfig, setAppsConfig] = useState<ISubscriptionPageAppConfig | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const config = useAppConfig()
+    const os = useOs({ getValueInEffect: false })
+
+    const isConfigLoaded = useIsConfigLoaded()
+
+    const isMobile = useMediaQuery(`(max-width: 30rem)`, undefined, {
+        getInitialValueInEffect: false
+    })
+
+    const [isMediaQueryReady, setIsMediaQueryReady] = useState(false)
 
     useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const tempConfig = await ofetch<ISubscriptionPageAppConfig>(
-                    `/assets/app-config.json?v=${Date.now()}`,
-                    {
-                        parseResponse: JSON.parse
-                    }
-                )
+        setIsMediaQueryReady(true)
+    }, [isMobile])
 
-                let newConfig: ISubscriptionPageAppConfig | null = null
+    if (!isConfigLoaded || !subscription || !config || !isMediaQueryReady)
+        return <LoadingScreen height="100vh" />
 
-                if (isOldFormat(tempConfig)) {
-                    consola.warn('Old config format detected, migrating to new format...')
-                    newConfig = {
-                        config: {
-                            additionalLocales: ['ru', 'fa', 'zh', 'fr']
-                        },
-                        platforms: {
-                            ios: tempConfig.ios,
-                            android: tempConfig.android,
-                            windows: tempConfig.pc,
-                            macos: tempConfig.pc,
-                            linux: [],
-                            androidTV: [],
-                            appleTV: []
-                        }
-                    }
-                } else {
-                    newConfig = tempConfig
-                }
-
-                setAppsConfig(newConfig)
-            } catch (error) {
-                consola.error('Failed to fetch app config:', error)
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchConfig()
-    }, [])
-
-    if (isLoading || !subscription || !appsConfig) return <LoadingScreen height="100vh" />
-
-    return <MainPageComponent subscriptionPageAppConfig={appsConfig} />
+    return <MainPageComponent isMobile={isMobile} platform={osToPlatform(os)} />
 }

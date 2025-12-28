@@ -4,6 +4,7 @@ import { getColorGradient, getLocalizedText } from '@shared/utils/config-parser'
 import { ThemeIconShared } from '@shared/ui'
 
 import { IBlockRendererProps } from '../renderer-block.interface'
+import classes from './cards-block.module.css'
 
 export const CardsBlockRenderer = ({
     blocks,
@@ -18,7 +19,12 @@ export const CardsBlockRenderer = ({
                 const gradientStyle = getColorGradient(block.svgIconColor)
 
                 return (
-                    <Card key={index} p={{ base: 'sm', xs: 'md', sm: 'lg' }} radius="lg">
+                    <Card
+                        className={classes.root}
+                        key={index}
+                        p={{ base: 'sm', xs: 'md', sm: 'lg' }}
+                        radius="lg"
+                    >
                         <Group align="flex-start" gap={isMobile ? 'sm' : 'md'} wrap="nowrap">
                             <ThemeIconShared
                                 getIconFromLibrary={getIconFromLibrary}

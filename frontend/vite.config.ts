@@ -110,7 +110,8 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 3334,
         cors: false,
-        strictPort: true
+        strictPort: true,
+        allowedHosts: true
     },
     resolve: {
         alias: {

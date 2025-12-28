@@ -4,6 +4,7 @@ import { getColorGradient, getLocalizedText } from '@shared/utils/config-parser'
 import { ThemeIconShared } from '@shared/ui'
 
 import { IBlockRendererProps } from '../renderer-block.interface'
+import classes from './cards-block.module.css'
 
 export const CardsBlockRenderer = ({
     blocks,
@@ -19,7 +20,7 @@ export const CardsBlockRenderer = ({
 
                 return (
                     <Card
-                        className="step-card"
+                        className={classes.root}
                         key={index}
                         p={{ base: 'sm', xs: 'md', sm: 'lg' }}
                         radius="lg"

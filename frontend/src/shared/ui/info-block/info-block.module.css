@@ -1,8 +1,6 @@
 .infoBlock {
     padding: var(--mantine-spacing-xs);
     border-radius: var(--mantine-radius-md);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .blue {

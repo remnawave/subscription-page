@@ -18,12 +18,7 @@ export const CardsBlockRenderer = ({
                 const gradientStyle = getColorGradient(block.svgIconColor)
 
                 return (
-                    <Card
-                        className="step-card"
-                        key={index}
-                        p={{ base: 'sm', xs: 'md', sm: 'lg' }}
-                        radius="lg"
-                    >
+                    <Card key={index} p={{ base: 'sm', xs: 'md', sm: 'lg' }} radius="lg">
                         <Group align="flex-start" gap={isMobile ? 'sm' : 'md'} wrap="nowrap">
                             <ThemeIconShared
                                 getIconFromLibrary={getIconFromLibrary}

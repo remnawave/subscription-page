@@ -60,7 +60,7 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: IProps) => {
     const gradientColor = getColorGradientSolid(statusInfo.color)
 
     return (
-        <Card className="glass-card" p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
+        <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
             <Stack gap={isMobile ? 'sm' : 'md'}>
                 <Group gap="sm" justify="space-between">
                     <Group

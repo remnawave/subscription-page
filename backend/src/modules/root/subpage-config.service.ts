@@ -124,6 +124,7 @@ export class SubpageConfigService implements OnApplicationBootstrap {
                 metaTitle: 'Subscription Page',
                 metaDescription: 'Subscription Page',
                 showConnectionKeys: false,
+                hideGetLinkButton: false,
             };
         }
 
@@ -131,6 +132,7 @@ export class SubpageConfigService implements OnApplicationBootstrap {
             metaTitle: subpageConfig.baseSettings.metaTitle,
             metaDescription: subpageConfig.baseSettings.metaDescription,
             showConnectionKeys: subpageConfig.baseSettings.showConnectionKeys,
+            hideGetLinkButton: subpageConfig.baseSettings.hideGetLinkButton,
         };
     }
 

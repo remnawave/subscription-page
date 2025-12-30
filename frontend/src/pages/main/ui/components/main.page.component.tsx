@@ -95,7 +95,10 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
                             </Title>
                         </Group>
 
-                        <SubscriptionLinkWidget supportUrl={config.brandingSettings.supportUrl} />
+                        <SubscriptionLinkWidget
+                            hideGetLink={config.baseSettings.hideGetLinkButton}
+                            supportUrl={config.brandingSettings.supportUrl}
+                        />
                     </Group>
                 </Container>
             </Box>

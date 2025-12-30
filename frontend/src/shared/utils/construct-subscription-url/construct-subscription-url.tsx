@@ -4,7 +4,6 @@ export const constructSubscriptionUrl = (currentUrl: string, shortUuid: string):
     const url = parseURL(currentUrl)
 
     url.search = ''
-    url.hash = ''
     url.auth = ''
 
     const segments = url.pathname.split('/').filter(Boolean)

@@ -20,10 +20,11 @@ import { useTranslation } from '@shared/hooks'
 import classes from './subscription-link.module.css'
 
 interface IProps {
+    hideGetLink: boolean
     supportUrl: string
 }
 
-export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
+export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
     const { t, baseTranslations } = useTranslation()
     const subscription = useSubscription()
     const clipboard = useClipboard({ timeout: 10000 })
@@ -122,15 +123,17 @@ export const SubscriptionLinkWidget = ({ supportUrl }: IProps) => {
 
     return (
         <Group gap="xs" ml="auto" wrap="nowrap">
-            <ActionIcon
-                className={classes.actionIcon}
-                onClick={handleGetLink}
-                radius="md"
-                size="xl"
-                variant="default"
-            >
-                <IconLink />
-            </ActionIcon>
+            {!hideGetLink && (
+                <ActionIcon
+                    className={classes.actionIcon}
+                    onClick={handleGetLink}
+                    radius="md"
+                    size="xl"
+                    variant="default"
+                >
+                    <IconLink />
+                </ActionIcon>
+            )}
 
             {supportUrl !== '' && renderSupportLink(supportUrl)}
         </Group>

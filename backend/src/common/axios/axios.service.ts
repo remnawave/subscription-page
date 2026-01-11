@@ -293,6 +293,9 @@ export class AxiosService implements OnModuleInit {
                 url: basePath,
                 headers: {
                     ...headers,
+                    'Cache-Control': 'no-cache, no-store, must-revalidate, private, max-age=0',
+                    Pragma: 'no-cache',
+                    Expires: '0',
                     [REMNAWAVE_REAL_IP_HEADER]: clientIp,
                 },
             });

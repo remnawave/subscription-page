@@ -23,6 +23,8 @@ import {
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
 
+import { IGNORED_HEADERS } from '@common/constants';
+
 import { ICommandResponse } from '../types/command-response.type';
 
 @Injectable()
@@ -288,11 +290,18 @@ export class AxiosService implements OnModuleInit {
                 basePath += '/' + clientType;
             }
 
+            const safeHeaders = Object.fromEntries(
+                Object.entries(headers).filter(([key]) => !IGNORED_HEADERS.has(key.toLowerCase())),
+            );
+
             const response = await this.axiosInstance.request<unknown>({
                 method: 'GET',
                 url: basePath,
                 headers: {
-                    ...headers,
+                    ...safeHeaders,
+                    'Cache-Control': 'no-cache, no-store, must-revalidate, private, max-age=0',
+                    Pragma: 'no-cache',
+                    Expires: '0',
                     [REMNAWAVE_REAL_IP_HEADER]: clientIp,
                 },
             });

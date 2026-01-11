@@ -23,21 +23,13 @@ import {
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
 
+import { IGNORED_HEADERS } from '@common/constants';
+
 import { ICommandResponse } from '../types/command-response.type';
 
 @Injectable()
 export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
-    private readonly headersToRemove = new Set([
-        'accept-encoding',
-        'cache-control',
-        'content-length',
-        'expires',
-        'host',
-        'pragma',
-        'server',
-        'transfer-encoding',
-    ]);
     private readonly logger = new Logger(AxiosService.name);
 
     constructor(private readonly configService: ConfigService) {
@@ -299,9 +291,7 @@ export class AxiosService implements OnModuleInit {
             }
 
             const safeHeaders = Object.fromEntries(
-                Object.entries(headers).filter(
-                    ([key]) => !this.headersToRemove.has(key.toLowerCase()),
-                ),
+                Object.entries(headers).filter(([key]) => !IGNORED_HEADERS.has(key.toLowerCase())),
             );
 
             const response = await this.axiosInstance.request<unknown>({

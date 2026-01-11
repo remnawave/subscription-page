@@ -1,9 +1,9 @@
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
-import { json } from 'express';
 import cookieParser from 'cookie-parser';
 import { createLogger } from 'winston';
 import compression from 'compression';
 import * as winston from 'winston';
+import { json } from 'express';
 import path from 'node:path';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -11,6 +11,8 @@ import morgan from 'morgan';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+
+import { APP_CONFIG_ROUTE_WO_LEADING_PATH } from '@remnawave/subscription-page-types';
 
 import { checkAssetsCookieMiddleware } from '@common/middlewares/check-assets-cookie.middleware';
 import { NotFoundExceptionFilter } from '@common/exception/not-found-exception.filter';
@@ -21,7 +23,6 @@ import { customLogFilter } from '@common/utils/filter-logs/filter-logs';
 import { getRealIp } from '@common/middlewares/get-real-ip';
 
 import { AppModule } from './app.module';
-import { APP_CONFIG_ROUTE_WO_LEADING_PATH } from '@remnawave/subscription-page-types';
 
 // const levels = {
 //     error: 0,

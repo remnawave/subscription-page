@@ -292,7 +292,7 @@ export class AxiosService implements OnModuleInit {
                 method: 'GET',
                 url: basePath,
                 headers: {
-                    ...this.filterHeaders(headers),
+                    ...headers,
                     [REMNAWAVE_REAL_IP_HEADER]: clientIp,
                 },
             });
@@ -310,27 +310,5 @@ export class AxiosService implements OnModuleInit {
 
             return null;
         }
-    }
-
-    private filterHeaders(headers: NodeJS.Dict<string | string[]>): NodeJS.Dict<string | string[]> {
-        const allowedHeaders = [
-            'user-agent',
-            'accept',
-            'accept-language',
-            'accept-encoding',
-            'x-hwid',
-            'x-device-os',
-            'x-ver-os',
-            'x-device-model',
-            'x-app-version',
-            'x-device-locale',
-            'x-client',
-        ];
-
-        const filteredHeaders = Object.fromEntries(
-            Object.entries(headers).filter(([key]) => allowedHeaders.includes(key)),
-        );
-
-        return filteredHeaders;
     }
 }

@@ -28,6 +28,7 @@ import { ICommandResponse } from '../types/command-response.type';
 @Injectable()
 export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
+    private readonly headersToRemove = new Set(['cache-control', 'expires', 'host', 'pragma']);
     private readonly logger = new Logger(AxiosService.name);
 
     constructor(private readonly configService: ConfigService) {
@@ -288,11 +289,17 @@ export class AxiosService implements OnModuleInit {
                 basePath += '/' + clientType;
             }
 
+            const safeHeaders = Object.fromEntries(
+                Object.entries(headers).filter(
+                    ([key]) => !this.headersToRemove.has(key.toLowerCase()),
+                ),
+            );
+
             const response = await this.axiosInstance.request<unknown>({
                 method: 'GET',
                 url: basePath,
                 headers: {
-                    ...headers,
+                    ...safeHeaders,
                     'Cache-Control': 'no-cache, no-store, must-revalidate, private, max-age=0',
                     Pragma: 'no-cache',
                     Expires: '0',

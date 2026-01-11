@@ -28,7 +28,16 @@ import { ICommandResponse } from '../types/command-response.type';
 @Injectable()
 export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
-    private readonly headersToRemove = new Set(['cache-control', 'expires', 'host', 'pragma']);
+    private readonly headersToRemove = new Set([
+        'accept-encoding',
+        'cache-control',
+        'content-length',
+        'expires',
+        'host',
+        'pragma',
+        'server',
+        'transfer-encoding',
+    ]);
     private readonly logger = new Logger(AxiosService.name);
 
     constructor(private readonly configService: ConfigService) {

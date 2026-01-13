@@ -296,6 +296,8 @@ export class AxiosService implements OnModuleInit {
                 Object.entries(headers).filter(([key]) => !IGNORED_HEADERS.has(key.toLowerCase())),
             );
 
+            this.logger.debug(`Request headers: ${JSON.stringify(safeHeaders, null, 0)}`);
+
             const response = await this.axiosInstance.request<unknown>({
                 method: 'GET',
                 url: basePath,
@@ -314,9 +316,9 @@ export class AxiosService implements OnModuleInit {
             };
         } catch (error) {
             if (error instanceof AxiosError) {
-                this.logger.error('Error in GetSubscription Request:', error.message);
+                this.logger.error(`Error in GetSubscription Request: ${error.message}`);
             } else {
-                this.logger.error('Error in GetSubscription Request:', error);
+                this.logger.error(`Error in GetSubscription Request: ${error}`);
             }
 
             return null;

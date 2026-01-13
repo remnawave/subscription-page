@@ -26,4 +26,5 @@ export const IGNORED_HEADERS = new Set([
     'x-api-key',
     'x-forwarded-for',
     'x-forwarded-proto',
+    'x-forwarded-scheme',
 ]);

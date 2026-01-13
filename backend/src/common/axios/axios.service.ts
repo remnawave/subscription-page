@@ -303,6 +303,7 @@ export class AxiosService implements OnModuleInit {
                 url: basePath,
                 headers: {
                     ...safeHeaders,
+                    Accept: '*/*',
                     'Cache-Control': 'no-cache, no-store, must-revalidate, private, max-age=0',
                     Pragma: 'no-cache',
                     Expires: '0',
@@ -317,6 +318,7 @@ export class AxiosService implements OnModuleInit {
         } catch (error) {
             if (error instanceof AxiosError) {
                 this.logger.error(`Error in GetSubscription Request: ${error.message}`);
+                this.logger.debug(`Error response: ${error.response?.data}`);
             } else {
                 this.logger.error(`Error in GetSubscription Request: ${error}`);
             }

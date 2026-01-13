@@ -13,7 +13,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import {
-    GetStatusCommand,
+    GetMetadataCommand,
     GetSubpageConfigByShortUuidCommand,
     GetSubscriptionInfoByShortUuidCommand,
     GetSubscriptionPageConfigCommand,
@@ -73,8 +73,8 @@ export class AxiosService implements OnModuleInit {
     async onModuleInit(): Promise<void> {
         this.logger.log(`Remnawave API URL: ${this.axiosInstance.defaults.baseURL}`);
 
-        const authStatus = await this.getAuthStatus();
-        if (!authStatus.isOk) {
+        const remnawaveMetadata = await this.getRemnawaveMetadata();
+        if (!remnawaveMetadata.isOk || !remnawaveMetadata.remnawaveVersion) {
             this.logger.error(
                 '\n' +
                     table([['Is the panel online and reachable from this server?']], {
@@ -91,28 +91,30 @@ export class AxiosService implements OnModuleInit {
                     }) +
                     '\n',
             );
-            this.logger.error(authStatus.error);
+            this.logger.error(remnawaveMetadata.error);
 
             exit(1);
         } else {
-            this.logger.log('Connection to Remnawave established successfully.');
+            this.logger.log(`[OK] Connected to Remnawave v${remnawaveMetadata.remnawaveVersion}`);
         }
     }
 
-    public async getAuthStatus(): Promise<{
+    public async getRemnawaveMetadata(): Promise<{
         isOk: boolean;
+        remnawaveVersion?: string;
         error?: unknown;
     }> {
         try {
-            const response = await this.axiosInstance.request<GetStatusCommand.Response>({
-                method: GetStatusCommand.endpointDetails.REQUEST_METHOD,
-                url: GetStatusCommand.TSQ_url,
+            const response = await this.axiosInstance.request<GetMetadataCommand.Response>({
+                method: GetMetadataCommand.endpointDetails.REQUEST_METHOD,
+                url: GetMetadataCommand.url,
             });
 
-            await GetStatusCommand.ResponseSchema.parseAsync(response.data);
+            await GetMetadataCommand.ResponseSchema.parseAsync(response.data);
 
             return {
                 isOk: true,
+                remnawaveVersion: response.data.response.version,
             };
         } catch (error) {
             if (error instanceof AxiosError) {

@@ -33,7 +33,8 @@ export class SubpageConfigService implements OnApplicationBootstrap {
         const subscriptionPageConfigList = await this.fetchSubscriptionPageConfigList();
 
         if (subscriptionPageConfigList.length === 0) {
-            this.logger.error('Subscription page config list is empty');
+            this.logger.error('[FATAL] Subscription page config list is empty, exiting...');
+
             exit(1);
         }
 
@@ -42,9 +43,13 @@ export class SubpageConfigService implements OnApplicationBootstrap {
         for (const config of subscriptionPageConfigList) {
             const subscriptionPageConfig =
                 await this.axiosService.getSubscriptionPageConfigByUuid(config);
+
             if (!subscriptionPageConfig.isOk || !subscriptionPageConfig.response) {
-                this.logger.error(`Subscription page config ${config} cannot be fetched`);
-                continue;
+                this.logger.error(
+                    `[FATAL] Error while fetching one of subpage config: ${config}, exiting...`,
+                );
+
+                exit(1);
             }
 
             const parsedConfig = await SubscriptionPageRawConfigSchema.safeParseAsync(
@@ -53,10 +58,10 @@ export class SubpageConfigService implements OnApplicationBootstrap {
 
             if (!parsedConfig.success) {
                 this.logger.error(
-                    `[ERROR] ${config} is not valid: ${JSON.stringify(parsedConfig.error)}`,
+                    `[FATAL] ${config} is not valid: ${JSON.stringify(parsedConfig.error)}`,
                 );
 
-                continue;
+                exit(1);
             }
 
             this.logger.log(`[OK] ${config}`);
@@ -67,6 +72,8 @@ export class SubpageConfigService implements OnApplicationBootstrap {
             this.logger.error('[FAILED] At least one SubPage config must be valid!');
             exit(1);
         }
+
+        this.logger.log('[OK] Subpage configs are loaded successfully.');
     }
 
     public async getSubscriptionPageConfig(

@@ -6,6 +6,8 @@ module.exports = {
             watch: false,
             instances: process.env.SUBSCRIPTION_PAGE_INSTANCES || 1,
             merge_logs: true,
+            out_file: '/dev/null',
+            error_file: '/dev/null',
             exec_mode: 'cluster',
             instance_var: 'INSTANCE_ID',
             env_development: {

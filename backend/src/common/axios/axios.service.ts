@@ -317,6 +317,13 @@ export class AxiosService implements OnModuleInit {
             };
         } catch (error) {
             if (error instanceof AxiosError) {
+                if (error.response) {
+                    if (error.response.status === 404) {
+                        this.logger.warn(`Subscription ${shortUuid} not found in Remnawave.`);
+                        return null;
+                    }
+                }
+
                 this.logger.error(`Error in GetSubscription Request: ${error.message}`);
                 this.logger.debug(`Error response: ${error.response?.data}`);
             } else {

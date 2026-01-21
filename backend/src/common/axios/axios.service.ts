@@ -24,6 +24,7 @@ import {
 } from '@remnawave/backend-contract';
 
 import { IGNORED_HEADERS } from '@common/constants';
+import { getAppVersion } from '@common/utils/startup-app';
 
 import { ICommandResponse } from '../types/command-response.type';
 
@@ -75,11 +76,12 @@ export class AxiosService implements OnModuleInit {
 
         const remnawaveMetadata = await this.getRemnawaveMetadata();
         if (!remnawaveMetadata.isOk || !remnawaveMetadata.remnawaveVersion) {
+            const appVersion = await getAppVersion();
             this.logger.error(
                 '\n' +
-                    table([['Is the panel online and reachable from this server?']], {
+                    table([['Connection to Remnawave Panel failed!\nIs the panel online and reachable from this server?']], {
                         header: {
-                            content: `Connection to Remnawave Panel failed!`,
+                            content: `Remnawave Subscription Page v${appVersion}`,
                             alignment: 'center',
                         },
                         columnDefault: {
@@ -206,9 +208,10 @@ export class AxiosService implements OnModuleInit {
         } catch (error) {
             if (error instanceof AxiosError) {
                 if (error.response?.status === 404) {
+                    const appVersion = await getAppVersion();
                     this.logger.error('Request failed with 404 status code.');
                     this.logger.error(
-                        'This version of Subscription Page requires Remnawave Panel version >=2.4.0. Please upgrade Remnawave Panel to the latest version or downgrade Subscription Page.',
+                        `Subscription Page v${appVersion} requires Remnawave Panel version >=2.4.0. Please upgrade Remnawave Panel to the latest version or downgrade Subscription Page.`,
                     );
                     return { isOk: false };
                 }

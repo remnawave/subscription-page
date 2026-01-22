@@ -1,6 +1,6 @@
 # Makefile for version bumping and dependency installation
 
-.PHONY: bump-patch bump-minor bump-major install help tag-release
+.PHONY: bump-patch bump-minor bump-major install help tag-release dev build-frontend
 
 # Default target
 help:
@@ -59,6 +59,20 @@ show-versions:
 	@echo "Current versions:"
 	@echo "Backend: $(shell cd backend && node -p "require('./package.json').version")"
 	@echo "Frontend: $(shell cd frontend && node -p "require('./package.json').version")"
+
+# Build frontend and copy to backend for development
+build-frontend:
+	@echo "📦 Building frontend..."
+	@cd frontend && npm run start:build
+	@echo "📁 Copying to backend/dev_frontend..."
+	@rm -rf backend/dev_frontend
+	@cp -r frontend/dist backend/dev_frontend
+	@echo "✅ Frontend built and copied!"
+
+# Full dev setup: build frontend and start backend
+dev: build-frontend
+	@echo "🚀 Starting backend in dev mode..."
+	@cd backend && npm run start:dev
 
 
 tag-release:

@@ -208,9 +208,10 @@ export class RootService {
                 subscriptionData.response.ssConfLinks = {};
             }
 
+            const isDev = process.env.NODE_ENV === 'development';
             res.cookie('session', this.generateJwtForCookie(subpageConfig.subpageConfigUuid), {
                 httpOnly: true,
-                secure: true,
+                secure: !isDev, // Disable secure flag in development for localhost
                 maxAge: 1_800_000, // 30 minutes
             });
 

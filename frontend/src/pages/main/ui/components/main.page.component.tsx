@@ -7,6 +7,7 @@ import {
     InstallationGuideConnector,
     MinimalBlockRenderer,
     RawKeysWidget,
+    SetupWizardWidget,
     SubscriptionInfoCardsWidget,
     SubscriptionInfoCollapsedWidget,
     SubscriptionInfoExpandedWidget,
@@ -62,6 +63,17 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
 
     const atLeastOnePlatformApp = Object.values(hasPlatformApps).some((value) => value)
 
+    // Use new wizard design
+    if (atLeastOnePlatformApp) {
+        return (
+            <SetupWizardWidget
+                hasPlatformApps={hasPlatformApps}
+                platform={platform}
+            />
+        )
+    }
+
+    // Fallback to old design if no apps configured
     const SubscriptionInfoBlockRenderer =
         SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfoBlockType]
 

@@ -1,0 +1,337 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 48px 16px 24px;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.lottieWrapper {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 32px;
+    line-height: 1.3;
+    white-space: pre-line;
+}
+
+.stepsContainer {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.step {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    position: relative;
+}
+
+.stepLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 36px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Line segments - top and bottom of the circle */
+.stepLineTop {
+    width: 2px;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 1px;
+}
+
+.stepLineBottom {
+    width: 2px;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 1px;
+}
+
+.stepLineHidden {
+    background: transparent;
+}
+
+.stepNumber {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    background: #000;
+    z-index: 2;
+}
+
+.stepNumberActive {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: #fff;
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.5);
+}
+
+.stepNumberInactive {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stepNumberCompleted {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.5);
+}
+
+.stepContent {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Active step with glowing border animation */
+.stepContentActive {
+    border-color: transparent;
+    background: 
+        linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+        linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.1)) border-box;
+}
+
+.stepContentActive::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(
+        var(--glow-angle, 0deg),
+        transparent 0%,
+        transparent 30%,
+        #3b82f6 45%,
+        #60a5fa 50%,
+        #3b82f6 55%,
+        transparent 70%,
+        transparent 100%
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: glowRotate 3s linear infinite;
+}
+
+@keyframes glowRotate {
+    0% {
+        --glow-angle: 0deg;
+    }
+    100% {
+        --glow-angle: 360deg;
+    }
+}
+
+/* Fallback for browsers that don't support @property */
+@supports not (background: paint(something)) {
+    .stepContentActive::before {
+        animation: glowRotateFallback 3s linear infinite;
+    }
+    
+    @keyframes glowRotateFallback {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+@property --glow-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.stepText {
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Links - blue without underline */
+.stepText a {
+    color: #60a5fa;
+    text-decoration: none;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.stepText a:hover {
+    color: #93c5fd;
+}
+
+/* Green highlighted text via <green> tag */
+.stepText green {
+    color: #22c55e;
+    font-weight: 500;
+}
+
+.buttonsContainer {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 24px;
+}
+
+.buttonOutline {
+    width: 100%;
+    height: 54px;
+    border-radius: 27px;
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.buttonOutline:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.buttonOutline:active {
+    transform: scale(0.98);
+}
+
+.buttonPrimary {
+    width: 100%;
+    height: 54px;
+    border-radius: 27px;
+    border: none;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 24px rgba(34, 197, 94, 0.35);
+}
+
+.buttonPrimary:hover {
+    box-shadow: 0 6px 32px rgba(34, 197, 94, 0.45);
+    transform: translateY(-1px);
+}
+
+.buttonPrimary:active {
+    transform: scale(0.98);
+}
+
+.buttonPrimary:disabled {
+    opacity: 1;
+    cursor: pointer;
+    transform: none;
+    box-shadow: 0 4px 24px rgba(34, 197, 94, 0.35);
+}
+
+/* App selector */
+.appSelector {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 24px;
+}
+
+.appSelectorLabel {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.appGrid {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.appButton {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    position: relative;
+}
+
+.appButton:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.appButtonActive {
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(59, 130, 246, 0.12);
+    color: #fff;
+}
+
+.appButtonFeatured::after {
+    content: '★';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 12px;
+    color: #fbbf24;
+}

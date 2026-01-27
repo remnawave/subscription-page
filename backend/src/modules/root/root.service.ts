@@ -22,7 +22,7 @@ export class RootService {
     private readonly logger = new Logger(RootService.name);
 
     private readonly isMarzbanLegacyLinkEnabled: boolean;
-    private readonly marzbanSecretKey?: string;
+    private readonly marzbanSecretKeys: string[];
 
     constructor(
         private readonly configService: ConfigService,
@@ -33,7 +33,14 @@ export class RootService {
         this.isMarzbanLegacyLinkEnabled = this.configService.getOrThrow<boolean>(
             'MARZBAN_LEGACY_LINK_ENABLED',
         );
-        this.marzbanSecretKey = this.configService.get<string>('MARZBAN_LEGACY_SECRET_KEY');
+
+        const marzbanSecretKeys = this.configService.get<string>('MARZBAN_LEGACY_SECRET_KEY');
+
+        if (marzbanSecretKeys && marzbanSecretKeys.length > 0) {
+            this.marzbanSecretKeys = marzbanSecretKeys.split(',').map((key) => key.trim());
+        } else {
+            this.marzbanSecretKeys = [];
+        }
     }
 
     public async serveSubscriptionPage(
@@ -54,7 +61,7 @@ export class RootService {
             }
 
             if (this.isMarzbanLegacyLinkEnabled) {
-                const username = await this.decodeMarzbanLink(shortUuid);
+                const username = await this.tryDecodeMarzbanLink(shortUuid);
 
                 if (username) {
                     const sanitizedUsername = sanitizeUsername(username.username);
@@ -227,10 +234,12 @@ export class RootService {
         }
     }
 
-    private async decodeMarzbanLink(shortUuid: string): Promise<{
+    private async tryDecodeMarzbanLink(shortUuid: string): Promise<{
         username: string;
         createdAt: Date;
     } | null> {
+        if (!this.marzbanSecretKeys.length) return null;
+
         const token = shortUuid;
         this.logger.debug(`Verifying token: ${token}`);
 
@@ -239,10 +248,29 @@ export class RootService {
             return null;
         }
 
+        for (const key of this.marzbanSecretKeys) {
+            const result = await this.decodeMarzbanLink(shortUuid, key);
+            if (result) return result;
+
+            this.logger.debug(`Decoding Marzban link failed with key: ${key}`);
+        }
+
+        this.logger.debug(`Decoding Marzban link failed with all keys`);
+
+        return null;
+    }
+
+    private async decodeMarzbanLink(
+        token: string,
+        marzbanSecretKey: string,
+    ): Promise<{
+        username: string;
+        createdAt: Date;
+    } | null> {
         if (token.split('.').length === 3) {
             try {
                 const payload = await this.jwtService.verifyAsync(token, {
-                    secret: this.marzbanSecretKey!,
+                    secret: marzbanSecretKey,
                     algorithms: ['HS256'],
                 });
 
@@ -281,7 +309,7 @@ export class RootService {
         }
 
         const hash = createHash('sha256');
-        hash.update(uToken + this.marzbanSecretKey!);
+        hash.update(uToken + marzbanSecretKey);
         const digest = hash.digest();
 
         const expectedSignature = Buffer.from(digest).toString('base64url').slice(0, 10);

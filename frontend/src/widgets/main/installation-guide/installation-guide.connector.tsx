@@ -190,10 +190,16 @@ export const InstallationGuideConnector = (props: IProps) => {
                 break
             }
             default: {
-                if (!HAPP_CRYPT5_BUTTON_TYPES.has(buttonType) || !formattedUrl) break
+                if (!HAPP_CRYPT5_BUTTON_TYPES.has(buttonType)) break
 
                 try {
-                    const happCrypt5Link = await createHappCrypt5Link(happCrypt5ApiUrl, formattedUrl)
+                    const happCrypt5Link =
+                        formattedUrl?.startsWith('happ://crypt5/')
+                            ? formattedUrl
+                            : await createHappCrypt5Link(
+                                  happCrypt5ApiUrl,
+                                  formattedUrl ?? subscriptionUrl
+                              )
                     window.open(happCrypt5Link, '_blank')
                 } catch (error) {
                     notifications.show({

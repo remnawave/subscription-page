@@ -44,9 +44,28 @@ export class RootController {
     }
 
     @Post(':shortUuid/happ-crypt5')
-    async createHappCrypt5Link(@Body('url') url: unknown) {
+    async createHappCrypt5Link(
+        @Param('shortUuid') shortUuid: string,
+        @Req() request: Request,
+        @Body('url') url: unknown,
+    ) {
         if (typeof url !== 'string' || !/^https?:\/\//.test(url)) {
             throw new BadRequestException('Invalid subscription URL');
+        }
+
+        const subscriptionUrl = new URL(url);
+        const expectedHost = request.get('host');
+        const forwardedProto = request.get('x-forwarded-proto')?.split(',')[0]?.trim();
+        const expectedProtocol = forwardedProto || request.protocol;
+        const expectedOrigin = expectedHost ? `${expectedProtocol}://${expectedHost}` : undefined;
+        const lastPathSegment = subscriptionUrl.pathname.split('/').filter(Boolean).at(-1);
+
+        if (expectedOrigin && subscriptionUrl.origin !== expectedOrigin) {
+            throw new BadRequestException('Subscription URL origin mismatch');
+        }
+
+        if (lastPathSegment !== shortUuid) {
+            throw new BadRequestException('Subscription URL short UUID mismatch');
         }
 
         const controller = new AbortController();
@@ -66,11 +85,12 @@ export class RootController {
                 signal: controller.signal,
             });
         } catch (error) {
-            throw new BadGatewayException(
+            this.logger.warn(
                 error instanceof Error
                     ? `Happ crypt5 API request failed: ${error.message}`
                     : 'Happ crypt5 API request failed',
             );
+            throw new BadGatewayException('Happ crypt5 API request failed');
         } finally {
             clearTimeout(timeout);
         }
@@ -78,9 +98,10 @@ export class RootController {
         const rawResponse = await response.text();
 
         if (!response.ok) {
-            throw new BadGatewayException(
+            this.logger.warn(
                 `Happ crypt5 API responded with ${response.status}: ${rawResponse.slice(0, 300)}`,
             );
+            throw new BadGatewayException('Happ crypt5 API request failed');
         }
 
         let link: unknown = rawResponse.trim();
@@ -102,9 +123,8 @@ export class RootController {
         }
 
         if (typeof link !== 'string' || !link.startsWith('happ://crypt5/')) {
-            throw new BadGatewayException(
-                `Happ crypt5 API returned an invalid link: ${rawResponse.slice(0, 300)}`,
-            );
+            this.logger.warn(`Happ crypt5 API returned an invalid link: ${rawResponse.slice(0, 300)}`);
+            throw new BadGatewayException('Happ crypt5 API returned an invalid link');
         }
 
         return { link };

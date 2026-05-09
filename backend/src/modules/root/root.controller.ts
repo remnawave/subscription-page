@@ -1,6 +1,17 @@
-import { Request, Response } from 'express';
+import { Request, Response as ExpressResponse } from 'express';
 
-import { Get, Controller, Res, Req, Param, Logger } from '@nestjs/common';
+import {
+    BadGatewayException,
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    Logger,
+    Param,
+    Post,
+    Req,
+    Res,
+} from '@nestjs/common';
 
 import {
     REQUEST_TEMPLATE_TYPE_VALUES,
@@ -14,6 +25,9 @@ import { IJwtPayload } from '@common/constants';
 
 import { SubpageConfigService } from './subpage-config.service';
 import { RootService } from './root.service';
+
+const HAPP_CRYPT5_API_URL = 'https://crypto.happ.su/api-v2.php';
+const HAPP_CRYPT5_TIMEOUT_MS = 10_000;
 
 @Controller()
 export class RootController {
@@ -29,11 +43,78 @@ export class RootController {
         return await this.subpageConfigService.getSubscriptionPageConfig(user.su, request);
     }
 
+    @Post(':shortUuid/happ-crypt5')
+    async createHappCrypt5Link(@Body('url') url: unknown) {
+        if (typeof url !== 'string' || !/^https?:\/\//.test(url)) {
+            throw new BadRequestException('Invalid subscription URL');
+        }
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), HAPP_CRYPT5_TIMEOUT_MS);
+
+        let response: globalThis.Response;
+
+        try {
+            response = await fetch(HAPP_CRYPT5_API_URL, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json, text/plain;q=0.9, */*;q=0.8',
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'remnawave-subscription-page/1.0',
+                },
+                body: JSON.stringify({ url }),
+                signal: controller.signal,
+            });
+        } catch (error) {
+            throw new BadGatewayException(
+                error instanceof Error
+                    ? `Happ crypt5 API request failed: ${error.message}`
+                    : 'Happ crypt5 API request failed',
+            );
+        } finally {
+            clearTimeout(timeout);
+        }
+
+        const rawResponse = await response.text();
+
+        if (!response.ok) {
+            throw new BadGatewayException(
+                `Happ crypt5 API responded with ${response.status}: ${rawResponse.slice(0, 300)}`,
+            );
+        }
+
+        let link: unknown = rawResponse.trim();
+        const contentType = response.headers.get('content-type');
+
+        if (contentType?.includes('application/json')) {
+            try {
+                const data: unknown = JSON.parse(rawResponse);
+
+                if (typeof data === 'string') {
+                    link = data;
+                } else if (data && typeof data === 'object') {
+                    const payload = data as Record<string, unknown>;
+                    link = payload.encrypted_link ?? payload.url ?? payload.link ?? payload.result;
+                }
+            } catch {
+                link = rawResponse.trim();
+            }
+        }
+
+        if (typeof link !== 'string' || !link.startsWith('happ://crypt5/')) {
+            throw new BadGatewayException(
+                `Happ crypt5 API returned an invalid link: ${rawResponse.slice(0, 300)}`,
+            );
+        }
+
+        return { link };
+    }
+
     @Get([':shortUuid', ':shortUuid/:clientType'])
     async root(
         @ClientIp() clientIp: string,
         @Req() request: Request,
-        @Res() response: Response,
+        @Res() response: ExpressResponse,
         @Param('shortUuid') shortUuid: string,
         @Param('clientType') clientType: string,
     ) {

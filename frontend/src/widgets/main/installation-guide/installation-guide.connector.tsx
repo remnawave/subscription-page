@@ -17,6 +17,7 @@ import {
 import { notifications } from '@mantine/notifications'
 import { useClipboard } from '@mantine/hooks'
 import { useState } from 'react'
+import { joinURL } from 'ufo'
 import clsx from 'clsx'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
@@ -32,11 +33,53 @@ import classes from './installation-guide.module.css'
 
 export type TBlockVariant = 'accordion' | 'cards' | 'minimal' | 'timeline'
 
+const HAPP_CRYPT5_BUTTON_TYPES = new Set(['HAPP_CRYPT5_LINK', 'happCrypt5Link'])
+const HAPP_CRYPT5_TEMPLATE = '{{HAPP_CRYPT5_LINK}}'
+
 interface IProps {
     BlockRenderer: React.ComponentType<IBlockRendererProps>
     hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean>
     isMobile: boolean
     platform: TSubscriptionPagePlatformKey | undefined
+}
+
+function getButtonType(button: TSubscriptionPageButtonConfig): string {
+    return String(button.type)
+}
+
+function getButtonLinkTemplate(button: TSubscriptionPageButtonConfig): string | undefined {
+    if ('link' in button && typeof button.link === 'string') {
+        return button.link
+    }
+
+    return undefined
+}
+
+async function createHappCrypt5Link(apiUrl: string, url: string): Promise<string> {
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url })
+    })
+
+    if (!response.ok) {
+        throw new Error(`Happ crypt5 proxy responded with ${response.status}`)
+    }
+
+    const data: unknown = await response.json()
+
+    if (data && typeof data === 'object') {
+        const payload = data as Record<string, unknown>
+        const link = payload.link
+
+        if (typeof link === 'string' && link.startsWith('happ://crypt5/')) {
+            return link
+        }
+    }
+
+    throw new Error('Happ crypt5 proxy returned an invalid link')
 }
 
 export const InstallationGuideConnector = (props: IProps) => {
@@ -80,18 +123,51 @@ export const InstallationGuideConnector = (props: IProps) => {
         window.location.href,
         subscription.user.shortUuid
     )
+    const happCrypt5ApiUrl = joinURL(subscriptionUrl, 'happ-crypt5')
 
-    const handleButtonClick = (button: TSubscriptionPageButtonConfig) => {
-        let formattedUrl: string | undefined
+    const formatButtonUrl = (button: TSubscriptionPageButtonConfig, linkTemplate?: string) => {
+        const template = linkTemplate ?? getButtonLinkTemplate(button) ?? subscriptionUrl
 
-        if (button.type === 'subscriptionLink' || button.type === 'copyButton') {
-            formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
-                username: subscription.user.username,
-                subscriptionUrl
-            })
+        return TemplateEngine.formatWithMetaInfo(template, {
+            username: subscription.user.username,
+            subscriptionUrl
+        })
+    }
+
+    const formatButtonUrlAsync = async (button: TSubscriptionPageButtonConfig) => {
+        const linkTemplate = getButtonLinkTemplate(button) ?? subscriptionUrl
+
+        if (!linkTemplate.includes(HAPP_CRYPT5_TEMPLATE)) {
+            return formatButtonUrl(button, linkTemplate)
         }
 
-        switch (button.type) {
+        const happCrypt5Link = await createHappCrypt5Link(happCrypt5ApiUrl, subscriptionUrl)
+        return formatButtonUrl(button, linkTemplate.replaceAll(HAPP_CRYPT5_TEMPLATE, happCrypt5Link))
+    }
+
+    const handleButtonClick = async (button: TSubscriptionPageButtonConfig) => {
+        const buttonType = getButtonType(button)
+        let formattedUrl: string | undefined
+
+        try {
+            if (
+                buttonType === 'subscriptionLink' ||
+                buttonType === 'copyButton' ||
+                HAPP_CRYPT5_BUTTON_TYPES.has(buttonType)
+            ) {
+                formattedUrl = await formatButtonUrlAsync(button)
+            }
+        } catch (error) {
+            notifications.show({
+                title: 'Happ crypt5 link error',
+                message:
+                    error instanceof Error ? error.message : 'Failed to create Happ crypt5 link',
+                color: 'red'
+            })
+            return
+        }
+
+        switch (buttonType) {
             case 'copyButton': {
                 if (!formattedUrl) return
 
@@ -104,7 +180,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                 break
             }
             case 'external': {
-                window.open(button.link, '_blank')
+                window.open(getButtonLinkTemplate(button), '_blank')
                 break
             }
             case 'subscriptionLink': {
@@ -113,8 +189,25 @@ export const InstallationGuideConnector = (props: IProps) => {
                 window.open(formattedUrl, '_blank')
                 break
             }
-            default:
+            default: {
+                if (!HAPP_CRYPT5_BUTTON_TYPES.has(buttonType) || !formattedUrl) break
+
+                try {
+                    const happCrypt5Link = await createHappCrypt5Link(happCrypt5ApiUrl, formattedUrl)
+                    window.open(happCrypt5Link, '_blank')
+                } catch (error) {
+                    notifications.show({
+                        title: 'Happ crypt5 link error',
+                        message:
+                            error instanceof Error
+                                ? error.message
+                                : 'Failed to create Happ crypt5 link',
+                        color: 'red'
+                    })
+                }
+
                 break
+            }
         }
     }
 

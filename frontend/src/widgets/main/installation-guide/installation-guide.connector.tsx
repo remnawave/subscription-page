@@ -17,6 +17,7 @@ import {
 import { notifications } from '@mantine/notifications'
 import { useClipboard } from '@mantine/hooks'
 import { useState } from 'react'
+import { joinURL } from 'ufo'
 import clsx from 'clsx'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
@@ -34,7 +35,6 @@ export type TBlockVariant = 'accordion' | 'cards' | 'minimal' | 'timeline'
 
 const HAPP_CRYPT5_BUTTON_TYPES = new Set(['HAPP_CRYPT5_LINK', 'happCrypt5Link'])
 const HAPP_CRYPT5_TEMPLATE = '{{HAPP_CRYPT5_LINK}}'
-const HAPP_CRYPT5_API_URL = 'https://crypto.happ.su/api-v2.php'
 const HAPP_CRYPT5_ERROR_TITLE = {
     en: 'Happ crypt5 link error',
     ru: 'Ошибка ссылки Happ crypt5'
@@ -63,28 +63,31 @@ function getButtonLinkTemplate(button: TSubscriptionPageButtonConfig): string | 
     return undefined
 }
 
-async function createHappCrypt5Link(url: string): Promise<string> {
-    const response = await fetch(HAPP_CRYPT5_API_URL, {
+async function createHappCrypt5Link(apiUrl: string, url: string): Promise<string> {
+    const response = await fetch(apiUrl, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ url })
     })
 
     if (!response.ok) {
-        throw new Error(`Happ crypt5 API responded with ${response.status}`)
+        throw new Error(`Happ crypt5 proxy responded with ${response.status}`)
     }
 
     const data: unknown = await response.json()
 
     if (data && typeof data === 'object') {
         const payload = data as Record<string, unknown>
-        const link = payload.encrypted_link ?? payload.url ?? payload.link ?? payload.result
+        const link = payload.link
 
         if (typeof link === 'string' && link.startsWith('happ://crypt5/')) {
             return link
         }
     }
 
-    throw new Error('Happ crypt5 API returned an invalid link')
+    throw new Error('Happ crypt5 proxy returned an invalid link')
 }
 
 export const InstallationGuideConnector = (props: IProps) => {
@@ -128,6 +131,7 @@ export const InstallationGuideConnector = (props: IProps) => {
         window.location.href,
         subscription.user.shortUuid
     )
+    const happCrypt5ApiUrl = joinURL(subscriptionUrl, 'happ-crypt5')
 
     const formatButtonUrl = (button: TSubscriptionPageButtonConfig, linkTemplate?: string) => {
         const template = linkTemplate ?? getButtonLinkTemplate(button) ?? subscriptionUrl
@@ -143,14 +147,14 @@ export const InstallationGuideConnector = (props: IProps) => {
         const linkTemplate = getButtonLinkTemplate(button) ?? subscriptionUrl
 
         if (linkTemplate.includes(HAPP_CRYPT5_TEMPLATE)) {
-            const happCrypt5Link = await createHappCrypt5Link(subscriptionUrl)
+            const happCrypt5Link = await createHappCrypt5Link(happCrypt5ApiUrl, subscriptionUrl)
             return formatButtonUrl(button, linkTemplate.replaceAll(HAPP_CRYPT5_TEMPLATE, happCrypt5Link))
         }
 
         const formattedUrl = formatButtonUrl(button, linkTemplate)
 
         if (HAPP_CRYPT5_BUTTON_TYPES.has(buttonType)) {
-            return await createHappCrypt5Link(formattedUrl)
+            return await createHappCrypt5Link(happCrypt5ApiUrl, formattedUrl)
         }
 
         return formattedUrl

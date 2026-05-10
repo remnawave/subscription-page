@@ -58,9 +58,6 @@ function getButtonLinkTemplate(button: TSubscriptionPageButtonConfig): string | 
 async function createHappCrypt5Link(url: string): Promise<string> {
     const response = await fetch(HAPP_CRYPT5_API_URL, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ url })
     })
 

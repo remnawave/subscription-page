@@ -20,6 +20,7 @@
     "start:preview": "vite preview --port 3334",
     "serve": "NODE_ENV=production tsc && vite build && vite preview --port 3334",
     "serve:dev": "cross-env NODE_ENV=production DOMAIN_OVERRIDE=1 tsc && vite build && vite preview --port 3334",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "npm run lint:eslint && npm run lint:stylelint",
     "lint:eslint": "eslint . --ext .ts,.tsx --cache",
@@ -109,7 +110,8 @@
     "vite-plugin-preload": "^0.4.4",
     "vite-plugin-remove-console": "^2.2.0",
     "vite-plugin-webfont-dl": "^3.11.1",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.1.7"
   },
   "commitlint": {
     "extends": [

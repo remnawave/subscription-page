@@ -15,6 +15,12 @@ import { IJwtPayload } from '@common/constants';
 import { SubpageConfigService } from './subpage-config.service';
 import { RootService } from './root.service';
 
+const SURGE_REQUEST_TEMPLATE_TYPE = 'surge';
+const SUPPORTED_REQUEST_TEMPLATE_TYPES = new Set<string>([
+    ...REQUEST_TEMPLATE_TYPE_VALUES,
+    SURGE_REQUEST_TEMPLATE_TYPE,
+]);
+
 @Controller()
 export class RootController {
     private readonly logger = new Logger(RootController.name);
@@ -51,7 +57,7 @@ export class RootController {
             );
         }
 
-        if (!REQUEST_TEMPLATE_TYPE_VALUES.includes(clientType as TRequestTemplateTypeKeys)) {
+        if (!SUPPORTED_REQUEST_TEMPLATE_TYPES.has(clientType)) {
             this.logger.error(`Invalid client type: ${clientType}`);
 
             response.socket?.destroy();

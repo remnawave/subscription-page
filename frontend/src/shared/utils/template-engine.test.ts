@@ -19,6 +19,20 @@ describe('TemplateEngine.formatWithMetaInfo', () => {
         )
     })
 
+    test('supports encoded Surge client-type suffixes in install-config links', () => {
+        const result = TemplateEngine.formatWithMetaInfo(
+            'surge:///install-config?url={{SUBSCRIPTION_LINK}}%2Fsurge',
+            {
+                ...metaInfo,
+                subscriptionUrl: 'https://example.com/78hSFzp1oW1y1vZL'
+            }
+        )
+
+        expect(result).toBe(
+            'surge:///install-config?url=https%3A%2F%2Fexample.com%2F78hSFzp1oW1y1vZL%2Fsurge'
+        )
+    })
+
     test('keeps regular subscription link templates unchanged', () => {
         const result = TemplateEngine.formatWithMetaInfo(
             'clash://install-config?url={{SUBSCRIPTION_LINK}}',

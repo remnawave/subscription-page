@@ -9,14 +9,22 @@ type LazyTemplateValues = {
     [key in TSubscriptionPageTemplateKey]?: (() => string | undefined) | string | undefined
 }
 
+const isSurgeInstallConfigTemplate = (template: string): boolean => {
+    return /^surge:\/\/\/?install-config\?/.test(template)
+}
+
 export class TemplateEngine {
     static formatWithMetaInfo(
         template: string,
         metaInfo: { subscriptionUrl: string; username: string }
     ): string {
+        const subscriptionUrl = isSurgeInstallConfigTemplate(template)
+            ? encodeURIComponent(metaInfo.subscriptionUrl)
+            : metaInfo.subscriptionUrl
+
         return this.replaceLazy(template, {
             USERNAME: metaInfo.username,
-            SUBSCRIPTION_LINK: metaInfo.subscriptionUrl,
+            SUBSCRIPTION_LINK: subscriptionUrl,
             HAPP_CRYPT3_LINK: () =>
                 createHappCryptoLink(metaInfo.subscriptionUrl, 'v3', true) || 'unknown',
             HAPP_CRYPT4_LINK: () =>

@@ -42,8 +42,8 @@ export const getColorGradient = (color: string): ColorGradientStyle => {
 export const getColorGradientSolid = (color: string): ColorGradientStyle => {
     const [r, g, b] = getRgb(color)
     return {
-        background: `linear-gradient(135deg, rgba(${r},${g},${b},0.22) 0%, rgba(${r},${g},${b},0.12) 100%)`,
-        border: `1px solid rgba(${r},${g},${b},0.38)`,
-        boxShadow: `0 2px 8px rgba(${r},${g},${b},0.15)`
+        background: `linear-gradient(135deg, rgba(${r},${g},${b},0.32) 0%, rgba(${r},${g},${b},0.20) 100%), #ffffff`,
+        border: `1px solid rgba(${r},${g},${b},0.45)`,
+        boxShadow: `0 2px 10px rgba(${r},${g},${b},0.2)`
     }
 }

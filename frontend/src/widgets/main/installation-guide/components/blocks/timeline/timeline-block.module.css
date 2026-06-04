@@ -8,8 +8,9 @@
 }
 
 .timelineItemBullet {
-    background: transparent !important;
+    background: #EDE8F5 !important;
     border: none !important;
+    border-radius: 50%;
 }
 
 .bulletIconSvg {

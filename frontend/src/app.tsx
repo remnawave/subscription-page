@@ -29,7 +29,7 @@ export function App() {
 
     return (
         <DirectionProvider>
-            <MantineProvider defaultColorScheme="dark" theme={theme}>
+            <MantineProvider defaultColorScheme="light" theme={theme}>
                 <ModalsProvider>
                     <Notifications position={mq ? 'top-right' : 'bottom-right'} />
                     <NavigationProgress />

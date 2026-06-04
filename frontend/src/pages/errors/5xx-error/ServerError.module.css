@@ -13,7 +13,7 @@
     font-size: rem(220px);
     line-height: 1;
     margin-bottom: calc(var(--mantine-spacing-xl) * 1.5);
-    color: var(--mantine-color-blue-3);
+    color: var(--mantine-color-violet-3);
 
     @media (max-width: $mantine-breakpoint-sm) {
         font-size: rem(120px);
@@ -24,7 +24,7 @@
     text-align: center;
     font-weight: 900;
     font-size: rem(38px);
-    color: var(--mantine-color-white);
+    color: #2D1B69;
 
     @media (max-width: $mantine-breakpoint-sm) {
         font-size: rem(32px);
@@ -36,5 +36,5 @@
     margin: auto;
     margin-top: var(--mantine-spacing-xl);
     margin-bottom: calc(var(--mantine-spacing-xl) * 1.5);
-    color: var(--mantine-color-blue-1);
+    color: var(--mantine-color-violet-7);
 }

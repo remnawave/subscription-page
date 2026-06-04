@@ -22,7 +22,7 @@ export const theme = createTheme({
     fontSmoothing: true,
     focusRing: 'never',
     white: '#ffffff',
-    black: '#24292f',
+    black: '#2D1B69',
     colors: {
         dark: [
             '#c9d1d9',
@@ -36,7 +36,18 @@ export const theme = createTheme({
             '#0d1117',
             '#010409'
         ],
-
+        violet: [
+            '#F0EBFF',
+            '#DDD5F5',
+            '#C4B5E8',
+            '#A894D9',
+            '#8E76CA',
+            '#7860B8',
+            '#6B5BA6',
+            '#5C4D8F',
+            '#4D3F78',
+            '#3E3161'
+        ],
         blue: [
             '#ddf4ff',
             '#b6e3ff',
@@ -74,25 +85,25 @@ export const theme = createTheme({
             '#3b2300'
         ],
         orange: [
-            '#fff1e5',
-            '#ffd8b5',
-            '#ffb77c',
-            '#fb8f44',
-            '#e16f24',
-            '#bc4c00',
-            '#953800',
-            '#762c00',
-            '#5c2200',
-            '#471700'
+            '#FFF1EE',
+            '#FFD9D4',
+            '#FFB5AC',
+            '#FF8F84',
+            '#F07068',
+            '#E8614A',
+            '#D45040',
+            '#BE4238',
+            '#A43530',
+            '#8A2828'
         ]
     },
-    primaryShade: 8,
-    primaryColor: 'cyan',
+    primaryShade: { light: 6, dark: 4 },
+    primaryColor: 'violet',
     autoContrast: true,
     luminanceThreshold: 0.3,
     headings: {
         fontFamily: 'Unbounded, Vazirmatn, Apple Color Emoji, Noto Sans SC, sans-serif',
         fontWeight: '600'
     },
-    defaultRadius: 'md'
+    defaultRadius: 'lg'
 })

@@ -35,13 +35,13 @@ export function LanguagePicker(props: IProps) {
         return (
             <Menu.Item
                 key={item}
-                leftSection={<Text>{localeInfo.emoji}</Text>}
+                leftSection={<Text translate="no">{localeInfo.emoji}</Text>}
                 onClick={() => {
                     vibrate('doubleTap')
                     changeLanguage(item)
                 }}
             >
-                {localeInfo.nativeName}
+                <span translate="no">{localeInfo.nativeName}</span>
             </Menu.Item>
         )
     })
@@ -59,12 +59,13 @@ export function LanguagePicker(props: IProps) {
                         background: 'rgba(107, 91, 166, 0.06)',
                         border: '1px solid rgba(107, 91, 166, 0.15)'
                     }}
+                    translate="no"
                     variant="default"
                 >
                     <IconLanguage size={22} />
                 </ActionIcon>
             </Menu.Target>
-            <Menu.Dropdown mah={250} style={{ overflowY: 'auto' }}>{items}</Menu.Dropdown>
+            <Menu.Dropdown mah={250} style={{ overflowY: 'auto' }} translate="no">{items}</Menu.Dropdown>
         </Menu>
     )
 }

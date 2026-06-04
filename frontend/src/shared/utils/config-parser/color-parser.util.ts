@@ -41,12 +41,9 @@ export const getColorGradient = (color: string): ColorGradientStyle => {
 
 export const getColorGradientSolid = (color: string): ColorGradientStyle => {
     const [r, g, b] = getRgb(color)
-    const dark1 = [22 + r * 0.08, 27 + g * 0.08, 35 + b * 0.08].map(Math.floor)
-    const dark2 = [20 + r * 0.05, 24 + g * 0.05, 30 + b * 0.05].map(Math.floor)
-
     return {
-        background: `linear-gradient(135deg, rgb(${dark1}) 0%, rgb(${dark2}) 100%)`,
-        border: `1px solid rgba(${r},${g},${b},0.4)`,
-        boxShadow: `inset 0 0 20px rgba(${r},${g},${b},0.15)`
+        background: `linear-gradient(135deg, rgba(${r},${g},${b},0.22) 0%, rgba(${r},${g},${b},0.12) 100%)`,
+        border: `1px solid rgba(${r},${g},${b},0.38)`,
+        boxShadow: `0 2px 8px rgba(${r},${g},${b},0.15)`
     }
 }

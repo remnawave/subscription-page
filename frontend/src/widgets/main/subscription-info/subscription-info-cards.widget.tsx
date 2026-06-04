@@ -52,7 +52,7 @@ const CardItem = ({ icon, label, value, color }: CardItemProps) => {
                     >
                         {label}
                     </Text>
-                    <Text c="white" className={classes.value} fw={600} size="sm">
+                    <Text className={classes.value} fw={600} size="sm">
                         {value}
                     </Text>
                 </Stack>

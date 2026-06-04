@@ -85,7 +85,6 @@ export const SubscriptionInfoExpandedWidget = ({ isMobile }: IProps) => {
 
                         <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
                             <Title
-                                c="white"
                                 fw={600}
                                 order={5}
                                 style={{

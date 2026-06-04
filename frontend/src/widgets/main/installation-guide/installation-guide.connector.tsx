@@ -99,7 +99,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                 notifications.show({
                     title: t(baseTranslations.linkCopied),
                     message: t(baseTranslations.linkCopiedToClipboard),
-                    color: 'cyan'
+                    color: 'violet'
                 })
                 break
             }
@@ -154,7 +154,7 @@ export const InstallationGuideConnector = (props: IProps) => {
         <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
             <Stack gap="md">
                 <Group gap="sm" justify="space-between">
-                    <Title c="white" fw={600} order={4}>
+                    <Title fw={600} order={4}>
                         {t(baseTranslations.installationGuideHeader)}
                     </Title>
 

@@ -35,7 +35,6 @@ export const CardsBlockRenderer = ({
                             />
                             <Stack gap={isMobile ? 'xs' : 'sm'} style={{ flex: 1, minWidth: 0 }}>
                                 <Title
-                                    c="white"
                                     fw={600}
                                     order={6}
                                     style={{ wordBreak: 'break-word' }}

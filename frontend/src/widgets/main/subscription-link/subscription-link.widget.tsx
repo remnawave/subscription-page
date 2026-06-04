@@ -38,7 +38,7 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
         notifications.show({
             title: t(baseTranslations.linkCopied),
             message: t(baseTranslations.linkCopiedToClipboard),
-            color: 'cyan'
+            color: 'violet'
         })
         clipboard.copy(subscriptionUrl)
     }
@@ -56,7 +56,7 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
 
         const { icon: Icon, color } = matchedPlatform
             ? matchedPlatform[1]
-            : { icon: IconMessageChatbot, color: 'cyan' }
+            : { icon: IconMessageChatbot, color: '#6B5BA6' }
 
         return (
             <ActionIcon
@@ -67,8 +67,8 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
                 rel="noopener noreferrer"
                 size="xl"
                 style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                    background: 'rgba(107, 91, 166, 0.06)',
+                    border: '1px solid rgba(107, 91, 166, 0.15)'
                 }}
                 target="_blank"
                 variant="default"
@@ -82,8 +82,8 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
         vibrate('tap')
 
         const subscriptionQrCode = renderSVG(subscriptionUrl, {
-            whiteColor: '#161B22',
-            blackColor: '#22d3ee'
+            whiteColor: '#ffffff',
+            blackColor: '#6B5BA6'
         })
 
         modals.open({
@@ -100,7 +100,7 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
                         src={`data:image/svg+xml;utf8,${encodeURIComponent(subscriptionQrCode)}`}
                         style={{ borderRadius: 'var(--mantine-radius-md)' }}
                     />
-                    <Text c="white" fw={600} size="lg" ta="center">
+                    <Text fw={600} size="lg" ta="center">
                         {t(baseTranslations.scanQrCode)}
                     </Text>
                     <Text c="dimmed" size="sm" ta="center">

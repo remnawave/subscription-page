@@ -61,8 +61,8 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
 
     const handleShowQr = (link: ParsedLink) => {
         const qrCode = renderSVG(link.fullLink, {
-            whiteColor: '#161B22',
-            blackColor: '#22d3ee'
+            whiteColor: '#ffffff',
+            blackColor: '#2d4d76'
         })
 
         modals.open({
@@ -91,11 +91,11 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
         <Card p={{ base: 'sm', xs: 'md', sm: 'lg', md: 'xl' }} radius="lg">
             <Stack gap="md">
                 <Group gap="sm" justify="space-between">
-                    <Title c="white" fw={600} order={4}>
+                    <Title c="dark.8" fw={600} order={4}>
                         {t(baseTranslations.connectionKeysHeader)}
                     </Title>
                     {parsedLinks.length > 1 && (
-                        <Badge color="cyan" size="lg" variant="light">
+                        <Badge color="brand" size="lg" variant="light">
                             {parsedLinks.length}
                         </Badge>
                     )}
@@ -110,13 +110,13 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
                                         <IconKey
                                             size={isMobile ? 16 : 18}
                                             style={{
-                                                color: 'var(--mantine-color-cyan-4)',
+                                                color: 'var(--mantine-color-brand-6)',
                                                 flexShrink: 0
                                             }}
                                         />
                                         <Box className={classes.keyName}>
                                             <Text
-                                                c="white"
+                                                c="dark.8"
                                                 fw={500}
                                                 size={isMobile ? 'xs' : 'sm'}
                                                 span
@@ -148,7 +148,7 @@ export const RawKeysWidget = ({ isMobile }: IProps) => {
                                         </CopyButton>
 
                                         <ActionIcon
-                                            color="cyan"
+                                            color="brand"
                                             onClick={() => {
                                                 vibrate('tap')
                                                 handleShowQr(link)

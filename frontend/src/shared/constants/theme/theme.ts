@@ -6,8 +6,8 @@ export const theme = createTheme({
     components,
     cursorType: 'pointer',
     fontFamily:
-        'Montserrat, Vazirmatn, Apple Color Emoji, Noto Sans SC, Twemoji Country Flags, sans-serif',
-    fontFamilyMonospace: 'Fira Mono, monospace',
+        'Geist, Vazirmatn, Apple Color Emoji, Noto Sans SC, Twemoji Country Flags, sans-serif',
+    fontFamilyMonospace: 'Geist Mono, Fira Mono, monospace',
     breakpoints: {
         xs: '25em',
         sm: '30em',
@@ -22,19 +22,33 @@ export const theme = createTheme({
     fontSmoothing: true,
     focusRing: 'never',
     white: '#ffffff',
-    black: '#24292f',
+    black: '#2d4d76',
     colors: {
+        // PoletVPN brand accent (#329fff) — fill, links, focus, borders
+        brand: [
+            '#eaf5ff',
+            '#d4eaff',
+            '#a8d3ff',
+            '#7abcff',
+            '#52a8ff',
+            '#329fff',
+            '#1f8cef',
+            '#1572cc',
+            '#0e59a3',
+            '#06407a'
+        ],
+        // navy "ink" scale used in place of the old dark scale for text
         dark: [
-            '#c9d1d9',
-            '#b1bac4',
-            '#8b949e',
-            '#6e7681',
-            '#484f58',
-            '#30363d',
-            '#21262d',
-            '#161b22',
-            '#0d1117',
-            '#010409'
+            '#f1f5f9',
+            '#dbe3ee',
+            '#b8c3c7',
+            '#8aa0b8',
+            '#5d7795',
+            '#3f5f82',
+            '#2d4d76',
+            '#243d5e',
+            '#1b2e47',
+            '#121f30'
         ],
 
         blue: [
@@ -86,12 +100,12 @@ export const theme = createTheme({
             '#471700'
         ]
     },
-    primaryShade: 8,
-    primaryColor: 'cyan',
+    primaryShade: 5,
+    primaryColor: 'brand',
     autoContrast: true,
     luminanceThreshold: 0.3,
     headings: {
-        fontFamily: 'Unbounded, Vazirmatn, Apple Color Emoji, Noto Sans SC, sans-serif',
+        fontFamily: 'Geist, Vazirmatn, Apple Color Emoji, Noto Sans SC, sans-serif',
         fontWeight: '600'
     },
     defaultRadius: 'md'

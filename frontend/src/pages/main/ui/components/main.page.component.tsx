@@ -11,7 +11,8 @@ import {
     SubscriptionInfoCollapsedWidget,
     SubscriptionInfoExpandedWidget,
     SubscriptionLinkWidget,
-    TimelineBlockRenderer
+    TimelineBlockRenderer,
+    VideoGuideCardWidget
 } from '@widgets/main'
 import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
@@ -83,10 +84,10 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
                                     }}
                                 />
                             ) : (
-                                <RemnawaveLogo c="cyan" size={32} />
+                                <RemnawaveLogo size={32} />
                             )}
                             <Title
-                                c={hasCustomLogo ? 'white' : 'cyan'}
+                                c="brand"
                                 fw={700}
                                 order={4}
                                 size="lg"
@@ -113,6 +114,8 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
                     {SubscriptionInfoBlockRenderer && (
                         <SubscriptionInfoBlockRenderer isMobile={isMobile} />
                     )}
+
+                    <VideoGuideCardWidget />
 
                     {atLeastOnePlatformApp && (
                         <InstallationGuideConnector

@@ -16,6 +16,11 @@ detector.init({
 function detectLanguage(
     supportedLocales: TSubscriptionPageLanguageCode[]
 ): TSubscriptionPageLanguageCode {
+    // PoletVPN — русскоязычный продукт: если русская локаль доступна, всегда её.
+    if (supportedLocales.includes('ru' as TSubscriptionPageLanguageCode)) {
+        return 'ru' as TSubscriptionPageLanguageCode
+    }
+
     const detected = detector.detect()
 
     const lang = Array.isArray(detected) ? detected[0] : detected

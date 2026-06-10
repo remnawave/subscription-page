@@ -1,11 +1,11 @@
 .accordionItem {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #fff;
+    border: 1px solid rgb(50, 159, 255, 0.2);
 }
 
 .accordionItem[data-active] {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(34, 211, 238, 0.3);
+    background: rgb(50, 159, 255, 0.06);
+    border-color: rgb(50, 159, 255, 0.35);
 }
 
 .accordionControl {
@@ -14,7 +14,7 @@
 }
 
 .accordionControl:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgb(50, 159, 255, 0.05);
     border-radius: var(--mantine-radius-lg);
 }
 

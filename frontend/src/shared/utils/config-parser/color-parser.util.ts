@@ -1,4 +1,5 @@
 const COLORS: Record<string, [number, number, number]> = {
+    brand: [50, 159, 255],
     cyan: [34, 211, 238],
     teal: [32, 201, 151],
     green: [64, 192, 87],
@@ -15,7 +16,7 @@ const COLORS: Record<string, [number, number, number]> = {
     dark: [55, 58, 64]
 }
 
-const DEFAULT_COLOR = COLORS.cyan
+const DEFAULT_COLOR = COLORS.brand
 
 const hexToRgb = (hex: string): [number, number, number] | null => {
     const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -41,12 +42,10 @@ export const getColorGradient = (color: string): ColorGradientStyle => {
 
 export const getColorGradientSolid = (color: string): ColorGradientStyle => {
     const [r, g, b] = getRgb(color)
-    const dark1 = [22 + r * 0.08, 27 + g * 0.08, 35 + b * 0.08].map(Math.floor)
-    const dark2 = [20 + r * 0.05, 24 + g * 0.05, 30 + b * 0.05].map(Math.floor)
-
+    // Light theme: a slightly stronger tinted fill than getColorGradient,
+    // so the colored icon stays readable on a white surface.
     return {
-        background: `linear-gradient(135deg, rgb(${dark1}) 0%, rgb(${dark2}) 100%)`,
-        border: `1px solid rgba(${r},${g},${b},0.4)`,
-        boxShadow: `inset 0 0 20px rgba(${r},${g},${b},0.15)`
+        background: `linear-gradient(135deg, rgba(${r},${g},${b},0.2) 0%, rgba(${r},${g},${b},0.1) 100%)`,
+        border: `1px solid rgba(${r},${g},${b},0.35)`
     }
 }

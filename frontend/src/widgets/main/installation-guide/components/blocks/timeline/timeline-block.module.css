@@ -1,6 +1,6 @@
 /* Timeline styles */
 .timelineRoot {
-    --tl-line-color: rgba(255, 255, 255, 0.08);
+    --tl-line-color: rgb(50, 159, 255, 0.2);
 }
 
 .timelineItem {

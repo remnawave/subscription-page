@@ -1,5 +1,5 @@
-import { IconArrowsUpDown, IconCalendar, IconCheck, IconUserScan, IconX } from '@tabler/icons-react'
 import { Box, Group, SimpleGrid, Stack, Text, ThemeIcon } from '@mantine/core'
+import { IconCalendar, IconCheck, IconX } from '@tabler/icons-react'
 
 import { useSubscription } from '@entities/subscription-info-store'
 import { formatDate } from '@shared/utils/config-parser'
@@ -7,10 +7,20 @@ import { useTranslation } from '@shared/hooks'
 
 import classes from './subscription-info-cards.module.css'
 
-type ColorVariant = 'blue' | 'cyan' | 'green' | 'orange' | 'red' | 'teal' | 'violet' | 'yellow'
+type ColorVariant =
+    | 'blue'
+    | 'brand'
+    | 'cyan'
+    | 'green'
+    | 'orange'
+    | 'red'
+    | 'teal'
+    | 'violet'
+    | 'yellow'
 
 const iconColorClasses: Record<ColorVariant, string> = {
     blue: classes.iconBlue,
+    brand: classes.iconCyan,
     cyan: classes.iconCyan,
     green: classes.iconGreen,
     teal: classes.iconTeal,
@@ -18,6 +28,14 @@ const iconColorClasses: Record<ColorVariant, string> = {
     yellow: classes.iconYellow,
     orange: classes.iconOrange,
     violet: classes.iconViolet
+}
+
+// Русские подписи статуса подписки (енумы Remnawave → текст для пользователя)
+const STATUS_RU: Record<string, string> = {
+    ACTIVE: 'Активна',
+    EXPIRED: 'Истекла',
+    LIMITED: 'Ограничена',
+    DISABLED: 'Отключена'
 }
 
 interface CardItemProps {
@@ -52,7 +70,7 @@ const CardItem = ({ icon, label, value, color }: CardItemProps) => {
                     >
                         {label}
                     </Text>
-                    <Text c="white" className={classes.value} fw={600} size="sm">
+                    <Text c="dark.8" className={classes.value} fw={600} size="sm">
                         {value}
                     </Text>
                 </Stack>
@@ -66,47 +84,28 @@ interface IProps {
 }
 
 export const SubscriptionInfoCardsWidget = ({ isMobile: _ }: IProps) => {
-    const { t, currentLang, baseTranslations } = useTranslation()
+    const { currentLang, baseTranslations } = useTranslation()
     const subscription = useSubscription()
 
     const { user } = subscription
 
     const isActive = user.userStatus === 'ACTIVE'
-    const statusText = isActive ? t(baseTranslations.active) : t(baseTranslations.inactive)
-
-    const bandwidthValue =
-        user.trafficLimit === '0'
-            ? `${user.trafficUsed} / ∞`
-            : `${user.trafficUsed} / ${user.trafficLimit}`
+    const statusText = STATUS_RU[user.userStatus] ?? 'Неизвестно'
 
     return (
         <SimpleGrid cols={{ base: 1, xs: 1, sm: 2 }} spacing="xs" verticalSpacing="xs">
             <CardItem
-                color="blue"
-                icon={<IconUserScan size={18} />}
-                label={t(baseTranslations.name)}
-                value={user.username}
-            />
-
-            <CardItem
                 color={isActive ? 'green' : 'red'}
                 icon={isActive ? <IconCheck size={18} /> : <IconX size={18} />}
-                label={t(baseTranslations.status)}
+                label="Статус"
                 value={statusText}
             />
 
             <CardItem
                 color="orange"
                 icon={<IconCalendar size={18} />}
-                label={t(baseTranslations.expires)}
+                label="Истекает"
                 value={formatDate(user.expiresAt, currentLang, baseTranslations)}
-            />
-
-            <CardItem
-                color="cyan"
-                icon={<IconArrowsUpDown size={18} />}
-                label={t(baseTranslations.bandwidth)}
-                value={bandwidthValue}
             />
         </SimpleGrid>
     )

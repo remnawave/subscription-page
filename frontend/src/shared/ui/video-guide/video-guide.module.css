@@ -1,0 +1,54 @@
+.modalContent {
+    background: #fff;
+    border: 1px solid rgb(50, 159, 255, 0.25);
+}
+
+.modalHeader {
+    background: transparent;
+}
+
+.modalTitle {
+    font-weight: 600;
+    color: #2d4d76;
+}
+
+.videoFrame {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 65vh;
+    border-radius: var(--mantine-radius-md);
+    overflow: hidden;
+    background: rgb(50, 159, 255, 0.06);
+    border: 1px solid rgb(50, 159, 255, 0.2);
+}
+
+/* Видео сохраняет свои пропорции (запись экрана — портрет), без обрезки */
+.video {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+    display: block;
+    border-radius: var(--mantine-radius-md);
+}
+
+.steps {
+    margin: 0;
+}
+
+.stepNumber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgb(50, 159, 255, 0.1);
+    color: #1572cc;
+    font-size: var(--mantine-font-size-xs);
+    font-weight: 600;
+}

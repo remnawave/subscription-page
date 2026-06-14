@@ -116,7 +116,7 @@ export const SubscriptionInfoCollapsedWidget = ({ isMobile }: IProps) => {
                 </Group>
             </UnstyledButton>
 
-            <Collapse in={isExpanded} keepMounted>
+            <Collapse expanded={isExpanded} keepMounted>
                 <Stack gap="xs" pb={{ base: 'xs', sm: 'sm' }} px={{ base: 'xs', sm: 'sm' }}>
                     <SimpleGrid cols={2} spacing="xs" verticalSpacing="xs">
                         <InfoBlockShared

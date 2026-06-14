@@ -9,6 +9,7 @@ import { json } from 'express';
 import path from 'node:path';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import * as ejs from 'ejs';
 
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
@@ -82,10 +83,7 @@ async function bootstrap(): Promise<void> {
 
     app.setBaseViewsDir(assetsPath);
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const consolidate = require('@ladjs/consolidate');
-
-    app.engine('html', consolidate.ejs);
+    app.engine('html', ejs.renderFile);
     app.setViewEngine('html');
 
     app.use(json({ limit: '100mb' }));

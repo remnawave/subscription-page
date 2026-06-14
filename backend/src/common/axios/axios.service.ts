@@ -144,7 +144,7 @@ export class AxiosService implements OnModuleInit {
         try {
             const response = await this.axiosInstance.request<GetUserByUsernameCommand.Response>({
                 method: GetUserByUsernameCommand.endpointDetails.REQUEST_METHOD,
-                url: GetUserByUsernameCommand.url(username),
+                url: GetUserByUsernameCommand.url(encodeURIComponent(username)),
                 headers: {
                     [REMNAWAVE_REAL_IP_HEADER]: clientIp,
                 },
@@ -178,7 +178,7 @@ export class AxiosService implements OnModuleInit {
             const response =
                 await this.axiosInstance.request<GetSubscriptionPageConfigCommand.Response>({
                     method: GetSubscriptionPageConfigCommand.endpointDetails.REQUEST_METHOD,
-                    url: GetSubscriptionPageConfigCommand.url(uuid),
+                    url: GetSubscriptionPageConfigCommand.url(encodeURIComponent(uuid)),
                 });
 
             return {
@@ -236,7 +236,7 @@ export class AxiosService implements OnModuleInit {
             const response =
                 await this.axiosInstance.request<GetSubscriptionInfoByShortUuidCommand.Response>({
                     method: GetSubscriptionInfoByShortUuidCommand.endpointDetails.REQUEST_METHOD,
-                    url: GetSubscriptionInfoByShortUuidCommand.url(shortUuid),
+                    url: GetSubscriptionInfoByShortUuidCommand.url(encodeURIComponent(shortUuid)),
                     headers: {
                         [REMNAWAVE_REAL_IP_HEADER]: clientIp,
                     },
@@ -265,7 +265,7 @@ export class AxiosService implements OnModuleInit {
             const response =
                 await this.axiosInstance.request<GetSubpageConfigByShortUuidCommand.Response>({
                     method: GetSubpageConfigByShortUuidCommand.endpointDetails.REQUEST_METHOD,
-                    url: GetSubpageConfigByShortUuidCommand.url(shortUuid),
+                    url: GetSubpageConfigByShortUuidCommand.url(encodeURIComponent(shortUuid)),
                     data: {
                         requestHeaders,
                     },
@@ -292,10 +292,10 @@ export class AxiosService implements OnModuleInit {
         headers: RawAxiosResponseHeaders | AxiosResponseHeaders;
     } | null> {
         try {
-            let basePath = 'api/sub/' + shortUuid;
+            let basePath = 'api/sub/' + encodeURIComponent(shortUuid);
 
             if (withClientType && clientType) {
-                basePath += '/' + clientType;
+                basePath += '/' + encodeURIComponent(clientType);
             }
 
             const safeHeaders = Object.fromEntries(

@@ -1,5 +1,5 @@
 import { ErrorBoundary, ErrorBoundaryProps } from 'react-error-boundary'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router'
 import { FC } from 'react'
 
 export const ErrorBoundaryHoc: FC<ErrorBoundaryProps> = (props) => {

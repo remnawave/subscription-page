@@ -3,17 +3,14 @@
 // import deadFile from 'vite-plugin-deadfile'
 import removeConsole from 'vite-plugin-remove-console'
 import webfontDownload from 'vite-plugin-webfont-dl'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
-import { fileURLToPath, URL } from 'node:url'
-import react from '@vitejs/plugin-react-swc'
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import 'dotenv/config'
 
 export default defineConfig({
     plugins: [
         react(),
-        tsconfigPaths(),
         removeConsole(),
         webfontDownload(undefined, {}),
         ViteEjsPlugin((viteConfig) => {
@@ -32,75 +29,37 @@ export default defineConfig({
                 metaTitle: process.env.META_TITLE
             }
         })
-        // obfuscatorPlugin({
-        //     exclude: [/node_modules/, /app.tsx/],
-        //     apply: 'build',
-        //     debugger: false,
-        //     options: {
-        //         compact: true,
-        //         controlFlowFlattening: false,
-        //         deadCodeInjection: false,
-        //         debugProtection: true,
-        //         debugProtectionInterval: 0,
-        //         domainLock: [],
-        //         disableConsoleOutput: true,
-        //         identifierNamesGenerator: 'hexadecimal',
-        //         log: false,
-        //         numbersToExpressions: false,
-        //         renameGlobals: false,
-        //         selfDefending: false,
-        //         simplify: true,
-        //         splitStrings: false,
-        //         stringArray: true,
-        //         stringArrayCallsTransform: false,
-        //         stringArrayCallsTransformThreshold: 0.5,
-        //         stringArrayEncoding: [],
-        //         stringArrayIndexShift: true,
-        //         stringArrayRotate: true,
-        //         stringArrayShuffle: true,
-        //         stringArrayWrappersCount: 1,
-        //         stringArrayWrappersChainedCalls: true,
-        //         stringArrayWrappersParametersMaxCount: 2,
-        //         stringArrayWrappersType: 'variable',
-        //         stringArrayThreshold: 0.75,
-        //         unicodeEscapeSequence: false
-        //         // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
-        //     }
-        // })
-        // visualizer()
     ],
     optimizeDeps: {
         include: ['html-parse-stringify']
     },
-
     build: {
-        target: 'esNext',
-
+        target: 'esnext',
         outDir: 'dist',
         rollupOptions: {
             output: {
-                manualChunks: {
-                    icons: ['react-icons/pi', '@tabler/icons-react'],
-                    date: ['dayjs'],
-                    react: [
-                        'react',
-                        'zustand',
-                        'react-dom',
-                        'react-router-dom',
-                        'react-error-boundary',
-                        'react-dom/client'
-                    ],
-                    mantine: [
-                        '@mantine/core',
-                        '@mantine/hooks',
-                        '@mantine/nprogress',
-                        '@mantine/notifications',
-                        '@mantine/modals'
-                    ],
-                    i18n: [
-                        'i18next-browser-languagedetector',
-                        '@remnawave/backend-contract',
-                        '@remnawave/subscription-page-types'
+                codeSplitting: {
+                    groups: [
+                        {
+                            name: 'icons',
+                            test: /node_modules[\\/](react-icons|@tabler[\\/]icons-react)[\\/]/
+                        },
+                        {
+                            name: 'date',
+                            test: /node_modules[\\/]dayjs[\\/]/
+                        },
+                        {
+                            name: 'react',
+                            test: /node_modules[\\/](react|zustand|react-dom|react-router|react-error-boundary)[\\/]/
+                        },
+                        {
+                            name: 'mantine',
+                            test: /node_modules[\\/]@mantine[\\/](core|hooks|nprogress|notifications|modals)[\\/]/
+                        },
+                        {
+                            name: 'i18n',
+                            test: /node_modules[\\/](i18next-browser-languagedetector|@remnawave[\\/](backend-contract|subscription-page-types))[\\/]/
+                        }
                     ]
                 }
             }
@@ -113,14 +72,5 @@ export default defineConfig({
         strictPort: true,
         allowedHosts: true
     },
-    resolve: {
-        alias: {
-            '@entities': fileURLToPath(new URL('./src/entities', import.meta.url)),
-            '@features': fileURLToPath(new URL('./src/features', import.meta.url)),
-            '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
-            '@widgets': fileURLToPath(new URL('./src/widgets', import.meta.url)),
-            '@public': fileURLToPath(new URL('./public', import.meta.url)),
-            '@shared': fileURLToPath(new URL('./src/shared', import.meta.url))
-        }
-    }
+    resolve: { tsconfigPaths: true }
 })

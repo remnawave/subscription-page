@@ -1,9 +1,4 @@
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
-    RouterProvider
-} from 'react-router-dom'
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router'
 
 import { ErrorPageComponent } from '@pages/errors/5xx-error/server-error.component'
 import { MainPageConnector } from '@pages/main/ui/connectors/main.page.connector'

@@ -1,23 +1,11 @@
-import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
-import { validateEnvConfig } from '@common/utils/validate-env-config';
-import { configSchema, Env } from '@common/config/app-config';
+import { AppConfigModule } from '@common/config/app-config/app-config.module';
 import { AxiosModule } from '@common/axios/axios.module';
 
 import { SubscriptionPageBackendModule } from '@modules/subscription-page-backend.modules';
 
 @Module({
-    imports: [
-        AxiosModule,
-        ConfigModule.forRoot({
-            isGlobal: true,
-            cache: true,
-            envFilePath: '.env',
-            validate: (config) => validateEnvConfig<Env>(configSchema, config),
-        }),
-
-        SubscriptionPageBackendModule,
-    ],
+    imports: [AppConfigModule, AxiosModule, SubscriptionPageBackendModule],
 })
 export class AppModule {}

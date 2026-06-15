@@ -10,7 +10,6 @@ import { exit } from 'node:process';
 import { table } from 'table';
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 import {
     GetMetadataCommand,
@@ -23,6 +22,7 @@ import {
     TRequestTemplateTypeKeys,
 } from '@remnawave/backend-contract';
 
+import { TypedConfigService } from '@common/config/app-config';
 import { IGNORED_HEADERS } from '@common/constants';
 
 import { ICommandResponse } from '../types/command-response.type';
@@ -32,7 +32,7 @@ export class AxiosService implements OnModuleInit {
     public axiosInstance: AxiosInstance;
     private readonly logger = new Logger(AxiosService.name);
 
-    constructor(private readonly configService: ConfigService) {
+    constructor(private readonly configService: TypedConfigService) {
         this.axiosInstance = axios.create({
             baseURL: this.configService.getOrThrow('REMNAWAVE_PANEL_URL'),
             timeout: 10_000,
@@ -42,18 +42,16 @@ export class AxiosService implements OnModuleInit {
             },
         });
 
-        const caddyAuthApiToken = this.configService.get<string | undefined>(
-            'CADDY_AUTH_API_TOKEN',
-        );
+        const caddyAuthApiToken = this.configService.get('CADDY_AUTH_API_TOKEN');
 
-        const cloudflareZeroTrustClientId = this.configService.get<string | undefined>(
+        const cloudflareZeroTrustClientId = this.configService.get(
             'CLOUDFLARE_ZERO_TRUST_CLIENT_ID',
         );
-        const cloudflareZeroTrustClientSecret = this.configService.get<string | undefined>(
+        const cloudflareZeroTrustClientSecret = this.configService.get(
             'CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET',
         );
 
-        const egamesCookie = this.configService.get<string | undefined>('EGAMES_COOKIE');
+        const egamesCookie = this.configService.get('EGAMES_COOKIE');
 
         if (caddyAuthApiToken) {
             this.axiosInstance.defaults.headers.common['X-Api-Key'] = caddyAuthApiToken;

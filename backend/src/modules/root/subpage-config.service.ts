@@ -2,7 +2,6 @@ import { exit } from 'node:process';
 import { Request } from 'express';
 
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 
 import {
@@ -12,6 +11,7 @@ import {
 } from '@remnawave/subscription-page-types';
 
 import { decryptUuid, encryptUuid } from '@common/utils/crypt-utils';
+import { TypedConfigService } from '@common/config/app-config';
 import { AxiosService } from '@common/axios';
 
 @Injectable()
@@ -22,11 +22,11 @@ export class SubpageConfigService implements OnApplicationBootstrap {
     private readonly subpageConfigMap: Map<string, TSubscriptionPageRawConfig> = new Map();
 
     constructor(
-        private readonly configService: ConfigService,
+        private readonly configService: TypedConfigService,
         private readonly axiosService: AxiosService,
     ) {
-        this.internalJwtSecret = this.configService.getOrThrow<string>('INTERNAL_JWT_SECRET');
-        this.subpageConfigUuid = this.configService.getOrThrow<string>('SUBPAGE_CONFIG_UUID');
+        this.internalJwtSecret = this.configService.getOrThrow('INTERNAL_JWT_SECRET');
+        this.subpageConfigUuid = this.configService.getOrThrow('SUBPAGE_CONFIG_UUID');
     }
 
     public async onApplicationBootstrap(): Promise<void> {

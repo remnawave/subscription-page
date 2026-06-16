@@ -1,6 +1,15 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
+const booleanString = (def: 'true' | 'false' = 'false') =>
+    z
+        .string()
+        .default(def)
+        .transform((val) => (val === '' ? def : val))
+        .refine((val) => val === 'true' || val === 'false', 'Must be "true" or "false".')
+        .transform((val) => val === 'true')
+        .pipe(z.boolean());
+
 const REQUIRED_REMNAWAVE_API_TOKEN_MESSAGE =
     'Remnawave Dashboard → Remnawave Settings → API Tokens. Create a new API Token and set it in the .env file.';
 
@@ -22,17 +31,10 @@ export const configSchema = z
         CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.optional(z.string()),
         CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.optional(z.string()),
 
-        MARZBAN_LEGACY_LINK_ENABLED: z
-            .string()
-            .default('false')
-            .transform((val) => val === 'true'),
+        MARZBAN_LEGACY_LINK_ENABLED: booleanString(),
         MARZBAN_LEGACY_SECRET_KEY: z.optional(z.string()),
         MARZBAN_LEGACY_SUBSCRIPTION_VALID_FROM: z.optional(z.string()),
-        MARZBAN_LEGACY_DROP_REVOKED_SUBSCRIPTIONS: z
-            .string()
-            .default('false')
-            .transform((val) => (val === '' ? 'false' : val))
-            .refine((val) => val === 'true' || val === 'false', 'Must be "true" or "false".'),
+        MARZBAN_LEGACY_DROP_REVOKED_SUBSCRIPTIONS: booleanString(),
         INTERNAL_JWT_SECRET: z.string(),
         EGAMES_COOKIE: z.optional(z.string()),
     })
@@ -47,7 +49,7 @@ export const configSchema = z
                 path: ['REMNAWAVE_PANEL_URL'],
             });
         }
-        if (data.MARZBAN_LEGACY_LINK_ENABLED === true) {
+        if (data.MARZBAN_LEGACY_LINK_ENABLED) {
             if (!data.MARZBAN_LEGACY_SECRET_KEY) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,

@@ -36,4 +36,5 @@ export const IGNORED_HEADERS = new Set([
 
     'x-forwarded-proto',
     'x-forwarded-scheme',
+    'x-subpage-version',
 ]);

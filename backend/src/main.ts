@@ -70,6 +70,11 @@ async function bootstrap(): Promise<void> {
 
     app.disable('x-powered-by');
 
+    // Resolve the real client IP from the trusted reverse-proxy hop. Without this,
+    // Express would treat the immediate peer as the client and our IP detection
+    // would rely on raw, client-spoofable forwarding headers.
+    app.set('trust proxy', app.get(TypedConfigService).get('TRUST_PROXY'));
+
     app.use(cookieParser());
 
     app.use(noRobotsMiddleware, proxyCheckMiddleware, checkAssetsCookieMiddleware, getRealIp);

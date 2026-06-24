@@ -27,6 +27,22 @@ export const configSchema = z
         SUBPAGE_CONFIG_UUID: z.string().default('00000000-0000-0000-0000-000000000000'),
         CUSTOM_SUB_PREFIX: z.optional(z.string()),
 
+        // Number of trusted reverse-proxy hops (e.g. 1 for a single nginx/Caddy,
+        // 2 for Cloudflare + nginx), or a comma-separated list of trusted proxy
+        // IPs/subnets. Used by Express `trust proxy` so the real client IP is
+        // resolved from the trusted hop and cannot be spoofed via X-Forwarded-For.
+        TRUST_PROXY: z
+            .string()
+            .default('1')
+            .transform((val) => (val.trim() === '' ? '1' : val.trim()))
+            .transform((val): boolean | number | string => {
+                if (val === 'true') return true;
+                if (val === 'false') return false;
+                const asNumber = Number(val);
+                if (Number.isInteger(asNumber) && asNumber >= 0) return asNumber;
+                return val;
+            }),
+
         CADDY_AUTH_API_TOKEN: z.optional(z.string()),
         CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.optional(z.string()),
         CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.optional(z.string()),

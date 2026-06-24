@@ -68,7 +68,11 @@ async function bootstrap(): Promise<void> {
         }),
     });
 
+    const config = app.get(TypedConfigService);
+
     app.disable('x-powered-by');
+
+    app.set('trust proxy', config.getOrThrow('TRUST_PROXY'));
 
     app.use(cookieParser());
 
@@ -87,8 +91,6 @@ async function bootstrap(): Promise<void> {
     app.setViewEngine('html');
 
     app.use(json({ limit: '100mb' }));
-
-    const config = app.get(TypedConfigService);
 
     app.use(helmet({ contentSecurityPolicy: false }));
 

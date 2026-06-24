@@ -1,6 +1,6 @@
 {
   "name": "@remnawave/subscription-page",
-  "version": "7.2.5",
+  "version": "7.2.6",
   "description": "Remnawave Subscription Page",
   "private": false,
   "type": "commonjs",
@@ -26,7 +26,6 @@
     "lint:fix:imports": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --rule 'perfectionist/sort-imports: error'"
   },
   "dependencies": {
-    "@kastov/request-ip": "^0.0.5",
     "@nestjs/axios": "4.0.1",
     "@nestjs/common": "11.1.27",
     "@nestjs/config": "4.0.4",
@@ -36,7 +35,7 @@
     "@nestjs/serve-static": "5.0.5",
     "@remnawave/backend-contract": "2.7.2",
     "@remnawave/subscription-page-types": "0.4.0",
-    "axios": "1.18.0",
+    "axios": "1.18.1",
     "class-transformer": "^0.5.1",
     "compression": "^1.8.1",
     "consola": "^3.4.2",
@@ -46,13 +45,14 @@
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
-    "nanoid": "5.1.11",
+    "nanoid": "5.1.15",
     "nest-winston": "^1.10.2",
     "nestjs-zod": "4.3.1",
     "pkg-types": "2.3.1",
+    "proxy-addr": "^2.0.7",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
-    "semver": "^7.7.4",
+    "semver": "^7.7.5",
     "superjson": "2.2.6",
     "table": "^6.9.0",
     "winston": "^3.19.0",
@@ -73,6 +73,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.10.2",
     "@types/passport-http": "^0.3.11",
+    "@types/proxy-addr": "^2.0.3",
     "@types/semver": "^7.7.1",
     "@typescript-eslint/eslint-plugin": "^8.49.0",
     "@typescript-eslint/parser": "^8.49.0",
@@ -89,5 +90,8 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.49.0"
+  },
+  "overrides": {
+    "multer": "2.2.0"
   }
 }

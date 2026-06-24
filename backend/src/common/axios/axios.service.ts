@@ -6,6 +6,7 @@ import axios, {
     AxiosResponseHeaders,
     RawAxiosResponseHeaders,
 } from 'axios';
+import { readPackageJSON } from 'pkg-types';
 import { exit } from 'node:process';
 import { table } from 'table';
 
@@ -29,8 +30,10 @@ import { ICommandResponse } from '../types/command-response.type';
 
 @Injectable()
 export class AxiosService implements OnModuleInit {
-    public axiosInstance: AxiosInstance;
     private readonly logger = new Logger(AxiosService.name);
+    private subpageVersion: string;
+
+    public axiosInstance: AxiosInstance;
 
     constructor(private readonly configService: TypedConfigService) {
         this.axiosInstance = axios.create({
@@ -38,6 +41,7 @@ export class AxiosService implements OnModuleInit {
             timeout: 10_000,
             headers: {
                 'user-agent': 'Remnawave Subscription Page',
+                'x-subpage-version': this.subpageVersion,
                 Authorization: `Bearer ${this.configService.getOrThrow('REMNAWAVE_API_TOKEN')}`,
             },
         });
@@ -75,6 +79,10 @@ export class AxiosService implements OnModuleInit {
     }
 
     async onModuleInit(): Promise<void> {
+        const pkg = await readPackageJSON();
+
+        this.subpageVersion = pkg.version!;
+
         this.logger.log(`Remnawave API URL: ${this.axiosInstance.defaults.baseURL}`);
 
         const remnawaveMetadata = await this.getRemnawaveMetadata();
@@ -310,6 +318,7 @@ export class AxiosService implements OnModuleInit {
                     Pragma: 'no-cache',
                     Expires: '0',
                     [REMNAWAVE_REAL_IP_HEADER]: clientIp,
+                    Authorization: undefined,
                 },
             });
 

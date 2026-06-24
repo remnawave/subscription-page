@@ -1,4 +1,4 @@
-FROM node:24.14-trixie-slim AS backend-build
+FROM node:24.17-trixie-slim AS backend-build
 WORKDIR /opt/app
 
 COPY backend/package*.json ./
@@ -15,7 +15,7 @@ RUN npm cache clean --force
 
 RUN npm prune --omit=dev
 
-FROM node:24.14-trixie-slim
+FROM node:24.17-trixie-slim
 WORKDIR /opt/app
 
 LABEL org.opencontainers.image.title="Remnawave Subscription Page"

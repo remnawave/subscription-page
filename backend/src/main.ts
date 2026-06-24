@@ -68,12 +68,11 @@ async function bootstrap(): Promise<void> {
         }),
     });
 
+    const config = app.get(TypedConfigService);
+
     app.disable('x-powered-by');
 
-    // Resolve the real client IP from the trusted reverse-proxy hop. Without this,
-    // Express would treat the immediate peer as the client and our IP detection
-    // would rely on raw, client-spoofable forwarding headers.
-    app.set('trust proxy', app.get(TypedConfigService).get('TRUST_PROXY'));
+    app.set('trust proxy', config.getOrThrow('TRUST_PROXY'));
 
     app.use(cookieParser());
 
@@ -92,8 +91,6 @@ async function bootstrap(): Promise<void> {
     app.setViewEngine('html');
 
     app.use(json({ limit: '100mb' }));
-
-    const config = app.get(TypedConfigService);
 
     app.use(helmet({ contentSecurityPolicy: false }));
 

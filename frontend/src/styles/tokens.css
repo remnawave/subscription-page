@@ -1,0 +1,18 @@
+:root {
+    --yl-bg: #0e0e10;
+    --yl-surface: #161619;
+    --yl-surface-raised: #1c1c21;
+    --yl-border: #2a2a30;
+    --yl-border-strong: #3a3a42;
+    --yl-text: #ececee;
+    --yl-muted: #9a9aa3;
+    --yl-soft: #c8c8ce;
+    --yl-positive: #85b99a;
+    --yl-warning: #c2a66d;
+    --yl-negative: #c08080;
+    --yl-radius-sm: 10px;
+    --yl-radius-md: 14px;
+    --yl-radius-lg: 20px;
+    --yl-content: 1120px;
+    --yl-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

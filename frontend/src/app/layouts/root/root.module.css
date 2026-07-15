@@ -1,17 +1,20 @@
 .root {
+    min-height: 100dvh;
     display: flex;
-    flex-grow: 1;
-    min-height: 100vh;
+    background: var(--yl-bg);
+}
+
+.content,
+.main {
+    width: 100%;
+    min-width: 0;
 }
 
 .content {
     display: flex;
     flex-direction: column;
-    width: 100%;
 }
 
 .main {
-    max-width: 800px;
-    width: 100%;
-    align-self: center;
+    flex: 1;
 }

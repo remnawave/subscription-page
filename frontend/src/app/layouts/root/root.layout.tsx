@@ -3,8 +3,8 @@ import {
     SubscriptionPageRawConfigSchema
 } from '@remnawave/subscription-page-types'
 import { GetSubscriptionInfoByShortUuidCommand } from '@remnawave/backend-contract'
-import { Outlet } from 'react-router'
 import { useLayoutEffect } from 'react'
+import { Outlet } from 'react-router'
 import consola from 'consola/browser'
 import { ofetch } from 'ofetch'
 
@@ -76,7 +76,6 @@ export function RootLayout() {
     if (!isConfigLoaded || !subscription) {
         return (
             <div className={classes.root}>
-                <div className="animated-background"></div>
                 <div className={classes.content}>
                     <main className={classes.main}>
                         <LoadingScreen height="100vh" />
@@ -88,7 +87,6 @@ export function RootLayout() {
 
     return (
         <div className={classes.root}>
-            <div className="animated-background"></div>
             <div className={classes.content}>
                 <main className={classes.main}>
                     <Outlet />

@@ -5,9 +5,8 @@ import components from './overrides'
 export const theme = createTheme({
     components,
     cursorType: 'pointer',
-    fontFamily:
-        'Montserrat, Vazirmatn, Apple Color Emoji, Noto Sans SC, Twemoji Country Flags, sans-serif',
-    fontFamilyMonospace: 'Fira Mono, monospace',
+    fontFamily: 'Geist, sans-serif',
+    fontFamilyMonospace: 'Geist Mono, monospace',
     breakpoints: {
         xs: '25em',
         sm: '30em',
@@ -21,8 +20,8 @@ export const theme = createTheme({
     scale: 1,
     fontSmoothing: true,
     focusRing: 'never',
-    white: '#ffffff',
-    black: '#24292f',
+    white: '#ececee',
+    black: '#0e0e10',
     colors: {
         dark: [
             '#c9d1d9',
@@ -86,12 +85,12 @@ export const theme = createTheme({
             '#471700'
         ]
     },
-    primaryShade: 8,
-    primaryColor: 'cyan',
+    primaryShade: 1,
+    primaryColor: 'gray',
     autoContrast: true,
     luminanceThreshold: 0.3,
     headings: {
-        fontFamily: 'Unbounded, Vazirmatn, Apple Color Emoji, Noto Sans SC, sans-serif',
+        fontFamily: 'Satoshi, Geist, sans-serif',
         fontWeight: '600'
     },
     defaultRadius: 'md'

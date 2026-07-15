@@ -1,0 +1,23 @@
+{
+  "response": {
+    "isFound": true,
+    "user": {
+      "shortUuid": "demo-user",
+      "daysLeft": 18,
+      "trafficUsed": "12.4 GB",
+      "trafficLimit": "150 GB",
+      "lifetimeTrafficUsed": "48.2 GB",
+      "trafficUsedBytes": "13314398617",
+      "trafficLimitBytes": "161061273600",
+      "lifetimeTrafficUsedBytes": "51754355917",
+      "username": "demo-user",
+      "expiresAt": "2026-08-01T12:00:00.000Z",
+      "isActive": true,
+      "userStatus": "ACTIVE",
+      "trafficLimitStrategy": "NO_RESET"
+    },
+    "links": [],
+    "ssConfLinks": {},
+    "subscriptionUrl": ""
+  }
+}

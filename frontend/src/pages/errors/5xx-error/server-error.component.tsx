@@ -1,29 +1,50 @@
-import { Button, Container, Group, Text, Title } from '@mantine/core'
-import { useNavigate } from 'react-router'
-
 import classes from './ServerError.module.css'
 
 export function ErrorPageComponent() {
-    const navigate = useNavigate()
+    const isEnglish = window.localStorage.getItem('i18nextLng')?.startsWith('en')
+    const copy = isEnglish
+        ? {
+            description: 'Please refresh the page. If the issue continues, contact support.',
+            retry: 'Refresh page',
+            support: 'Contact support',
+            title: 'The page could not be loaded'
+        }
+        : {
+            description:
+                  'Обновите страницу. Если ошибка повторится, напишите в поддержку.',
+            retry: 'Обновить страницу',
+            support: 'Написать в поддержку',
+            title: 'Не удалось загрузить страницу'
+        }
 
     const handleRefresh = () => {
-        navigate(0)
+        window.location.reload()
     }
 
     return (
         <div className={classes.root}>
-            <Container>
-                <div className={classes.label}>500</div>
-                <Title className={classes.title}>Something bad just happened...</Title>
-                <Text className={classes.description} size="lg" ta="center">
-                    Try to refresh the page.
-                </Text>
-                <Group justify="center">
-                    <Button onClick={handleRefresh} size="md" variant="outline">
-                        Refresh the page
-                    </Button>
-                </Group>
-            </Container>
+            <main className={classes.card}>
+                <div className={classes.brand}>
+                    <img alt="" src="/assets/yung-link-logo.svg" />
+                    <span>Yung Link</span>
+                </div>
+                <span className={classes.label}>500</span>
+                <h1 className={classes.title}>{copy.title}</h1>
+                <p className={classes.description}>{copy.description}</p>
+                <div className={classes.actions}>
+                    <button className={classes.primaryButton} onClick={handleRefresh} type="button">
+                        {copy.retry}
+                    </button>
+                    <a
+                        className={classes.secondaryButton}
+                        href="https://t.me/skyy3"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                    >
+                        {copy.support}
+                    </a>
+                </div>
+            </main>
         </div>
     )
 }

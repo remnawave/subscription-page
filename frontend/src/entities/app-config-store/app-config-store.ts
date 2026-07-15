@@ -2,27 +2,17 @@ import {
     TSubscriptionPageLanguageCode,
     TSubscriptionPageRawConfig
 } from '@remnawave/subscription-page-types'
-import LanguageDetector from 'i18next-browser-languagedetector'
 import { create } from 'zustand'
 
 import { IActions, IState } from './interfaces'
 
-const detector = new LanguageDetector()
-detector.init({
-    order: ['localStorage', 'navigator', 'htmlTag'],
-    caches: ['localStorage']
-})
-
 function detectLanguage(
     supportedLocales: TSubscriptionPageLanguageCode[]
 ): TSubscriptionPageLanguageCode {
-    const detected = detector.detect()
-
-    const lang = Array.isArray(detected) ? detected[0] : detected
-    const shortLang = lang?.split('-')[0]
+    const cached = window.localStorage.getItem('i18nextLng')
+    const shortLang = cached?.split('-')[0]
 
     if (shortLang && supportedLocales.includes(shortLang as TSubscriptionPageLanguageCode)) {
-        detector.cacheUserLanguage(shortLang)
         return shortLang as TSubscriptionPageLanguageCode
     }
 
@@ -31,7 +21,7 @@ function detectLanguage(
 
 const initialState: IState = {
     config: null,
-    currentLang: 'en',
+    currentLang: 'ru',
     isConfigLoaded: false
 }
 
@@ -49,7 +39,7 @@ export const useAppConfigStore = create<IActions & IState>()((set) => ({
         },
 
         setLanguage: (lang: TSubscriptionPageLanguageCode) => {
-            detector.cacheUserLanguage(lang)
+            window.localStorage.setItem('i18nextLng', lang)
             set({ currentLang: lang })
         },
 

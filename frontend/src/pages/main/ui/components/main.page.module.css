@@ -255,7 +255,8 @@
 }
 
 .statusValue[data-tone='negative'] .statusDot {
-    background: var(--yl-negative);
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--yl-negative);
 }
 
 .section {

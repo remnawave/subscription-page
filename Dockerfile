@@ -50,7 +50,7 @@ RUN npm install pm2 -g
 # not-found-exception.filter.ts), so an HTTP probe cannot distinguish "up" from
 # "down". A TCP accept on loopback can, and exposes no new surface.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD node -e "require('net').connect(Number(process.env.APP_PORT||3010),'127.0.0.1').on('connect',function(){process.exit(0)}).on('error',function(){process.exit(1)})"
+  CMD node -e "require('net').connect(parseInt(process.env.APP_PORT||'3010',10),'127.0.0.1').on('connect',function(){process.exit(0)}).on('error',function(){process.exit(1)})"
 
 ENTRYPOINT [ "/bin/sh", "docker-entrypoint.sh" ]
 

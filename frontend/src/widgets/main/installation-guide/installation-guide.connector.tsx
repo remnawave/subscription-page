@@ -15,8 +15,9 @@ import {
     UnstyledButton
 } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
+import { encryptLink } from '@incy/link-encoder/web'
 import { useClipboard } from '@mantine/hooks'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 
 import { constructSubscriptionUrl } from '@shared/utils/construct-subscription-url'
@@ -81,10 +82,61 @@ export const InstallationGuideConnector = (props: IProps) => {
         subscription.user.shortUuid
     )
 
+    const hasIncyButton = useMemo(
+        () =>
+            Object.values(platforms).some((platformConfig) =>
+                platformConfig?.apps.some((app) =>
+                    app.blocks.some((block) =>
+                        block.buttons.some((button) => button.link === '{{INCY_CRYPT1_LINK}}')
+                    )
+                )
+            ),
+        [platforms]
+    )
+
+    const [incyCryptLink, setIncyCryptLink] = useState<string | undefined>(undefined)
+    const [incyCryptLoading, setIncyCryptLoading] = useState(() => hasIncyButton)
+
+    useEffect(() => {
+        if (!hasIncyButton) return
+
+        let cancelled = false
+
+        // name is capped at 128 chars per @incy/link-encoder's encryptLink contract
+        const name = subscription.user.username.slice(0, 128)
+
+        encryptLink(subscriptionUrl, { name })
+            .then((link) => {
+                if (!cancelled) setIncyCryptLink(link)
+            })
+            .catch(() => {
+                // incyCryptLink stays undefined; handleButtonClick surfaces
+                // the "not ready" notification when the user clicks the button
+            })
+            .finally(() => {
+                if (!cancelled) setIncyCryptLoading(false)
+            })
+
+        return () => {
+            cancelled = true
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasIncyButton, subscriptionUrl, subscription.user.username])
+
     const handleButtonClick = (button: TSubscriptionPageButtonConfig) => {
         let formattedUrl: string | undefined
 
-        if (button.type === 'subscriptionLink' || button.type === 'copyButton') {
+        if (button.link === '{{INCY_CRYPT1_LINK}}') {
+            if (!incyCryptLink) {
+                notifications.show({
+                    title: 'Error',
+                    message: 'INCY link is not ready yet, please try again in a moment',
+                    color: 'red'
+                })
+                return
+            }
+            formattedUrl = incyCryptLink
+        } else if (button.type === 'subscriptionLink' || button.type === 'copyButton') {
             formattedUrl = TemplateEngine.formatWithMetaInfo(button.link, {
                 username: subscription.user.username,
                 subscriptionUrl
@@ -104,7 +156,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                 break
             }
             case 'external': {
-                window.open(button.link, '_blank')
+                window.open(formattedUrl ?? button.link, '_blank')
                 break
             }
             case 'subscriptionLink': {
@@ -129,6 +181,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                 {buttons.map((button, index) => (
                     <Button
                         key={index}
+                        disabled={button.link === '{{INCY_CRYPT1_LINK}}' && incyCryptLoading}
                         leftSection={
                             <span
                                 dangerouslySetInnerHTML={{
@@ -137,6 +190,7 @@ export const InstallationGuideConnector = (props: IProps) => {
                                 style={{ display: 'flex', alignItems: 'center' }}
                             />
                         }
+                        loading={button.link === '{{INCY_CRYPT1_LINK}}' && incyCryptLoading}
                         onClick={() => handleButtonClick(button)}
                         radius="md"
                         variant={variant}

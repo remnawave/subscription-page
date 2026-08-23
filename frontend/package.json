@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@gfazioli/mantine-spinner": "4.1.8",
+    "@incy/link-encoder": "^1.2.0",
     "@kastov/cryptohapp": "^1.1.2",
     "@mantine/core": "9.4.1",
     "@mantine/hooks": "9.4.1",

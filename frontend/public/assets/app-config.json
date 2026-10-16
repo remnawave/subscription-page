@@ -868,6 +868,98 @@
                 }
             },
             {
+                "id": "moclash",
+                "name": "Moclash",
+                "isFeatured": false,
+                "urlScheme": "moclash://install-config?url=",
+                "installationStep": {
+                    "buttons": [
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash_amd64.deb",
+                            "buttonText": {
+                                "en": "amd64 (.deb)",
+                                "fa": "amd64 (.deb)",
+                                "ru": "amd64 (.deb)",
+                                "zh": "amd64 (.deb)",
+                                "fr": "amd64 (.deb)"
+                            }
+                        },
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash.x86_64.rpm",
+                            "buttonText": {
+                                "en": "amd64 (.rpm)",
+                                "fa": "amd64 (.rpm)",
+                                "ru": "amd64 (.rpm)",
+                                "zh": "amd64 (.rpm)",
+                                "fr": "amd64 (.rpm)"
+                            }
+                        },
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash_arm64.deb",
+                            "buttonText": {
+                                "en": "arm64 (.deb)",
+                                "fa": "arm64 (.deb)",
+                                "ru": "arm64 (.deb)",
+                                "zh": "arm64 (.deb)",
+                                "fr": "arm64 (.deb)"
+                            }
+                        },
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash.aarch64.rpm",
+                            "buttonText": {
+                                "en": "arm64 (.rpm)",
+                                "fa": "arm64 (.rpm)",
+                                "ru": "arm64 (.rpm)",
+                                "zh": "arm64 (.rpm)",
+                                "fr": "arm64 (.rpm)"
+                            }
+                        }
+                    ],
+                    "description": {
+                        "en": "Choose the version for your device, click the button below and install the app.",
+                        "fa": "نسخه مناسب برای دستگاه خود را انتخاب کنید، دکمه زیر را فشار دهید و برنامه را نصب کنید",
+                        "ru": "Выберите подходящую версию для вашего устройства, нажмите на кнопку ниже и установите приложение.",
+                        "zh": "选择适合您设备的版本，点击下方按钮并安装应用程序。",
+                        "fr": "Choisis la version pour ton appareil, clique sur le bouton ci‑dessous et installe l’app."
+                    }
+                },
+                "addSubscriptionStep": {
+                    "description": {
+                        "en": "Click the button below to add subscription",
+                        "fa": "برای افزودن اشتراک روی دکمه زیر کلیک کنید",
+                        "ru": "Нажмите кнопку ниже, чтобы добавить подписку",
+                        "zh": "点击下方按钮以添加订阅",
+                        "fr": "Clique sur le bouton ci‑dessous pour ajouter l’abonnement."
+                    }
+                },
+                "additionalAfterAddSubscriptionStep": {
+                    "buttons": [],
+                    "title": {
+                        "en": "If the subscription is not added",
+                        "fa": "اگر اشتراک اضافه نشد",
+                        "ru": "Если подписка не добавилась",
+                        "zh": "如果未添加订阅",
+                        "fr": "Si l’abonnement ne s’ajoute pas"
+                    },
+                    "description": {
+                        "en": "If nothing happens after clicking the button, add the subscription manually. Click the Get Link button in the top right corner of this page and copy the link. In Moclash, open Profiles, paste the link into the Profile URL field and click Import.",
+                        "fa": "اگر پس از کلیک روی دکمه هیچ اتفاقی نیفتاد، اشتراک را به صورت دستی اضافه کنید. روی دکمه دریافت لینک در گوشه بالا سمت راست این صفحه کلیک کنید و لینک را کپی کنید. در Moclash بخش Profiles را باز کنید، لینک را در فیلد Profile URL قرار دهید و روی Import کلیک کنید.",
+                        "ru": "Если после нажатия на кнопку ничего не произошло, добавьте подписку вручную. Нажмите на этой странице кнопку Получить ссылку в правом верхнем углу и скопируйте ссылку. В Moclash откройте раздел Профили, вставьте ссылку в поле URL профиля и нажмите Импортировать.",
+                        "zh": "如果点击按钮后没有任何反应，请手动添加订阅。点击本页面右上角的获取链接按钮并复制链接。在 Moclash 中打开 Profiles，将链接粘贴到 Profile URL 输入框，然后点击 Import。",
+                        "fr": "Si rien ne se passe après avoir cliqué sur le bouton, ajoute l’abonnement manuellement. Clique sur le bouton Obtenir le lien en haut à droite de cette page et copie le lien. Dans Moclash, ouvre Profiles, colle le lien dans le champ Profile URL et clique sur Import."
+                    }
+                },
+                "connectAndUseStep": {
+                    "description": {
+                        "en": "Open the Moclash tray menu and choose Quick Panel: select a server and turn the VPN on with the round power button. The full dashboard opens from the same panel.",
+                        "fa": "منوی Moclash را در سینی سیستم باز کنید و Quick Panel را انتخاب کنید: سرور را انتخاب کنید و با دکمه گرد روشن/خاموش، VPN را روشن کنید. داشبورد کامل نیز از همین پنل باز می‌شود.",
+                        "ru": "Откройте меню Moclash в трее и выберите Быстрая панель: выберите сервер и включите VPN круглой кнопкой питания. Полная панель управления открывается из этой же панели.",
+                        "zh": "打开托盘中的 Moclash 菜单并选择 Quick Panel：选择服务器，并使用圆形电源按钮开启 VPN。完整的控制面板也可从该面板打开。",
+                        "fr": "Ouvre le menu Moclash dans la zone de notification et choisis Quick Panel : choisis un serveur et active le VPN avec le bouton rond. Le tableau de bord complet s’ouvre depuis ce même panneau."
+                    }
+                }
+            },
+            {
                 "id": "prizrak-box",
                 "name": "Prizrak-Box",
                 "isFeatured": true,
@@ -1228,6 +1320,95 @@
                         "ru": "Выбрать сервер можно внизу на главной странице, включить VPN можно нажав на главной странице на большую кнопку по центру.",
                         "zh": "您可以在主页面底部选择服务器，并通过点击主页面中央的大按钮来启用 VPN。",
                         "fr": "You can select a server at the bottom of the main page, and enable VPN by clicking on the large button in the center of the main page."
+                    }
+                }
+            },
+            {
+                "id": "moclash",
+                "name": "Moclash",
+                "isFeatured": false,
+                "urlScheme": "moclash://install-config?url=",
+                "installationStep": {
+                    "buttons": [
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash_aarch64.dmg",
+                            "buttonText": {
+                                "en": "macOS (Apple Silicon)",
+                                "fa": "مک (Apple Silicon)",
+                                "ru": "macOS (Apple Silicon)",
+                                "zh": "macOS（Apple Silicon）",
+                                "fr": "macOS (Apple Silicon)"
+                            }
+                        },
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash_x64.dmg",
+                            "buttonText": {
+                                "en": "macOS (Intel)",
+                                "fa": "مک (اینتل)",
+                                "ru": "macOS (Intel)",
+                                "zh": "macOS（Intel）",
+                                "fr": "macOS (Intel)"
+                            }
+                        }
+                    ],
+                    "description": {
+                        "en": "Choose the version for your device, click the button below and install the app.",
+                        "fa": "نسخه مناسب برای دستگاه خود را انتخاب کنید، دکمه زیر را فشار دهید و برنامه را نصب کنید",
+                        "ru": "Выберите подходящую версию для вашего устройства, нажмите на кнопку ниже и установите приложение.",
+                        "zh": "选择适合您设备的版本，点击下方按钮并安装应用程序。",
+                        "fr": "Choisis la version pour ton appareil, clique sur le bouton ci‑dessous et installe l’app."
+                    }
+                },
+                "additionalBeforeAddSubscriptionStep": {
+                    "buttons": [],
+                    "title": {
+                        "en": "First launch",
+                        "fa": "اولین اجرا",
+                        "ru": "Первый запуск",
+                        "zh": "首次启动",
+                        "fr": "Premier lancement"
+                    },
+                    "description": {
+                        "en": "If macOS says it cannot verify the developer, open System Settings → Privacy & Security and click Open Anyway. If macOS says the app is damaged, run this command in Terminal: sudo xattr -r -c /Applications/Moclash.app",
+                        "fa": "اگر macOS اعلام کرد که نمی‌تواند توسعه‌دهنده را تأیید کند، به System Settings → Privacy & Security بروید و روی Open Anyway کلیک کنید. اگر macOS اعلام کرد که برنامه خراب است، این دستور را در ترمینال اجرا کنید: sudo xattr -r -c /Applications/Moclash.app",
+                        "ru": "Если macOS сообщает, что не может проверить разработчика, откройте Системные настройки → Конфиденциальность и безопасность и нажмите «Всё равно открыть». Если macOS сообщает, что приложение повреждено, выполните в Терминале команду: sudo xattr -r -c /Applications/Moclash.app",
+                        "zh": "如果 macOS 提示无法验证开发者，请打开 系统设置 → 隐私与安全性，然后点击“仍要打开”。如果 macOS 提示应用已损坏，请在终端中运行此命令：sudo xattr -r -c /Applications/Moclash.app",
+                        "fr": "Si macOS indique qu’il ne peut pas vérifier le développeur, ouvre Réglages Système → Confidentialité et sécurité et clique sur Ouvrir quand même. Si macOS indique que l’app est endommagée, exécute cette commande dans le Terminal : sudo xattr -r -c /Applications/Moclash.app"
+                    }
+                },
+                "addSubscriptionStep": {
+                    "description": {
+                        "en": "Click the button below to add subscription",
+                        "fa": "برای افزودن اشتراک روی دکمه زیر کلیک کنید",
+                        "ru": "Нажмите кнопку ниже, чтобы добавить подписку",
+                        "zh": "点击下方按钮以添加订阅",
+                        "fr": "Clique sur le bouton ci‑dessous pour ajouter l’abonnement."
+                    }
+                },
+                "additionalAfterAddSubscriptionStep": {
+                    "buttons": [],
+                    "title": {
+                        "en": "If the subscription is not added",
+                        "fa": "اگر اشتراک اضافه نشد",
+                        "ru": "Если подписка не добавилась",
+                        "zh": "如果未添加订阅",
+                        "fr": "Si l’abonnement ne s’ajoute pas"
+                    },
+                    "description": {
+                        "en": "If nothing happens after clicking the button, add the subscription manually. Click the Get Link button in the top right corner of this page and copy the link. In Moclash, open Profiles, paste the link into the Profile URL field and click Import.",
+                        "fa": "اگر پس از کلیک روی دکمه هیچ اتفاقی نیفتاد، اشتراک را به صورت دستی اضافه کنید. روی دکمه دریافت لینک در گوشه بالا سمت راست این صفحه کلیک کنید و لینک را کپی کنید. در Moclash بخش Profiles را باز کنید، لینک را در فیلد Profile URL قرار دهید و روی Import کلیک کنید.",
+                        "ru": "Если после нажатия на кнопку ничего не произошло, добавьте подписку вручную. Нажмите на этой странице кнопку Получить ссылку в правом верхнем углу и скопируйте ссылку. В Moclash откройте раздел Профили, вставьте ссылку в поле URL профиля и нажмите Импортировать.",
+                        "zh": "如果点击按钮后没有任何反应，请手动添加订阅。点击本页面右上角的获取链接按钮并复制链接。在 Moclash 中打开 Profiles，将链接粘贴到 Profile URL 输入框，然后点击 Import。",
+                        "fr": "Si rien ne se passe après avoir cliqué sur le bouton, ajoute l’abonnement manuellement. Clique sur le bouton Obtenir le lien en haut à droite de cette page et copie le lien. Dans Moclash, ouvre Profiles, colle le lien dans le champ Profile URL et clique sur Import."
+                    }
+                },
+                "connectAndUseStep": {
+                    "description": {
+                        "en": "Click the Moclash icon in the menu bar to open the quick panel: select a server and turn the VPN on with the round power button. The full dashboard opens from the same panel.",
+                        "fa": "روی آیکون Moclash در نوار منو کلیک کنید تا پنل سریع باز شود: سرور را انتخاب کنید و با دکمه گرد روشن/خاموش، VPN را روشن کنید. داشبورد کامل نیز از همین پنل باز می‌شود.",
+                        "ru": "Нажмите на значок Moclash в строке меню, чтобы открыть быструю панель: выберите сервер и включите VPN круглой кнопкой питания. Полная панель управления открывается из этой же панели.",
+                        "zh": "点击菜单栏中的 Moclash 图标打开快捷面板：选择服务器，并使用圆形电源按钮开启 VPN。完整的控制面板也可从该面板打开。",
+                        "fr": "Clique sur l’icône Moclash dans la barre des menus pour ouvrir le panneau rapide : choisis un serveur et active le VPN avec le bouton rond. Le tableau de bord complet s’ouvre depuis ce même panneau."
                     }
                 }
             },
@@ -1672,6 +1853,78 @@
                         "ru": "Выбрать сервер можно внизу на главной странице, включить VPN можно нажав на главной странице на большую кнопку по центру.",
                         "zh": "您可以在主页面底部选择服务器，并通过点击主页面中央的大按钮来启用 VPN。",
                         "fr": "You can select a server at the bottom of the main page, and enable VPN by clicking on the large button in the center of the main page."
+                    }
+                }
+            },
+            {
+                "id": "moclash",
+                "name": "Moclash",
+                "isFeatured": false,
+                "urlScheme": "moclash://install-config?url=",
+                "installationStep": {
+                    "buttons": [
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash_x64-setup.exe",
+                            "buttonText": {
+                                "en": "Windows (Setup)",
+                                "fa": "ویندوز (نصب)",
+                                "ru": "Windows (Установщик)",
+                                "zh": "Windows（安装程序）",
+                                "fr": "Windows (Installateur)"
+                            }
+                        },
+                        {
+                            "buttonLink": "https://github.com/moltea/moclash-rev/releases/latest/download/Moclash_arm64-setup.exe",
+                            "buttonText": {
+                                "en": "Windows on ARM (Setup)",
+                                "fa": "ویندوز ARM (نصب)",
+                                "ru": "Windows на ARM (Установщик)",
+                                "zh": "Windows ARM（安装程序）",
+                                "fr": "Windows sur ARM (Installateur)"
+                            }
+                        }
+                    ],
+                    "description": {
+                        "en": "Choose the version for your device, click the button below and install the app.",
+                        "fa": "نسخه مناسب برای دستگاه خود را انتخاب کنید، دکمه زیر را فشار دهید و برنامه را نصب کنید",
+                        "ru": "Выберите подходящую версию для вашего устройства, нажмите на кнопку ниже и установите приложение.",
+                        "zh": "选择适合您设备的版本，点击下方按钮并安装应用程序。",
+                        "fr": "Choisis la version pour ton appareil, clique sur le bouton ci‑dessous et installe l’app."
+                    }
+                },
+                "addSubscriptionStep": {
+                    "description": {
+                        "en": "Click the button below to add subscription",
+                        "fa": "برای افزودن اشتراک روی دکمه زیر کلیک کنید",
+                        "ru": "Нажмите кнопку ниже, чтобы добавить подписку",
+                        "zh": "点击下方按钮以添加订阅",
+                        "fr": "Clique sur le bouton ci‑dessous pour ajouter l’abonnement."
+                    }
+                },
+                "additionalAfterAddSubscriptionStep": {
+                    "buttons": [],
+                    "title": {
+                        "en": "If the subscription is not added",
+                        "fa": "اگر اشتراک اضافه نشد",
+                        "ru": "Если подписка не добавилась",
+                        "zh": "如果未添加订阅",
+                        "fr": "Si l’abonnement ne s’ajoute pas"
+                    },
+                    "description": {
+                        "en": "If nothing happens after clicking the button, add the subscription manually. Click the Get Link button in the top right corner of this page and copy the link. In Moclash, open Profiles, paste the link into the Profile URL field and click Import.",
+                        "fa": "اگر پس از کلیک روی دکمه هیچ اتفاقی نیفتاد، اشتراک را به صورت دستی اضافه کنید. روی دکمه دریافت لینک در گوشه بالا سمت راست این صفحه کلیک کنید و لینک را کپی کنید. در Moclash بخش Profiles را باز کنید، لینک را در فیلد Profile URL قرار دهید و روی Import کلیک کنید.",
+                        "ru": "Если после нажатия на кнопку ничего не произошло, добавьте подписку вручную. Нажмите на этой странице кнопку Получить ссылку в правом верхнем углу и скопируйте ссылку. В Moclash откройте раздел Профили, вставьте ссылку в поле URL профиля и нажмите Импортировать.",
+                        "zh": "如果点击按钮后没有任何反应，请手动添加订阅。点击本页面右上角的获取链接按钮并复制链接。在 Moclash 中打开 Profiles，将链接粘贴到 Profile URL 输入框，然后点击 Import。",
+                        "fr": "Si rien ne se passe après avoir cliqué sur le bouton, ajoute l’abonnement manuellement. Clique sur le bouton Obtenir le lien en haut à droite de cette page et copie le lien. Dans Moclash, ouvre Profiles, colle le lien dans le champ Profile URL et clique sur Import."
+                    }
+                },
+                "connectAndUseStep": {
+                    "description": {
+                        "en": "Click the Moclash icon in the system tray to open the quick panel: select a server and turn the VPN on with the round power button. The full dashboard opens from the same panel.",
+                        "fa": "روی آیکون Moclash در سینی سیستم کلیک کنید تا پنل سریع باز شود: سرور را انتخاب کنید و با دکمه گرد روشن/خاموش، VPN را روشن کنید. داشبورد کامل نیز از همین پنل باز می‌شود.",
+                        "ru": "Нажмите на значок Moclash в системном трее, чтобы открыть быструю панель: выберите сервер и включите VPN круглой кнопкой питания. Полная панель управления открывается из этой же панели.",
+                        "zh": "点击系统托盘中的 Moclash 图标打开快捷面板：选择服务器，并使用圆形电源按钮开启 VPN。完整的控制面板也可从该面板打开。",
+                        "fr": "Clique sur l’icône Moclash dans la zone de notification pour ouvrir le panneau rapide : choisis un serveur et active le VPN avec le bouton rond. Le tableau de bord complet s’ouvre depuis ce même panneau."
                     }
                 }
             },

@@ -1,5 +1,6 @@
-import { TSubscriptionPageTemplateKey } from '@remnawave/subscription-page-types'
+import { encryptLink } from '@incy/link-encoder/sync'
 import { createHappCryptoLink } from '@kastov/cryptohapp'
+import { TSubscriptionPageTemplateKey } from '@remnawave/subscription-page-types'
 
 type TemplateValues = {
     [key in TSubscriptionPageTemplateKey]: number | string | undefined
@@ -20,7 +21,8 @@ export class TemplateEngine {
             HAPP_CRYPT3_LINK: () =>
                 createHappCryptoLink(metaInfo.subscriptionUrl, 'v3', true) || 'unknown',
             HAPP_CRYPT4_LINK: () =>
-                createHappCryptoLink(metaInfo.subscriptionUrl, 'v4', true) || 'unknown'
+                createHappCryptoLink(metaInfo.subscriptionUrl, 'v4', true) || 'unknown',
+            INCY_CRYPT1_LINK: () => encryptLink(metaInfo.subscriptionUrl)
         })
     }
 

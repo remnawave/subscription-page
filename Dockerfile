@@ -1,4 +1,4 @@
-FROM node:24.18-trixie-slim AS backend-build
+FROM node:24.22-trixie-slim AS backend-build
 WORKDIR /opt/app
 
 COPY backend/package*.json ./
@@ -12,7 +12,7 @@ COPY backend/ .
 RUN npm run build \
     && npm run trace
 
-FROM node:24.18-trixie-slim
+FROM node:24.22-trixie-slim
 WORKDIR /opt/app
 
 LABEL org.opencontainers.image.title="Remnawave Subscription Page"

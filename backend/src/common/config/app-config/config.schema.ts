@@ -40,6 +40,8 @@ export const configSchema = z
         SUBPAGE_CONFIG_UUID: z.string().default('00000000-0000-0000-0000-000000000000'),
         CUSTOM_SUB_PREFIX: z.optional(z.string()),
 
+        DROP_REJECTED_REQUESTS: booleanString('true'),
+
         TRUST_PROXY: z
             .string()
             .default(TRUST_PROXY_DEFAULT)

@@ -6,6 +6,7 @@ import { Logger } from '@nestjs/common';
 import { TRequestTemplateTypeKeys } from '@remnawave/backend-contract';
 
 import { AxiosService } from '@common/axios/axios.service';
+import { rejectRequest } from '@common/utils/reject-request';
 
 @Injectable()
 export class SubscriptionService {
@@ -30,7 +31,7 @@ export class SubscriptionService {
             );
 
             if (!subscriptionDataResponse) {
-                res.socket?.destroy();
+                rejectRequest(res, 404);
                 return;
             }
 
@@ -43,7 +44,7 @@ export class SubscriptionService {
         } catch (error) {
             this.logger.error('Error in serveSubscriptionPage', error);
 
-            res.socket?.destroy();
+            rejectRequest(res, 500);
             return;
         }
     }

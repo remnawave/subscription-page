@@ -4,6 +4,8 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 
 import { REQUEST_TEMPLATE_TYPE_VALUES } from '@remnawave/backend-contract';
 
+import { rejectRequest } from '@common/utils/reject-request';
+
 @Injectable()
 export class ClientTypeMiddleware implements NestMiddleware {
     private readonly logger = new Logger(ClientTypeMiddleware.name);
@@ -17,7 +19,7 @@ export class ClientTypeMiddleware implements NestMiddleware {
         if (clientType && !this.allowedClientTypes.has(clientType)) {
             this.logger.error(`Invalid client type: ${clientType}`);
 
-            res.socket?.destroy();
+            rejectRequest(res, 404);
             return;
         }
 

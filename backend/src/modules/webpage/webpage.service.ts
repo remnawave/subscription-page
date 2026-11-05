@@ -17,7 +17,7 @@ import {
 
 import { AxiosService } from '@common/axios';
 import { TypedConfigService } from '@common/config/app-config';
-import { getAssetsPath, isDevelopment } from '@common/utils';
+import { getAssetsPath, isDevelopment, rejectRequest } from '@common/utils';
 import { decryptUuid, encryptUuid } from '@common/utils/crypt-utils';
 
 @Injectable()
@@ -191,7 +191,7 @@ export class WebpageService implements OnApplicationBootstrap {
             );
 
             if (!subscriptionDataResponse.isOk || !subscriptionDataResponse.response) {
-                res.socket?.destroy();
+                rejectRequest(res, 404);
                 return;
             }
 
@@ -201,7 +201,7 @@ export class WebpageService implements OnApplicationBootstrap {
             );
 
             if (!subpageConfigResponse.isOk || !subpageConfigResponse.response) {
-                res.socket?.destroy();
+                rejectRequest(res, 404);
                 return;
             }
 
@@ -209,7 +209,7 @@ export class WebpageService implements OnApplicationBootstrap {
 
             if (subpageConfig.webpageAllowed === false) {
                 this.logger.log(`Webpage access is not allowed by Remnawave's SRR.`);
-                res.socket?.destroy();
+                rejectRequest(res, 403);
                 return;
             }
 
@@ -238,7 +238,7 @@ export class WebpageService implements OnApplicationBootstrap {
         } catch (error) {
             this.logger.error(`Error in returnWebpage: ${error}`);
 
-            res.socket?.destroy();
+            rejectRequest(res, 500);
             return;
         }
     }

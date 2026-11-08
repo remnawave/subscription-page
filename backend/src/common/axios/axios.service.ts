@@ -158,6 +158,7 @@ export class AxiosService implements OnModuleInit {
 
                 return {
                     isOk: false,
+                    notFound: error.response?.status === 404,
                 };
             } else {
                 this.logger.error('Error in GetUserByUsername Request:', error);
@@ -250,7 +251,7 @@ export class AxiosService implements OnModuleInit {
                 this.logger.error('Error in GetSubscriptionInfo Request:', error);
             }
 
-            return { isOk: false };
+            return { isOk: false, notFound: isNotFound(error) };
         }
     }
 
@@ -274,7 +275,7 @@ export class AxiosService implements OnModuleInit {
             };
         } catch (error) {
             this.logger.error('Error in GetSubpageConfig Request:', error);
-            return { isOk: false };
+            return { isOk: false, notFound: isNotFound(error) };
         }
     }
 
@@ -284,10 +285,13 @@ export class AxiosService implements OnModuleInit {
         headers: NodeJS.Dict<string | string[]>,
         withClientType: boolean = false,
         clientType?: TRequestTemplateTypeKeys,
-    ): Promise<{
-        subscription: Buffer;
-        headers: RawAxiosResponseHeaders;
-    } | null> {
+    ): Promise<
+        | {
+              subscription: Buffer;
+              headers: RawAxiosResponseHeaders;
+          }
+        | { notFound: boolean }
+    > {
         try {
             let basePath = 'api/sub/' + encodeURIComponent(shortUuid);
 
@@ -317,19 +321,22 @@ export class AxiosService implements OnModuleInit {
                 ),
             };
         } catch (error) {
-            if (error instanceof AxiosError) {
-                if (error.response) {
-                    if (error.response.status === 404) {
-                        return null;
-                    }
-                }
+            if (isNotFound(error)) {
+                return { notFound: true };
+            }
 
+            if (error instanceof AxiosError) {
                 this.logger.error(`Error in GetSubscription Request: ${error.message}`);
             } else {
                 this.logger.error(`Error in GetSubscription Request: ${error}`);
             }
 
-            return null;
+            return { notFound: false };
         }
     }
+}
+
+// Only a 404 from the panel means the subscription does not exist; a timeout or 5xx does not.
+function isNotFound(error: unknown): boolean {
+    return error instanceof AxiosError && error.response?.status === 404;
 }

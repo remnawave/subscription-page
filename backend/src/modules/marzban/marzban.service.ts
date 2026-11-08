@@ -38,6 +38,7 @@ export class MarzbanService {
     ): Promise<{
         dropConnection: boolean;
         shortUuid: string | null;
+        panelUnavailable?: boolean;
     }> {
         try {
             const username = await this.tryDecodeMarzbanLink(marzbanLink);
@@ -61,6 +62,7 @@ export class MarzbanService {
                     return {
                         dropConnection: true,
                         shortUuid: null,
+                        panelUnavailable: !userInfo.isOk && !userInfo.notFound,
                     };
                 } else if (
                     this.mlDropRevokedSubscriptions &&

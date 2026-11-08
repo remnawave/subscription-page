@@ -22,7 +22,7 @@ export class MarzbanMiddleware implements NestMiddleware {
         );
 
         if (resolvedShortUuid.dropConnection) {
-            rejectRequest(res, 404);
+            rejectRequest(res, resolvedShortUuid.panelUnavailable ? 502 : 404);
             return;
         }
 

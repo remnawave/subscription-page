@@ -191,7 +191,7 @@ export class WebpageService implements OnApplicationBootstrap {
             );
 
             if (!subscriptionDataResponse.isOk || !subscriptionDataResponse.response) {
-                rejectRequest(res, 404);
+                rejectRequest(res, subscriptionDataResponse.notFound ? 404 : 502);
                 return;
             }
 
@@ -201,7 +201,7 @@ export class WebpageService implements OnApplicationBootstrap {
             );
 
             if (!subpageConfigResponse.isOk || !subpageConfigResponse.response) {
-                rejectRequest(res, 404);
+                rejectRequest(res, subpageConfigResponse.notFound ? 404 : 502);
                 return;
             }
 

@@ -30,8 +30,8 @@ export class SubscriptionService {
                 clientType,
             );
 
-            if (!subscriptionDataResponse) {
-                rejectRequest(res, 404);
+            if (!('subscription' in subscriptionDataResponse)) {
+                rejectRequest(res, subscriptionDataResponse.notFound ? 404 : 502);
                 return;
             }
 

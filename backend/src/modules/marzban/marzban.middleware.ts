@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
+import { rejectRequest } from '@common/utils/reject-request';
+
 import { MarzbanService } from './marzban.service';
 
 @Injectable()
@@ -20,7 +22,7 @@ export class MarzbanMiddleware implements NestMiddleware {
         );
 
         if (resolvedShortUuid.dropConnection) {
-            res.socket?.destroy();
+            rejectRequest(res, resolvedShortUuid.panelUnavailable ? 502 : 404);
             return;
         }
 

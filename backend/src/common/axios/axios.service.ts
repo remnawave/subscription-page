@@ -18,24 +18,29 @@ import {
 } from '@remnawave/backend-contract';
 
 import { TypedConfigService } from '@common/config/app-config';
-import { IGNORED_HEADERS } from '@common/constants';
+import { IGNORED_HEADERS, REMNAWAVE_REAL_IP_PROOF_HEADER } from '@common/constants';
+import { createRealIpProofSigner, TRealIpProofSigner } from '@common/utils';
 
 import { ICommandResponse } from '../types/command-response.type';
 
 @Injectable()
 export class AxiosService implements OnModuleInit {
     private readonly logger = new Logger(AxiosService.name);
-    private subpageVersion: string;
+    private readonly signRealIpProof: null | TRealIpProofSigner;
 
     public axiosInstance: AxiosInstance;
 
     constructor(private readonly configService: TypedConfigService) {
+        this.signRealIpProof = createRealIpProofSigner(
+            this.configService.getOrThrow('REMNAWAVE_API_TOKEN'),
+        );
+
         this.axiosInstance = axios.create({
             baseURL: this.configService.getOrThrow('REMNAWAVE_PANEL_URL'),
             timeout: 10_000,
             headers: {
                 'user-agent': 'Remnawave Subscription Page',
-                'x-subpage-version': this.subpageVersion,
+                'x-subpage-version': __RW_SUBPAGE_VERSION__,
                 Authorization: `Bearer ${this.configService.getOrThrow('REMNAWAVE_API_TOKEN')}`,
             },
         });
@@ -73,8 +78,6 @@ export class AxiosService implements OnModuleInit {
     }
 
     async onModuleInit(): Promise<void> {
-        this.subpageVersion = __RW_SUBPAGE_VERSION__;
-
         this.logger.log(`Remnawave API URL: ${this.axiosInstance.defaults.baseURL}`);
 
         const remnawaveMetadata = await this.getRemnawaveMetadata();
@@ -235,7 +238,7 @@ export class AxiosService implements OnModuleInit {
                     method: GetSubscriptionInfoByShortUuidCommand.endpointDetails.REQUEST_METHOD,
                     url: GetSubscriptionInfoByShortUuidCommand.url(encodeURIComponent(shortUuid)),
                     headers: {
-                        [REMNAWAVE_REAL_IP_HEADER]: clientIp,
+                        ...this.getRealIpHeaders(clientIp),
                     },
                 });
 
@@ -305,7 +308,7 @@ export class AxiosService implements OnModuleInit {
                     'Cache-Control': 'no-cache, no-store, must-revalidate, private, max-age=0',
                     Pragma: 'no-cache',
                     Expires: '0',
-                    [REMNAWAVE_REAL_IP_HEADER]: clientIp,
+                    ...this.getRealIpHeaders(clientIp),
                     Authorization: undefined,
                 },
             });
@@ -331,5 +334,15 @@ export class AxiosService implements OnModuleInit {
 
             return null;
         }
+    }
+
+    private getRealIpHeaders(clientIp: string): Record<string, string> {
+        const headers: Record<string, string> = { [REMNAWAVE_REAL_IP_HEADER]: clientIp };
+
+        if (this.signRealIpProof) {
+            headers[REMNAWAVE_REAL_IP_PROOF_HEADER] = this.signRealIpProof(clientIp);
+        }
+
+        return headers;
     }
 }

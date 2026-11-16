@@ -41,6 +41,7 @@ export const IGNORED_HEADERS = new Set([
     'x-real-ip',
     'x-remnawave-client-type',
     'x-remnawave-real-ip',
+    'x-remnawave-real-ip-proof',
     'x-subpage-version',
     'etag',
     'last-modified',

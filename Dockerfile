@@ -24,7 +24,11 @@ LABEL org.opencontainers.image.licenses="AGPL-3.0"
 LABEL org.opencontainers.image.documentation="https://docs.rw"
 
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+# Require the Debian fix for CVE-2026-111497 in curl's Brotli dependency.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl libbrotli1 \
+    && dpkg --compare-versions "$(dpkg-query -W -f='${Version}' libbrotli1)" ge '1.1.0-2+deb13u1' \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=backend-build /opt/app/dist ./dist
 
